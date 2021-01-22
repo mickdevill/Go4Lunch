@@ -1,0 +1,52 @@
+
+
+{
+  "project_info": {
+    "project_number": "1088186154718",
+    "firebase_url": "https://go4lunch-ff25e-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "go4lunch-ff25e",
+    "storage_bucket": "go4lunch-ff25e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088186154718:android:f01dace92fff30d3cf0c4f",
+        "android_client_info": {
+          "package_name": "com.mickdevil.go4lunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088186154718-sdjgi9c33jmp8blidnai4e4hcggnbfbm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mickdevil.go4lunch",
+            "certificate_hash": "7bfd025e50aac928aa569486b4151af6603a69e1"
+          }
+        },
+        {
+          "client_id": "1088186154718-j3to13hvo5ithje3c3clm7re0sd63nm1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrL7fritH0HjKs6UJNRroichF3Sat4N4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088186154718-j3to13hvo5ithje3c3clm7re0sd63nm1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+
+

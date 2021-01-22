@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+   id 'com.google.gms.google-services'  // Google Services plugin
+
 }
 
 android {
@@ -36,4 +38,14 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//google services
+    implementation platform('com.google.firebase:firebase-bom:26.3.0')//somme fierbase stuf
+    implementation 'com.google.firebase:firebase-analytics:18.0.1'//even if i dont use it in this project why not import
+    implementation 'com.google.firebase:firebase-auth:20.0.2'//authentification thingss
+    implementation'com.google.firebase:firebase-functions:19.2.0'
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'//for the app chat
+implementation 'com.google.firebase:firebase-inappmessaging:+'
+implementation'com.google.firebase:firebase-config:+'
+
+
 }
