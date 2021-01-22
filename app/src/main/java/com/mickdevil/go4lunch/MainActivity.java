@@ -3,26 +3,22 @@ package com.mickdevil.go4lunch;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.io.FileNotFoundException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainActivity extends AppCompatActivity {
 
-    String str = "sdfsfsfsfs";
 
-    TextView text;
-    Button btn;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.auth_activity);
 
-  text = findViewById(R.id.text);
-  btn = findViewById(R.id.btn);
+
 
     }
 
