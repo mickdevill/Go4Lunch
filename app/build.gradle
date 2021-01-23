@@ -41,9 +41,14 @@ dependencies {
 //google services
     implementation platform('com.google.firebase:firebase-bom:26.3.0')//somme fierbase stuа
     implementation 'com.google.firebase:firebase-auth:20.0.2'//authentification thingss
-    implementation'com.google.firebase:firebase-functions:19.2.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'//for the app chat
 
     //facebook stuf
-    implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+
+
+//UI things
+    implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
 }
+
