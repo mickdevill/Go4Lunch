@@ -43,7 +43,7 @@
         android:textStyle="italic"
         />
 
-<com.facebook.login.widget.DeviceLoginButton
+<com.facebook.login.widget.LoginButton
   android:id="@+id/faceBookSignIN"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

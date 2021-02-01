@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mickdevil.go4lunch.R;
@@ -16,28 +18,25 @@ public class UserIsConected extends AppCompatActivity {
 
     public static final String key = "getUserInfo";
 
-    private static List<String> userInfo;
 
+ImageView userAva;
 TextView userName;
+Button logOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_is_conected);
-
+userAva = findViewById(R.id.userAva);
 userName = findViewById(R.id.userName);
-userName.setText(userInfo.get(0));
+
+logOut = findViewById(R.id.logOut);
 
 
     }
 
 
-    public static void startAndGet(Activity activity, ArrayList<String> userData) {
-//Bundle  info = new Bundle();
-//        info.putStringArrayList(key, userData);
-
-      userInfo = userData;
-
+    public static void startAndGet(Activity activity) {
         Intent intent = new Intent(activity.getApplicationContext(), UserIsConected.class);
         activity.startActivity(intent);
 
