@@ -68,9 +68,8 @@ public class MainSigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+   configureGoogleClient();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //init callback manager
         callbackManager = CallbackManager.Factory.create();
@@ -102,7 +101,7 @@ public class MainSigninActivity extends AppCompatActivity {
 
     private void configureGoogleClient() {
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 // for the requestIdToken, this is in the values.xml file that
                 // is generated from your google-services.json
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -111,7 +110,7 @@ public class MainSigninActivity extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         // Set the dimensions of the sign-in button.
-        googleSignIn.setSize(SignInButton.SIZE_WIDE);
+
         // Initialize Firebase Auth
     }
 
