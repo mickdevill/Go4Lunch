@@ -130,6 +130,8 @@ public class MainSigninActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                          G4LunchMain.start(MainSigninActivity.this);
+
                             //my code here
                         } else {
                             //my code here
