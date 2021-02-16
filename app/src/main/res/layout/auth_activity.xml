@@ -17,9 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/logoapp"
-
-        />
+        android:src="@drawable/logoapp" />
 
     <TextView
         android:id="@+id/bolowAppLogo"

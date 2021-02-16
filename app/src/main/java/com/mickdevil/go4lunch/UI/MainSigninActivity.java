@@ -68,7 +68,7 @@ public class MainSigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity);
 
-   configureGoogleClient();
+        configureGoogleClient();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //init callback manager
@@ -85,6 +85,7 @@ public class MainSigninActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fbOrGoogle = true;
                 signInToGoogle();
+                //G4LunchMain.start(MainSigninActivity.this);
             }
         });
 
@@ -112,6 +113,7 @@ public class MainSigninActivity extends AppCompatActivity {
         // Set the dimensions of the sign-in button.
 
         // Initialize Firebase Auth
+
     }
 
     public void signInToGoogle() {
@@ -130,7 +132,8 @@ public class MainSigninActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                          G4LunchMain.start(MainSigninActivity.this);
+
+                            G4LunchMain.start(MainSigninActivity.this);
 
                             //my code here
                         } else {
@@ -156,7 +159,7 @@ public class MainSigninActivity extends AppCompatActivity {
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-
+                        //G4LunchMain.start(MainSigninActivity.this);
                     }
                 });
 
@@ -235,6 +238,7 @@ public class MainSigninActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
+
             Log.i(TAG, "onStart: Someone logged in <3");
         } else {
             Log.i(TAG, "onStart: No one logged in :/");
