@@ -1,5 +1,7 @@
 package com.mickdevil.go4lunch.UI;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -34,6 +37,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mickdevil.go4lunch.R;
 
 import org.json.JSONException;
@@ -67,7 +75,7 @@ public class MainSigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity);
-
+        askPermisions();
         configureGoogleClient();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -231,7 +239,7 @@ public class MainSigninActivity extends AppCompatActivity {
 
     }
 
-
+//need tou implement after
     @Override
     public void onStart() {
         super.onStart();
@@ -244,4 +252,45 @@ public class MainSigninActivity extends AppCompatActivity {
             Log.i(TAG, "onStart: No one logged in :/");
         }
     }
+
+
+    //I can add some permissions to this stuf. if i need after in the app
+    public void askPermisions() {
+        Dexter.withContext(MainSigninActivity.this).withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                if (!multiplePermissionsReport.areAllPermissionsGranted()) {
+                    showDialogOFDeniedPermisions();
+
+                }
+
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                permissionToken.continuePermissionRequest();
+
+            }
+        }).check();
+    }
+
+
+
+    public AlertDialog showDialogOFDeniedPermisions() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage(R.string.perms_are_denied);
+
+        alertBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        return alertBuilder.show();
+    }
+
 }
+
+
+

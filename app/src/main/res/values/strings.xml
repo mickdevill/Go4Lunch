@@ -11,9 +11,11 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-
+    <string name="perms_are_denied">Sory but the app is bassed on google maps so if you don\'t allow the location this don\'t have sence to use it</string>
 
     <string name="title_activity_btom_nav">MainActivity</string>
+
+    <string name="place_ApiKey">AIzaSyB5pdCHz3tknrs61cl8jCWlNDQ5_oQLAsU</string>
 
     <string name="search">Search</string>
     <string name="your_lunch">Your lunch</string>

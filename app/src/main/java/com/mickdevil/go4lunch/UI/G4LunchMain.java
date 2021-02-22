@@ -1,29 +1,42 @@
 package com.mickdevil.go4lunch.UI;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-import com.mickdevil.go4lunch.R;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
 public class G4LunchMain extends AppCompatActivity {
 
+
     private AppBarConfiguration mAppBarConfiguration;
+
+    // Initialize the SDK
+    Places.initialize(G4LunchMain, "ggggggggggggg");
+
+    // Create a new PlacesClient instance
+    PlacesClient placesClient = Places.createClient(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,5 +82,25 @@ public class G4LunchMain extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.g4_lunch_main, menu);
         return true;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MapFragment.GPS_REQUEST_CODE){
+
+            LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+
+            boolean providerEnable = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+
+            if (providerEnable){
+                Toast.makeText(this, "it worck", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(this, "it DON'T worck", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
 
 }
