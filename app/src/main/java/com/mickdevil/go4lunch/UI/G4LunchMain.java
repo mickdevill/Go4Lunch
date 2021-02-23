@@ -32,16 +32,17 @@ public class G4LunchMain extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     // Initialize the SDK
-    Places.initialize(G4LunchMain, "ggggggggggggg");
 
-    // Create a new PlacesClient instance
-    PlacesClient placesClient = Places.createClient(this);
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
+      //the things of
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,9 +55,6 @@ public class G4LunchMain extends AppCompatActivity {
                 drawer.openDrawer(Gravity.LEFT);
             }
         });
-
-
-
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -66,7 +64,7 @@ public class G4LunchMain extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(botomNavigation, navController);
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     }
