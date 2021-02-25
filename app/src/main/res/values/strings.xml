@@ -24,6 +24,8 @@
     <string name="map_view">map view</string>
     <string name="list_view">list view</string>
     <string name="worckmates">worckmates</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

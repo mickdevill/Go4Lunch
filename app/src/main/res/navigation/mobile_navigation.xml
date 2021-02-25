@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/maps">
+    app:startDestination="@+id/map">
 
     <fragment
-        android:id="@+id/maps"
+        android:id="@+id/map"
         android:name="com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment"
         android:label="@string/map_view"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_map" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.mickdevil.go4lunch.UI.botoomNavStaf.dashboard.DashboardFragment"
+        android:id="@+id/mapListV"
+        android:name="com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListView"
         android:label="@string/list_view"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_list_view" />
 
     <fragment
         android:id="@+id/navigation_notifications"
