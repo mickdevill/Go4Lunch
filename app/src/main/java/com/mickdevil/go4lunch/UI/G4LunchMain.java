@@ -34,32 +34,31 @@ public class G4LunchMain extends AppCompatActivity {
     // Initialize the SDK
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
-      //the things of
+        //the things of navigation
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //  Toolbar toolbar = findViewById(R.id.toolbar);
-      //  setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-     //  toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
-     //  toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-    //       @Override
-    //       public void onClick(View v) {
-    //           drawer.openDrawer(Gravity.LEFT);
-    //       }
-    //   });
+        toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.LEFT);
+            }
+        });
+
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.map, R.id.mapListV, R.id.navigation_notifications)
+                R.id.maps, R.id.mapListV, R.id.navigation_notifications)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -69,9 +68,9 @@ public class G4LunchMain extends AppCompatActivity {
 
     }
 
-  public static void start(Activity activity){
-      Intent intent = new Intent(activity.getApplicationContext(), G4LunchMain.class);
-  activity.startActivity(intent);
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity.getApplicationContext(), G4LunchMain.class);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -84,16 +83,15 @@ public class G4LunchMain extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MapFragment.GPS_REQUEST_CODE){
+        if (requestCode == MapFragment.GPS_REQUEST_CODE) {
 
             LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
             boolean providerEnable = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
 
-            if (providerEnable){
+            if (providerEnable) {
                 Toast.makeText(this, "it worck", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 Toast.makeText(this, "it DON'T worck", Toast.LENGTH_SHORT).show();
             }
         }
