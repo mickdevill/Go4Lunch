@@ -1,4 +1,4 @@
-package com.mickdevil.go4lunch.UI.botoomNavStaf.notifications;
+package com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
