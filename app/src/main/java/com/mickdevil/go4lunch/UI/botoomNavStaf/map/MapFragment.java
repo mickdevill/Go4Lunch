@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 
 import java.util.Collections;
 
@@ -57,14 +59,17 @@ import static android.content.Context.LOCATION_SERVICE;
 public class MapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private FloatingActionButton findMe;
+    private EditText searchOnMap;
+    private View view;
+
     private static final String TAG = "MapFragment";
     private LocationManager locationManager;
 
-    private Location Myloc;
+
     private FusedLocationProviderClient locationProviderClient;
 
-    public final static int GPS_REQUEST_CODE = 90001;
 
+    public final static int GPS_REQUEST_CODE = 90001;
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -96,7 +101,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
                         Log.d(TAG, "pas de permissions");
 
-                        return;
                     }
 
                     Log.d(TAG, "on a les perms");
@@ -109,10 +113,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
                                 googleMap.addMarker(new MarkerOptions().position(me));
 
-
-                                //    LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-                                //    googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                                //    googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                                 Log.d(TAG, "location = " + location);
                                 //    Myloc = location;
                             }
@@ -127,6 +127,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
                 }
             });
+
+
         }
     };
 
@@ -136,8 +138,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        view = inflater.inflate(R.layout.fragment_map, container, false);
         findMe = view.findViewById(R.id.findMe);
+
         Log.d(TAG, "BTN find me: = " + findMe);
         return view;
 
@@ -165,6 +168,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
+
 
     public boolean isGPSenabled() {
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);

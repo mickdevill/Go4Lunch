@@ -32,22 +32,26 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         return 15;
     }
 
-    public class Holder extends RecyclerView.ViewHolder{
-  TextView restoName;
-TextView restoAddress;
-TextView restoOpenColse;
-ImageView restImg;
-TextView restoDistance;
-TextView workmatesWillGo;
+    public class Holder extends RecyclerView.ViewHolder {
 
-    public Holder(@NonNull View itemView) {
-        super(itemView);
-        restoName = itemView.findViewById(R.id.restoName);
-        restoAddress = itemView.findViewById(R.id.restoAddress);
-        restoOpenColse = itemView.findViewById(R.id.restoOpenColse);
-        restImg = itemView.findViewById(R.id.restImg);
-        restoDistance = itemView.findViewById(R.id.restoDistance);
-        workmatesWillGo = itemView.findViewById(R.id.workmatesWillGo);
+        TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo;
+        ImageView restImg , rateStar1, rateStar2, rateStar3, rateStar4, rateStar5;
+
+
+        public Holder(@NonNull View itemView) {
+            super(itemView);
+            restoName = itemView.findViewById(R.id.restoName);
+            restoAddress = itemView.findViewById(R.id.restoAddress);
+            restoOpenColse = itemView.findViewById(R.id.restoOpenColse);
+            restImg = itemView.findViewById(R.id.restImg);
+            restoDistance = itemView.findViewById(R.id.restoDistance);
+            workmatesWillGo = itemView.findViewById(R.id.workmatesWillGo);
+       //the stars to set resto rate
+            rateStar1 = itemView.findViewById(R.id.rateStar1);
+            rateStar2 = itemView.findViewById(R.id.rateStar2);
+            rateStar3 = itemView.findViewById(R.id.rateStar3);
+            rateStar4 = itemView.findViewById(R.id.rateStar4);
+            rateStar5 = itemView.findViewById(R.id.rateStar5);
+        }
     }
-}
 }

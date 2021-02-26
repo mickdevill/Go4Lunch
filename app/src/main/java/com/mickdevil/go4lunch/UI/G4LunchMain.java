@@ -7,7 +7,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,39 +23,45 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class G4LunchMain extends AppCompatActivity {
 
 
     private AppBarConfiguration mAppBarConfiguration;
 
-    // Initialize the SDK
+    private DrawerLayout drawer;
+    private Toolbar toolbar;
+    private EditText searchOnMap;
+    private com.google.android.material.appbar.AppBarLayout AppBarLayout;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
+        Places.initialize(G4LunchMain.this, "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI");
+
         //the things of navigation
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        searchOnMap = findViewById(R.id.searchOnMap);
+        AppBarLayout = findViewById(R.id.AppBarLayout);
+        toolbar = findViewById(R.id.toolbar);
+        searchOnMap.setVisibility(View.INVISIBLE);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
+        //the toolBar
+        searchMdoe(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.openDrawer(Gravity.LEFT);
-            }
-        });
 
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
         // Passing each menu ID as a set of Ids because each
@@ -81,6 +90,19 @@ public class G4LunchMain extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.searchIcon) {
+            searchMdoe(false);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MapFragment.GPS_REQUEST_CODE) {
@@ -94,6 +116,38 @@ public class G4LunchMain extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "it DON'T worck", Toast.LENGTH_SHORT).show();
             }
+        }
+
+    }
+
+    public void searchMdoe(Boolean barMode) {
+
+        if (barMode) {
+            setSupportActionBar(toolbar);
+
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    drawer.openDrawer(Gravity.LEFT);
+                }
+            });
+
+        } else {
+           AppBarLayout.setVisibility(View.INVISIBLE);
+            toolbar.setVisibility(View.INVISIBLE);
+            searchOnMap.setVisibility(View.VISIBLE);
+            searchOnMap.setFocusable(false);
+            searchOnMap.bringToFront();
+
+        searchOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.)
+            }
+        });
         }
 
     }
