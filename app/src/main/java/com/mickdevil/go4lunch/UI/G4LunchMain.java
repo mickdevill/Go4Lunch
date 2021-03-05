@@ -85,10 +85,22 @@ public class G4LunchMain extends AppCompatActivity {
 
         //the things of navigation
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //find the drawer layout
         drawer = findViewById(R.id.drawer_layout);
 
-        AppBarLayout = findViewById(R.id.AppBarLayout);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        NavigationView sideNavView = findViewById(R.id.side_nav_view);
+
+        toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
+//use the nav icon to opent drawer layout
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(Gravity.LEFT);
+            }
+        });
 
 
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);

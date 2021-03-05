@@ -23,6 +23,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class GetPlaces {
 
+    private static final String TAG = "tagir";
+
     static Context context;
     static PlacesClient placesClient;
 
@@ -52,7 +54,8 @@ public class GetPlaces {
                             FindCurrentPlaceResponse response = task.getResult();
 
                             for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                //  Log.i(TAG, String.format("Place '%s' has likelihood: %f",
+                                 Log.i(TAG, String.format("Place '%s' has likelihood: %f"));
+
                                 customPlaces.add(new CustomPlace(placeLikelihood.getPlace().getName(), placeLikelihood.getPlace().getAddress(),
                                         placeLikelihood.getPlace().getOpeningHours(), placeLikelihood.getPlace().getRating()
                                         , placeLikelihood.getPlace().getLatLng()));
@@ -62,7 +65,7 @@ public class GetPlaces {
                             Exception exception = task.getException();
                             if (exception instanceof ApiException) {
                                 ApiException apiException = (ApiException) exception;
-                                // Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                                 Log.e(TAG, "Place not found: " + apiException.getStatusCode());
                             }
                         }
                     }
@@ -71,14 +74,6 @@ public class GetPlaces {
 
         return customPlaces;
     }
-
-    List<Place.Field> fieldList = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.RATING);
-
-  //  public List<Place.Field> getPlacesList() {
-  //      List<Place.Field> places = new ArrayList<>(fieldList);
-//
-  //      return places;
-  //  }
 
 
 }

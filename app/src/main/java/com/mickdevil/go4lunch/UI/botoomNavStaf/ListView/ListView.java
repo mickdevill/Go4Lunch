@@ -30,7 +30,7 @@ public class ListView extends Fragment {
 
         mapListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mapListView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-      //  mapListView.setAdapter(new ListViewAdapter(getPlaces.curentPlaceRaqForList()));
+        mapListView.setAdapter(new ListViewAdapter(getPlaces.curentPlaceRaqForList()));
 
 
         return view;
