@@ -9,10 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.libraries.places.api.model.Place;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
+
+import java.util.List;
 
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder> {
+    List<CustomPlace> places;
 
+    public ListViewAdapter(List<CustomPlace> places) {
+        this.places = places;
+    }
 
     @NonNull
     @Override
@@ -24,12 +32,15 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
+        CustomPlace place =  places.get(position);
+holder.restoName.setText(place.getName());
+
 
     }
 
     @Override
     public int getItemCount() {
-        return 15;
+        return places.size();
     }
 
     public class Holder extends RecyclerView.ViewHolder {
