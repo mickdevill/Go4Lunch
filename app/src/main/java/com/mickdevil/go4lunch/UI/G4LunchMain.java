@@ -72,7 +72,7 @@ public class G4LunchMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
 
-         fieldList = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.RATING);
+        fieldList = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.RATING);
 
 
         Places.initialize(G4LunchMain.this, "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI");
@@ -91,8 +91,6 @@ public class G4LunchMain extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
 
 
-
-
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -102,37 +100,38 @@ public class G4LunchMain extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(botomNavigation, navController);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //the method used to start activity when user is sign in
     public static void start(Activity activity) {
         Intent intent = new Intent(activity.getApplicationContext(), G4LunchMain.class);
         activity.startActivity(intent);
     }
-
+//init the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.g4_lunch_main, menu);
         return true;
     }
-
+//working with menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-         if (id == R.id.searchIcon) {
-             Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
-                     fieldList ).build(G4LunchMain.this);
-             startActivityForResult(intent, REQUESTAUTOCOMPLITION);
+        if (id == R.id.searchIcon) {
+            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
+                    fieldList).build(G4LunchMain.this);
+            startActivityForResult(intent, REQUESTAUTOCOMPLITION);
 
-         }
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+//this on activity result is used for alot of things. and the only working is autocmplete with places api
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -159,33 +158,6 @@ public class G4LunchMain extends AppCompatActivity {
     }
 
 
-    public void getLoc() {
-        if (ActivityCompat.checkSelfPermission(G4LunchMain.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(G4LunchMain.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-        }
-
-        locationProviderClient.getLastLocation().addOnSuccessListener(G4LunchMain.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-
-                if (location != null) {
-                    LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
-
-
-                }
-            }
-
-        }).addOnFailureListener(G4LunchMain.this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-    }
-
-
 }
 
 
@@ -194,7 +166,6 @@ public class G4LunchMain extends AppCompatActivity {
 
 //the set elevation method to make view above others in "steck"
 // searchOnMap.setElevation(1000);
-
 
 
 //  public void searchMdoe(Boolean barMode) {
@@ -233,6 +204,31 @@ public class G4LunchMain extends AppCompatActivity {
 //  }
 
 
+// public void getLoc() {
+//     if (ActivityCompat.checkSelfPermission(G4LunchMain.this, Manifest.permission.ACCESS_FINE_LOCATION)
+//             != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(G4LunchMain.this,
+//             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//     }
+//
+//     locationProviderClient.getLastLocation().addOnSuccessListener(G4LunchMain.this, new OnSuccessListener<Location>() {
+//         @Override
+//         public void onSuccess(Location location) {
+//
+//             if (location != null) {
+//                 LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//
+//             }
+//         }
+//
+//     }).addOnFailureListener(G4LunchMain.this, new OnFailureListener() {
+//         @Override
+//         public void onFailure(@NonNull Exception e) {
+//
+//         }
+//     });
+// }
 
 
 
