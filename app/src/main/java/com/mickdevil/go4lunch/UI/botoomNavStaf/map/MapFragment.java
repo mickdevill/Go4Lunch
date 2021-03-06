@@ -78,52 +78,13 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         @Override
         public void onMapReady(GoogleMap googleMap) {
 
-
             locationProviderClient = new FusedLocationProviderClient(getContext());
-
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    googleMap.addMarker(new MarkerOptions().position(latLng));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                }
-            });
-
 
             findMe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                        Log.d(TAG, "pas de permissions");
-
-                    }
-
-                    Log.d(TAG, "on a les perms");
-                    locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-
-                            if (location != null) {
-                                LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
-                                googleMap.addMarker(new MarkerOptions().position(me));
-
-                                Log.d(TAG, "location = " + location);
-                                //    Myloc = location;
-                            }
-                        }
-
-                    }).addOnFailureListener(getActivity(), new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "god damn" + e.getMessage());
-                        }
-                    });
+                    getCurentLoc(googleMap);
 
                 }
             });
@@ -131,6 +92,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
         }
     };
+
+
+
 
     @Nullable
     @Override
@@ -170,26 +134,43 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
 
-    public boolean isGPSenabled() {
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
-        boolean providerEnable = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+    private void getCurentLoc(GoogleMap googleMap){
 
-        if (providerEnable) {
-            return true;
-        } else {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity().getApplicationContext())
-                    .setTitle("GPS ask").setMessage("the GPS is requierd for this app").setPositiveButton("ya man", new
-                            DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    startActivityForResult(intent, GPS_REQUEST_CODE);
-                                }
-                            }).show();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            Log.d(TAG, "pas de permissions");
         }
-        return false;
+
+        Log.d(TAG, "on a les perms");
+        locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+
+                if (location != null) {
+                    LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
+                    googleMap.addMarker(new MarkerOptions().position(me));
+googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 10));
+
+                    Log.d(TAG, "location = " + location);
+                    //    Myloc = location;
+                }
+            }
+
+        }).addOnFailureListener(getActivity(), new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "god damn" + e.getMessage());
+            }
+        });
     }
+
+
+
+
 
 
 }

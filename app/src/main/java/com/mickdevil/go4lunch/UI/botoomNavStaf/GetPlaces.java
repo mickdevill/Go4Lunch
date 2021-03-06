@@ -23,57 +23,6 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class GetPlaces {
 
-    private static final String TAG = "tagir";
-
-    static Context context;
-    static PlacesClient placesClient;
-
-    public GetPlaces(Context context) {
-        this.context = context;
-        this.placesClient = placesClient;
-    }
-
-
-    public static List<CustomPlace> curentPlaceRaqForList() {
-        // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
-
-        List<CustomPlace> customPlaces = new ArrayList<>();
-//Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.RATING);
-
-// Use the builder to create a FindCurrentPlaceRequest.
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
-
-// Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-
-            placeResponse.addOnCompleteListener(task -> {
-
-                        if (task.isSuccessful()) {
-                            FindCurrentPlaceResponse response = task.getResult();
-
-                            for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                 Log.i(TAG, String.format("Place '%s' has likelihood: %f"));
-
-                                customPlaces.add(new CustomPlace(placeLikelihood.getPlace().getName(), placeLikelihood.getPlace().getAddress(),
-                                        placeLikelihood.getPlace().getOpeningHours(), placeLikelihood.getPlace().getRating()
-                                        , placeLikelihood.getPlace().getLatLng()));
-
-                            }
-                        } else {
-                            Exception exception = task.getException();
-                            if (exception instanceof ApiException) {
-                                ApiException apiException = (ApiException) exception;
-                                 Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                            }
-                        }
-                    }
-            );
-        }
-
-        return customPlaces;
-    }
 
 
 }

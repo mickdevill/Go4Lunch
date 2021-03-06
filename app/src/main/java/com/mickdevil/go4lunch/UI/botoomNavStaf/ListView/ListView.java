@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 public class ListView extends Fragment {
-    GetPlaces getPlaces;
+
     RecyclerView mapListView;
 
 
@@ -24,13 +25,12 @@ public class ListView extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
 
-        getPlaces = new GetPlaces(getContext());
         mapListView = view.findViewById(R.id.mapListView);
 
 
         mapListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mapListView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        mapListView.setAdapter(new ListViewAdapter(getPlaces.curentPlaceRaqForList()));
+
 
 
         return view;
