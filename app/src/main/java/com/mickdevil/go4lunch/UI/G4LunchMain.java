@@ -50,12 +50,16 @@ import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -198,6 +202,8 @@ public class G4LunchMain extends AppCompatActivity {
         String url = "https://maps.googleapis.com/maps/api/nearbysearch/json" + "?location=" + curentLat + "," + curentLng +
                 "&radius=5000" + "&type=" + placeTypesList[1] + "&sensor=true" + "&key=" + "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
 
+  new PlaceTask().execute(url);
+
     }
 
 
@@ -216,12 +222,12 @@ public class G4LunchMain extends AppCompatActivity {
     }
 
 
-   private class PlaceTask extends AsyncTask<String, Integer, String> {
+    private class PlaceTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-          //Initialyze data
-         String data = null;
+            //Initialyze data
+            String data = null;
             try {
                 data = downloadUrl(strings[0]);
             } catch (IOException e) {
@@ -232,54 +238,83 @@ public class G4LunchMain extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            new ParserTask.execute(s);
+            new ParserTask().execute(s);
         }
 
         private String downloadUrl(String string) throws IOException {
             //init URL
-        URL url = new URL(string);
-        //init conection
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-  connection.connect();
+            URL url = new URL(string);
+            //init conection
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
 
-        InputStream stream = connection.getInputStream();
+            InputStream stream = connection.getInputStream();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-        StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
-        String line = "";
+            String line = "";
 
-        while((line = reader.readLine()) != null ){
-           builder.append(line);
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
 
-        }
+            }
 
-        String data = builder.toString();
+            String data = builder.toString();
 
-        reader.close();
+            reader.close();
 
-        return data;
+            return data;
         }
 
 
         private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
 
+            List<Double> TheLatList = new ArrayList<>();
+            List<Double> TheLngList = new ArrayList<>();
+
             @Override
             protected List<HashMap<String, String>> doInBackground(String... strings) {
-               //createJson
-                OtherJsonParser
-                return null;
+                //createJson
+                OtherJsonParser otherJsonParser = new OtherJsonParser();
+
+                List<HashMap<String, String>> mapList = null;
+                JSONObject object = null;
+                try {
+                    object = new JSONObject(strings[0]);
+
+                    mapList = otherJsonParser.parseResult(object);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return mapList;
+            }
+
+            @Override
+            protected void onPostExecute(List<HashMap<String, String>> hashMaps) {
+                for (int i = 0; i < hashMaps.size(); i++) {
+                    HashMap<String, String> hashMapList = hashMaps.get(i);
+                    double lat = Double.parseDouble(hashMapList.get("lat"));
+                    double lng = Double.parseDouble(hashMapList.get("lng"));
+                    String name = hashMapList.get("name");
+                    LatLng latLng = new LatLng(lat, lng);
+
+                    TheLatList.add(lat);
+                    TheLngList.add(lng);
+                    if (i == hashMaps.size()){
+
+                    }
+
+                }
+
             }
         }
 
 
-
-
-
     }
-
-
 
 
 }

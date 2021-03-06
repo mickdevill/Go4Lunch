@@ -52,6 +52,7 @@ import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 
 import java.util.Collections;
+import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -84,7 +85,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 @Override
                 public void onClick(View v) {
 
-                    getCurentLoc(googleMap);
+
+
+                    // getCurentLoc(googleMap);
 
                 }
             });
@@ -167,7 +170,6 @@ googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 10));
             }
         });
     }
-
 
 
 
