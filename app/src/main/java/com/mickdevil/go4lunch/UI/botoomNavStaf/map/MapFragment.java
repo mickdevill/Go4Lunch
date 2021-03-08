@@ -60,7 +60,6 @@ import static android.content.Context.LOCATION_SERVICE;
 public class MapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private FloatingActionButton findMe;
-    private EditText searchOnMap;
     private View view;
 
     private static final String TAG = "MapFragment";
@@ -85,9 +84,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 @Override
                 public void onClick(View v) {
 
-
-
-                    // getCurentLoc(googleMap);
+                    getCurentLoc(googleMap);
 
                 }
             });

@@ -50,6 +50,7 @@ import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,14 +59,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class G4LunchMain extends AppCompatActivity {
+import javax.net.ssl.HttpsURLConnection;
 
+public class G4LunchMain extends AppCompatActivity {
+    private static final String TAG = "G4LunchMain";
     //views
     //////////////////////////////////////////////////////////////////////////////////////////
     private AppBarConfiguration mAppBarConfiguration;
@@ -116,14 +120,15 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
+getPlaces();
+        Log.d(TAG, "onCreate: is runing");
         //the things of navigation
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //find the drawer layout
         drawer = findViewById(R.id.drawer_layout);
         NavigationView sideNavView = findViewById(R.id.side_nav_view);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_open_drawer);
@@ -190,20 +195,31 @@ public class G4LunchMain extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         }
-        Task<Location> task = locationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+         locationProviderClient.getLastLocation()
+        .addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 curentLat = location.getLatitude();
                 curentLng = location.getLongitude();
+
+
+        String urlAsString = "https://maps.googleapis.com/maps/api/place/details/output" + "?location=" + curentLat + "," + curentLng +
+                "&radius=5000" + "&type=" + placeTypesList[0] + "&sensor=true" + "&key=" + "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
+        Log.d(TAG, "getPlaces: " + curentLat + " " + curentLng);
+
+        URL url = null;
+        try {
+            url = new URL(urlAsString);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        FetchPlacesData fetchPlacesData = new FetchPlacesData(url);
+        new Thread(fetchPlacesData).start();
+        //call my runable here
+       // new PlaceTask().execute(url);
             }
         });
-
-        String url = "https://maps.googleapis.com/maps/api/nearbysearch/json" + "?location=" + curentLat + "," + curentLng +
-                "&radius=5000" + "&type=" + placeTypesList[1] + "&sensor=true" + "&key=" + "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
-
-  new PlaceTask().execute(url);
-
     }
 
 
@@ -221,103 +237,146 @@ public class G4LunchMain extends AppCompatActivity {
 
     }
 
+    class FetchPlacesData implements Runnable {
+        URL url;
+        String line = "";
+        String data = "";
+        String parsed = "";
+        int i = 0;
 
-    private class PlaceTask extends AsyncTask<String, Integer, String> {
+        public FetchPlacesData(URL url) {
+            this.url = url;
+        }
+
 
         @Override
-        protected String doInBackground(String... strings) {
-            //Initialyze data
-            String data = null;
+        public void run() {
+
+
             try {
-                data = downloadUrl(strings[0]);
-            } catch (IOException e) {
+                HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+while (bufferedReader.readLine() != null){
+    data += bufferedReader.readLine();
+}
+
+JSONArray jsonArray = new JSONArray(data);
+
+                Log.d(TAG, "Jason Array: " + jsonArray.toString());
+
+
+            }
+            catch (IOException | JSONException e) {
                 e.printStackTrace();
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            new ParserTask().execute(s);
-        }
-
-        private String downloadUrl(String string) throws IOException {
-            //init URL
-            URL url = new URL(string);
-            //init conection
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            InputStream stream = connection.getInputStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
-            StringBuilder builder = new StringBuilder();
-
-            String line = "";
-
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-
+                Log.d(TAG, "error: " + e.getMessage(), e);
             }
 
-            String data = builder.toString();
 
-            reader.close();
 
-            return data;
         }
-
-
-        private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
-
-            List<Double> TheLatList = new ArrayList<>();
-            List<Double> TheLngList = new ArrayList<>();
-
-            @Override
-            protected List<HashMap<String, String>> doInBackground(String... strings) {
-                //createJson
-                OtherJsonParser otherJsonParser = new OtherJsonParser();
-
-                List<HashMap<String, String>> mapList = null;
-                JSONObject object = null;
-                try {
-                    object = new JSONObject(strings[0]);
-
-                    mapList = otherJsonParser.parseResult(object);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                return mapList;
-            }
-
-            @Override
-            protected void onPostExecute(List<HashMap<String, String>> hashMaps) {
-                for (int i = 0; i < hashMaps.size(); i++) {
-                    HashMap<String, String> hashMapList = hashMaps.get(i);
-                    double lat = Double.parseDouble(hashMapList.get("lat"));
-                    double lng = Double.parseDouble(hashMapList.get("lng"));
-                    String name = hashMapList.get("name");
-                    LatLng latLng = new LatLng(lat, lng);
-
-                    TheLatList.add(lat);
-                    TheLngList.add(lng);
-                    if (i == hashMaps.size()){
-
-                    }
-
-                }
-
-            }
-        }
-
 
     }
 
 
 }
+//  private class PlaceTask extends AsyncTask<String, Integer, String> {
+
+//      @Override
+//      protected String doInBackground(String... strings) {
+//          //Initialyze data
+//          String data = null;
+//          try {
+//              data = downloadUrl(strings[0]);
+//          } catch (IOException e) {
+//              e.printStackTrace();
+//          }
+//          return data;
+//      }
+
+//      @Override
+//      protected void onPostExecute(String s) {
+//          new ParserTask().execute(s);
+//      }
+
+//      private String downloadUrl(String string) throws IOException {
+//          //init URL
+//          URL url = new URL(string);
+//          //init conection
+//          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//          connection.connect();
+
+//          InputStream stream = connection.getInputStream();
+
+//          BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+//          StringBuilder builder = new StringBuilder();
+
+//          String line = "";
+
+//          while ((line = reader.readLine()) != null) {
+//              builder.append(line);
+
+//          }
+
+//          String data = builder.toString();
+
+//          reader.close();
+
+//          return data;
+//      }
+
+
+//      private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+
+//          List<Double> TheLatList = new ArrayList<>();
+//          List<Double> TheLngList = new ArrayList<>();
+
+//          @Override
+//          protected List<HashMap<String, String>> doInBackground(String... strings) {
+//              //createJson
+//              OtherJsonParser otherJsonParser = new OtherJsonParser();
+
+//              List<HashMap<String, String>> mapList = null;
+//              JSONObject object = null;
+//              try {
+//                  object = new JSONObject(strings[0]);
+
+//                  mapList = otherJsonParser.parseResult(object);
+
+//              } catch (JSONException e) {
+//                  e.printStackTrace();
+//              }
+
+//              return mapList;
+//          }
+
+//          @Override
+//          protected void onPostExecute(List<HashMap<String, String>> hashMaps) {
+//              for (int i = 0; i < hashMaps.size(); i++) {
+//                  HashMap<String, String> hashMapList = hashMaps.get(i);
+//                  double lat = Double.parseDouble(hashMapList.get("lat"));
+//                  double lng = Double.parseDouble(hashMapList.get("lng"));
+//                  String name = hashMapList.get("name");
+//                  LatLng latLng = new LatLng(lat, lng);
+
+//                  TheLatList.add(lat);
+//                  TheLngList.add(lng);
+//                  if (i == hashMaps.size()){
+
+//                  }
+
+//              }
+
+//          }
+//      }
+
+
+//  }
+
+
+//
 
 
 
