@@ -9,14 +9,17 @@ public class CustomPlace {
     private String name;
     private String address;
     private OpeningHours openTime;
-    private double rate;
+   // private double rate;
     private LatLng latLng;
 
-    public CustomPlace(String name, String address, OpeningHours openTime, double rate, LatLng latLng) {
+
+    public CustomPlace(String name, String address, OpeningHours openTime,
+                       //double rate,
+                       LatLng latLng) {
         this.name = name;
         this.address = address;
         this.openTime = openTime;
-        this.rate = rate;
+       // this.rate = rate;
         this.latLng = latLng;
     }
 
@@ -44,13 +47,13 @@ public class CustomPlace {
         this.openTime = openTime;
     }
 
-    public double getRate() {
-        return rate;
-    }
+ // public double getRate() {
+ //     return rate;
+ // }
 
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
+ // public void setRate(double rate) {
+ //     this.rate = rate;
+ // }
 
     public LatLng getLatLng() {
         return latLng;

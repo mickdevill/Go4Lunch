@@ -15,6 +15,8 @@ import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
 
 import java.util.List;
 
+import static java.lang.Double.valueOf;
+
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder> {
     List<CustomPlace> places;
 
@@ -32,9 +34,11 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        CustomPlace place =  places.get(position);
-holder.restoName.setText(place.getName());
-
+        CustomPlace customPlace =  places.get(position);
+holder.restoName.setText(customPlace.getName());
+holder.restoAddress.setText(customPlace.getAddress());
+//holder.restoOpenColse.setText(customPlace.getOpenTime().getWeekdayText().get(6));
+//holder.restoDistance.setText(valueOf(customPlace.getLatLng().latitude));
 
     }
 

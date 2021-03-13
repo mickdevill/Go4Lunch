@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -40,6 +41,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONObject;
 
@@ -100,6 +102,7 @@ public class MainSigninActivity extends AppCompatActivity {
                 fbSignIn();
             }
         });
+
     }
 
 
@@ -116,7 +119,6 @@ public class MainSigninActivity extends AppCompatActivity {
         // Set the dimensions of the sign-in button.
 
         // Initialize Firebase Auth
-
     }
 
     public void signInToGoogle() {
@@ -261,7 +263,6 @@ public class MainSigninActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
                 permissionToken.continuePermissionRequest();

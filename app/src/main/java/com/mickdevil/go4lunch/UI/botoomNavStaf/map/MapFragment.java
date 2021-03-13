@@ -50,6 +50,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import java.util.Collections;
 import java.util.List;
@@ -94,8 +95,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     };
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -134,8 +133,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
 
-
-    private void getCurentLoc(GoogleMap googleMap){
+    private void getCurentLoc(GoogleMap googleMap) {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
@@ -144,7 +142,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
             Log.d(TAG, "pas de permissions");
         }
 
-        Log.d(TAG, "on a les perms");
+
         locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -152,8 +150,13 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 if (location != null) {
                     LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
-                    googleMap.addMarker(new MarkerOptions().position(me));
-googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 10));
+                  //  googleMap.addMarker(new MarkerOptions().position(me));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
+
+                    for (int i = 0; i < GetPlaces.myPlaces.size(); i++) {
+                        googleMap.addMarker(new MarkerOptions().position(GetPlaces.myPlaces.get(i).getLatLng()));
+
+                    }
 
                     Log.d(TAG, "location = " + location);
                     //    Myloc = location;
@@ -167,9 +170,6 @@ googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 10));
             }
         });
     }
-
-
-
 
 
 }
