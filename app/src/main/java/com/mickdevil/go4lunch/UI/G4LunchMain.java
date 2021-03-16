@@ -47,7 +47,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonParser;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.CustomListener;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
 import org.json.JSONArray;
@@ -68,7 +70,7 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class G4LunchMain extends AppCompatActivity {
+public class G4LunchMain extends AppCompatActivity implements CustomListener {
     private static final String TAG = "G4LunchMain";
     //views
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -83,19 +85,20 @@ public class G4LunchMain extends AppCompatActivity {
     public GetPlaces getPlaces;
 
     private static FusedLocationProviderClient locationProviderClient;
-   private static PlacesClient client;
-
+    private static PlacesClient client;
 
 
     List<Place.Field> fieldList;
     private static final String apikey = "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
     //-----------------------------------------------------------------------------------------
 
+
+
     //...........................=================............................
     //..........................||              ||.............................
     //..........................||              ||.............................
     //===========================DATA FOR SHIPMENT=============================
-
+private List<CustomPlace> getPlacesList;
 
     //===========================DATA FOR SHIPMENT=============================
 
@@ -123,9 +126,8 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-      getPlaces = new GetPlaces(locationProviderClient, client, apikey, this);
-      getPlaces.getPlacesLikeHood();
-
+        Thread getPlaces = new Thread(new GetPlacesList(this, this));
+        getPlaces.start();
 
 
         Log.d(TAG, "onCreate: is runing");
@@ -154,10 +156,21 @@ public class G4LunchMain extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.maps, R.id.mapListV, R.id.navigation_notifications)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(botomNavigation, navController);
         //----------------------------------------------------------------------------------------------------------------------------------------------
+
+        botomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+              
+
+
+                return false;
+            }
+        });
 
     }
 
@@ -193,7 +206,6 @@ public class G4LunchMain extends AppCompatActivity {
     }
 
 
-
     public static FusedLocationProviderClient getLocationProviderClient() {
         return locationProviderClient;
     }
@@ -207,6 +219,9 @@ public class G4LunchMain extends AppCompatActivity {
         return apikey;
     }
 
+    public List<CustomPlace> getGetPlacesList() {
+        return getPlacesList;
+    }
 
 
     //this on activity result is used for alot of things. and the only working is autocmplete with places api
@@ -222,6 +237,30 @@ public class G4LunchMain extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onResult(List<CustomPlace> resultList) {
+getPlacesList = resultList;
+    }
+
+    class GetPlacesList implements Runnable {
+        Context context;
+        CustomListener customListener;
+
+        public GetPlacesList(Context context, CustomListener customListener) {
+            this.context = context;
+            this.customListener = customListener;
+        }
+
+        @Override
+        public void run() {
+            getPlaces = new GetPlaces(locationProviderClient, client, apikey,
+                    context, customListener);
+            getPlaces.getPlacesLikeHood();
+        }
+    }
+
+
 }
 
 

@@ -17,6 +17,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.CustomListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,12 +35,15 @@ public class GetPlaces {
     PlacesClient placesClient;
     String apiKey;
     Context context;
+    CustomListener customListener;
 
-    public GetPlaces(FusedLocationProviderClient locationProviderClient, PlacesClient placesClient, String apiKey, Context context) {
+    public GetPlaces(FusedLocationProviderClient locationProviderClient, PlacesClient placesClient, String apiKey,
+                     Context context, CustomListener customListener) {
         this.locationProviderClient = locationProviderClient;
         this.placesClient = placesClient;
         this.apiKey = apiKey;
         this.context = context;
+        this.customListener = customListener;
     }
 
     public static List<CustomPlace> myPlaces = new ArrayList<>();
@@ -59,7 +63,11 @@ public class GetPlaces {
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
 
             placeResponse.addOnCompleteListener(task -> {
+
                 if (task.isSuccessful()) {
+
+                    customListener.onResult(myPlaces);
+
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         Log.i(TAG, String.format("Place '%s' has likelihood: %f",
@@ -82,8 +90,6 @@ public class GetPlaces {
                 }
             });
         }
-
-
     }
 
     public void getPlaceDetail(String placeId) {
@@ -102,11 +108,12 @@ public class GetPlaces {
 
             CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
                     response.getPlace().getOpeningHours(),
-                    response.getPlace().getLatLng() );
+                    response.getPlace().getLatLng());
 
-           myPlaces.add(customPlace);
+            myPlaces.add(customPlace);
+
             Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime()
-             );
+            );
         })
 
                 .addOnFailureListener((exception) -> {
