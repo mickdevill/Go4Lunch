@@ -33,6 +33,15 @@ public class deadCode {
 
 
 
+//  class GetPlasesList implements Runnable {
+
+//      @Override
+//      public void run() {
+//          GetPlaces getPlaces = new GetPlaces(locationProviderClient, client, apikey, G4LunchMain.this);
+//          getPlaces.getPlacesLikeHood();
+
+//      }
+//  }
 
     //THIS CODE WILL BE MAYBE USED
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HandlerForMsg;
+import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import java.util.Arrays;
@@ -69,7 +71,7 @@ public class G4LunchMain extends AppCompatActivity {
     public static final String appUserKey = "appUser";
     //-----------------------------------------------------------------------------------------
 
-    //HavyTasksThread havyTasksThread = new HavyTasksThread();
+    HavyTasksThread havyTasksThread = new HavyTasksThread("havy task thread" , G4LunchMain.this);
 
 
     //the onCreate
@@ -79,11 +81,11 @@ public class G4LunchMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
 
-        //   handlerForMsg = new HandlerForMsg(G4LunchMain.this);
+           handlerForMsg = new HandlerForMsg(G4LunchMain.this);
 
-        //  if (!havyTasksThread.isAlive()) {
-        //      havyTasksThread.start();
-        //  }
+          if (!havyTasksThread.isAlive()) {
+              havyTasksThread.start();
+          }
         AppUser appUser = getIntent().getParcelableExtra(G4LunchMain.appUserKey);
 
 
@@ -95,11 +97,11 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // handleMSG(0);
+         handleMSG(0);
 
         // TODO: need to overWrite this shit
-        Thread thread = new Thread(new GetPlasesList());
-        thread.start();
+       // Thread thread = new Thread(new GetPlasesList());
+       // thread.start();
 
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation
@@ -195,11 +197,11 @@ else {
     }
 
 
-    //  private void handleMSG(int taskCode) {
-    //      Message msg = Message.obtain();
-    //      msg.what = taskCode;
-    //      havyTasksThread.handlerForMsg.sendMessage(msg);
-    //  }
+      private void handleMSG(int taskCode) {
+          Message msg = Message.obtain();
+          msg.what = taskCode;
+          havyTasksThread.getHuendler().sendMessage(msg);
+      }
 
 
     public static void start(Activity activity, Intent intent) {
@@ -222,15 +224,6 @@ else {
     }
 
 
-    class GetPlasesList implements Runnable {
-
-        @Override
-        public void run() {
-            GetPlaces getPlaces = new GetPlaces(locationProviderClient, client, apikey, G4LunchMain.this);
-            getPlaces.getPlacesLikeHood();
-
-        }
-    }
 
 
 }

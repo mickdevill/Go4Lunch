@@ -35,8 +35,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -45,9 +48,12 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainSigninActivity extends AppCompatActivity {
@@ -59,8 +65,8 @@ public class MainSigninActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     //my fierBase database
-    public static FirebaseDatabase database;
-    public static DatabaseReference fierBaseDBRef;
+    public  FirebaseDatabase database;
+    public  DatabaseReference fierBaseDBRef;
     public static final String USER_KEY = "App users";
 
     private GoogleSignInClient googleSignInClient;
@@ -155,8 +161,9 @@ public class MainSigninActivity extends AppCompatActivity {
 
                             appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
                                     account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString());
+                            Log.d(TAG, "onComplete: " + appUser);
 
-                            fierBaseDBRef.push().setValue(appUser);
+                           chekIfUserExistAndPush(appUser);
 
                             Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
 
@@ -287,6 +294,45 @@ public class MainSigninActivity extends AppCompatActivity {
         });
         return alertBuilder.show();
     }
+
+
+
+    private void chekIfUserExistAndPush(AppUser appUser){
+      List<String> myUsers = new ArrayList<>();
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    AppUser appUser = ds.getValue(AppUser.class);
+                    myUsers.add(appUser.email);
+
+                }
+                Log.d(TAG, "myUser " + myUsers);
+
+
+            if (!myUsers.contains(appUser.email)){
+
+                fierBaseDBRef.push().setValue(appUser);
+
+                Log.d(TAG, "app user " + appUser);
+            }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        fierBaseDBRef.addValueEventListener(valueEventListener);
+
+    }
+
+
+
+
+
+
+
 
 
     @Override

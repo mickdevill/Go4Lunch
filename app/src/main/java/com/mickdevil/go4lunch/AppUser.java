@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import java.net.URI;
 import java.net.URL;
 
-public class AppUser implements Parcelable {
+public class AppUser implements Parcelable  {
 
     public String ID, Fname, Lname, email, photo;
 
