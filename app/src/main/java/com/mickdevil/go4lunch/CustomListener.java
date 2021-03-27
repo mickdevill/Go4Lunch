@@ -1,4 +1,4 @@
-package com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates;
+package com.mickdevil.go4lunch;
 
 import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
 

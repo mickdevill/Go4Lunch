@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,21 +29,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONObject;
 
@@ -55,6 +58,10 @@ public class MainSigninActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
 
     private FirebaseAuth firebaseAuth;
+    //my fierBase database
+    public static FirebaseDatabase database;
+    public static DatabaseReference fierBaseDBRef;
+    public static final String USER_KEY = "App users";
 
     private GoogleSignInClient googleSignInClient;
 
@@ -67,6 +74,9 @@ public class MainSigninActivity extends AppCompatActivity {
     private com.google.android.gms.common.SignInButton googleSignIn;
 
     private Boolean fbOrGoogle;
+
+    AppUser appUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,11 @@ public class MainSigninActivity extends AppCompatActivity {
 
         //init firebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
+
+        //init fierBase DB
+        database = FirebaseDatabase.getInstance();
+        fierBaseDBRef = database.getReference(USER_KEY);
+
         //finde views by ID
         faceBookSignIN = findViewById(R.id.faceBookSignIN);
         googleSignIn = findViewById(R.id.googleSignIn);
@@ -138,7 +153,18 @@ public class MainSigninActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                            G4LunchMain.start(MainSigninActivity.this);
+                            appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
+                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString());
+
+                            fierBaseDBRef.push().setValue(appUser);
+
+                            Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
+
+                            intent.putExtra(G4LunchMain.appUserKey, appUser);
+
+                            G4LunchMain.start(MainSigninActivity.this, intent);
+
+
 
                             //my code here
                         } else {
@@ -211,32 +237,8 @@ public class MainSigninActivity extends AppCompatActivity {
                 });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (fbOrGoogle) {
-            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-            if (requestCode == RC_SIGN_IN) {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                try {
-                    // Google Sign In was successful, authenticate with Firebase
-                    GoogleSignInAccount account = task.getResult(ApiException.class);
 
-                    firebaseAuthWithGoogle(account);
-                } catch (ApiException e) {
-                    // Google Sign In failed, update UI appropriately
-
-                }
-            } else {
-                callbackManager.onActivityResult(requestCode, resultCode, data);
-                super.onActivityResult(requestCode, resultCode, data);
-            }
-
-        }
-
-
-    }
-
-//need tou implement after
+    //need tou implement after
     @Override
     public void onStart() {
         super.onStart();
@@ -263,6 +265,7 @@ public class MainSigninActivity extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
                 permissionToken.continuePermissionRequest();
@@ -270,7 +273,6 @@ public class MainSigninActivity extends AppCompatActivity {
             }
         }).check();
     }
-
 
 
     public AlertDialog showDialogOFDeniedPermisions() {
@@ -285,6 +287,32 @@ public class MainSigninActivity extends AppCompatActivity {
         });
         return alertBuilder.show();
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (fbOrGoogle) {
+            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+            if (requestCode == RC_SIGN_IN) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+
+                    firebaseAuthWithGoogle(account);
+                } catch (ApiException e) {
+                    // Google Sign In failed, update UI appropriately
+
+                }
+            } else {
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+
+        }
+
+    }
+
 
 }
 

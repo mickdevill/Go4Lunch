@@ -1,7 +1,6 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -16,8 +15,6 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.CustomListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,15 +32,14 @@ public class GetPlaces {
     PlacesClient placesClient;
     String apiKey;
     Context context;
-    CustomListener customListener;
 
-    public GetPlaces(FusedLocationProviderClient locationProviderClient, PlacesClient placesClient, String apiKey,
-                     Context context, CustomListener customListener) {
+
+    public GetPlaces(FusedLocationProviderClient locationProviderClient, PlacesClient placesClient, String apiKey, Context context) {
         this.locationProviderClient = locationProviderClient;
         this.placesClient = placesClient;
         this.apiKey = apiKey;
         this.context = context;
-        this.customListener = customListener;
+
     }
 
     public static List<CustomPlace> myPlaces = new ArrayList<>();
@@ -58,37 +54,42 @@ public class GetPlaces {
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
 // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        try {
 
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
 
-            placeResponse.addOnCompleteListener(task -> {
+            if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                if (task.isSuccessful()) {
+                Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
 
-                    customListener.onResult(myPlaces);
+                placeResponse.addOnCompleteListener(task -> {
 
-                    FindCurrentPlaceResponse response = task.getResult();
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %f",
-                                placeLikelihood.getPlace().getId(),
-                                placeLikelihood.getLikelihood()));
+                    if (task.isSuccessful()) {
 
-                        getPlacesID.add(placeLikelihood.getPlace().getId());
-                        Log.i(TAG, "and my list is: " + getPlacesID.size());
 
-                        getPlaceDetail(placeLikelihood.getPlace().getId());
+                        FindCurrentPlaceResponse response = task.getResult();
+                        for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                            Log.i(TAG, String.format("Place '%s' has likelihood: %f",
+                                    placeLikelihood.getPlace().getId(),
+                                    placeLikelihood.getLikelihood()));
+
+                            getPlacesID.add(placeLikelihood.getPlace().getId());
+                            Log.i(TAG, "and my list is: " + getPlacesID.size());
+
+                            getPlaceDetail(placeLikelihood.getPlace().getId());
+                        }
+
+
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception instanceof ApiException) {
+                            ApiException apiException = (ApiException) exception;
+                            Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                        }
                     }
-
-
-                } else {
-                    Exception exception = task.getException();
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                    }
-                }
-            });
+                });
+            }
+        } catch (NullPointerException np) {
+            np.printStackTrace();
         }
     }
 

@@ -135,12 +135,12 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     private void getCurentLoc(GoogleMap googleMap) {
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+              != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+              Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            Log.d(TAG, "pas de permissions");
-        }
+          Log.d(TAG, "pas de permissions");
+      }
 
 
         locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {

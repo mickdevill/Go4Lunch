@@ -19,7 +19,7 @@ import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 public class ListView extends Fragment {
 
     RecyclerView mapListView;
-    GetPlaces getPlaces;
+
 
 
 
@@ -35,7 +35,7 @@ public class ListView extends Fragment {
 
         mapListView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mapListView.setAdapter(new ListViewAdapter());
+        mapListView.setAdapter(new ListViewAdapter(GetPlaces.myPlaces));
 
         return view;
     }

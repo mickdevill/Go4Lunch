@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.libraries.places.api.model.Place;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
 
@@ -28,7 +27,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_holder, parent, false);
+                .inflate(R.layout.places_list_holder, parent, false);
         return new Holder(view);
     }
 
