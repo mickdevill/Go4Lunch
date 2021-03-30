@@ -61,7 +61,6 @@ public class G4LunchMain extends AppCompatActivity {
     List<Place.Field> fieldList;
     private static final String apikey = "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
 
-    public static HandlerForMsg handlerForMsg;
     //-----------------------------------------------------------------------------------------
 
 
@@ -81,7 +80,6 @@ public class G4LunchMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_g4_lunch_main);
 
-           handlerForMsg = new HandlerForMsg(G4LunchMain.this);
 
           if (!havyTasksThread.isAlive()) {
               havyTasksThread.start();
@@ -99,9 +97,7 @@ public class G4LunchMain extends AppCompatActivity {
 
          handleMSG(0);
 
-        // TODO: need to overWrite this shit
-       // Thread thread = new Thread(new GetPlasesList());
-       // thread.start();
+
 
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation

@@ -263,7 +263,7 @@ public class MainSigninActivity extends AppCompatActivity {
     //I can add some permissions to this stuf. if i need after in the app
     public void askPermisions() {
         Dexter.withContext(MainSigninActivity.this).withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_WIFI_STATE).withListener(new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                 if (!multiplePermissionsReport.areAllPermissionsGranted()) {

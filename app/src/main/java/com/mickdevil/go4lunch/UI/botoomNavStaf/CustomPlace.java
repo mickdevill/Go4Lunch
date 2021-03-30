@@ -1,5 +1,7 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf;
 
+import android.graphics.Bitmap;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.Place;
@@ -9,57 +11,36 @@ public class CustomPlace {
     private String name;
     private String address;
     private OpeningHours openTime;
-   // private double rate;
     private LatLng latLng;
-
+    private Bitmap bitmap;
 
     public CustomPlace(String name, String address, OpeningHours openTime,
-                       //double rate,
-                       LatLng latLng) {
+                       LatLng latLng, Bitmap bitmap) {
         this.name = name;
         this.address = address;
         this.openTime = openTime;
-       // this.rate = rate;
+        // this.rate = rate;
         this.latLng = latLng;
+        this.bitmap = bitmap;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public OpeningHours getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(OpeningHours openTime) {
-        this.openTime = openTime;
-    }
-
- // public double getRate() {
- //     return rate;
- // }
-
- // public void setRate(double rate) {
- //     this.rate = rate;
- // }
-
     public LatLng getLatLng() {
         return latLng;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 }

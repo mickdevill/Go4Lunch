@@ -1,5 +1,6 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,10 @@ import static java.lang.Double.valueOf;
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder> {
     List<CustomPlace> places;
 
+
     public ListViewAdapter(List<CustomPlace> places) {
         this.places = places;
+
     }
 
     @NonNull
@@ -33,9 +36,17 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        CustomPlace customPlace =  places.get(position);
-holder.restoName.setText(customPlace.getName());
-holder.restoAddress.setText(customPlace.getAddress());
+        CustomPlace customPlace = places.get(position);
+        holder.restoName.setText(customPlace.getName());
+        holder.restoAddress.setText(customPlace.getAddress());
+
+        if (customPlace.getBitmap() != null) {
+            holder.restImg.setImageBitmap(customPlace.getBitmap());
+        }
+        else {
+            holder.restImg.setImageResource(R.drawable.no_place_photo);
+        }
+
 //holder.restoOpenColse.setText(customPlace.getOpenTime().getWeekdayText().get(6));
 //holder.restoDistance.setText(valueOf(customPlace.getLatLng().latitude));
 
@@ -49,7 +60,7 @@ holder.restoAddress.setText(customPlace.getAddress());
     public class Holder extends RecyclerView.ViewHolder {
 
         TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo;
-        ImageView restImg , rateStar1, rateStar2, rateStar3, rateStar4, rateStar5;
+        ImageView restImg, rateStar1, rateStar2, rateStar3, rateStar4, rateStar5;
 
 
         public Holder(@NonNull View itemView) {
@@ -60,7 +71,7 @@ holder.restoAddress.setText(customPlace.getAddress());
             restImg = itemView.findViewById(R.id.restImg);
             restoDistance = itemView.findViewById(R.id.restoDistance);
             workmatesWillGo = itemView.findViewById(R.id.workmatesWillGo);
-       //the stars to set resto rate
+            //the stars to set resto rate
             rateStar1 = itemView.findViewById(R.id.rateStar1);
             rateStar2 = itemView.findViewById(R.id.rateStar2);
             rateStar3 = itemView.findViewById(R.id.rateStar3);

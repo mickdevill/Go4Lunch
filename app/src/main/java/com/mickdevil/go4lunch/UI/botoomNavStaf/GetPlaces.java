@@ -2,6 +2,7 @@ package com.mickdevil.go4lunch.UI.botoomNavStaf;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -9,8 +10,10 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
@@ -43,6 +46,8 @@ public class GetPlaces {
     }
 
     public static List<CustomPlace> myPlaces = new ArrayList<>();
+    public static List<Bitmap> myPlaceIMG = new ArrayList<>();
+
 
     public void getPlacesLikeHood() {
 // Use fields to define the data types to return.
@@ -76,6 +81,8 @@ public class GetPlaces {
                             Log.i(TAG, "and my list is: " + getPlacesID.size());
 
                             getPlaceDetail(placeLikelihood.getPlace().getId());
+                            //  getPlacePhoto(placeLikelihood.getPlace().getId());
+
                         }
 
 
@@ -99,7 +106,7 @@ public class GetPlaces {
 
         // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.OPENING_HOURS, Place.Field.LAT_LNG);
+                Place.Field.OPENING_HOURS, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS);
 
         // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -107,14 +114,35 @@ public class GetPlaces {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
 
-            CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
-                    response.getPlace().getOpeningHours(),
-                    response.getPlace().getLatLng());
+            // Get the photo metadata.
+            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if (metadata == null || metadata.isEmpty()) {
+                Log.w(TAG, "No photo metadata.");
+                return;
+            }
+            final PhotoMetadata photoMetadata = metadata.get(0);
 
-            myPlaces.add(customPlace);
+            // Get the attribution text.
+            final String attributions = photoMetadata.getAttributions();
 
-            Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime()
-            );
+            // Create a FetchPhotoRequest.
+            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500) // Optional.
+                    .setMaxHeight(300) // Optional.
+                    .build();
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+
+                CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
+                        response.getPlace().getOpeningHours(),
+                        response.getPlace().getLatLng(), bitmap);
+
+                myPlaces.add(customPlace);
+
+                Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
+
+            });
+
         })
 
                 .addOnFailureListener((exception) -> {
@@ -130,42 +158,20 @@ public class GetPlaces {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
-//public List<Place>getPlacesDetails(List<String> placeIdList) {
-//    // Define a Place ID.
-//    final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS,
-//            Place.Field.RATING, Place.Field.LAT_LNG);
-//  List<Place> theOutPut = new ArrayList<>();
-//  //  for (int i = 0; i < placeIdList.size(); i++){
-//
-//        final String placeId = placeIdList.get(placeIdList.get(0));
-//
-//// Specify the fields to return.
-//
-//
-//// Construct a request object, passing the place ID and fields array.
-//    final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-//
-//    placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-//        Place place = response.getPlace();
-//        Log.i(TAG, "Place found: " + place.getName());
-//
-//        theOutPut.add(place);
-//
-//    }).addOnFailureListener((exception) -> {
-//        if (exception instanceof ApiException) {
-//            final ApiException apiException = (ApiException) exception;
-//            Log.e(TAG, "Place not found: " + exception.getMessage());
-//            final int statusCode = apiException.getStatusCode();
-//
-//            // TODO: Handle error with given status code.
-//        }
-//    });
-////}
-//
-//    return theOutPut;
-//}
 
 

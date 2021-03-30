@@ -29,9 +29,114 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class deadCode {
 
 
-    //RIP dear code, I will remember you
+
+                                                          /////////////////////////
+                                                       //////////////////////////////                                   //
+                                                     /////////////////////////////////                                  //
+                                                  //////////////////////////////////////                                //
+                                                  //                                  //                        ////////////////////
+                                                  //                                  //                              //////
+                                                  //                                  //                             ///////
+                                                  //                                  //         ////////////////////////////////////////////////////
+                                                  //RIP dear code, I will remember you//        //             FaceBook API & SDK                  //
+                                                  //                                  //        ////////////////////////////////////////////////////
+                                                  //                                  //                            //////
+                                                  //                                  //                            //////
+                                                  //                                  //                            //////
+                                                  //                                  //                           //////
+                                                  //                                  //                           //////
+                                                  //                                  //                          //////
+                                                  //                                  //                         ///////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+//public void getPlacePhoto( String placeID){
+//    // Define a Place ID.
+//    final String placeId = placeID;
+//
+//// Specify fields. Requests for photos must always have the PHOTO_METADATAS field.
+//    final List<Place.Field> fields = Collections.singletonList(Place.Field.PHOTO_METADATAS);
+//
+//// Get a Place object (this example uses fetchPlace(), but you can also use findCurrentPlace())
+//    final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
+//
+//    placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+//        final Place place = response.getPlace();
+//
+//        // Get the photo metadata.
+//        final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+//        if (metadata == null || metadata.isEmpty()) {
+//            Log.w(TAG, "No photo metadata.");
+//            return;
+//        }
+//        final PhotoMetadata photoMetadata = metadata.get(0);
+//
+//        // Get the attribution text.
+//        final String attributions = photoMetadata.getAttributions();
+//
+//        // Create a FetchPhotoRequest.
+//        final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+//                .setMaxWidth(500) // Optional.
+//                .setMaxHeight(300) // Optional.
+//                .build();
+//        placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+//
+//            Bitmap bitmap = fetchPhotoResponse.getBitmap();
+//myPlaceIMG.add(bitmap);
+//
+//
+//
+//        }).addOnFailureListener((exception) -> {
+//            if (exception instanceof ApiException) {
+//                final ApiException apiException = (ApiException) exception;
+//                Log.e(TAG, "Place not found: " + exception.getMessage());
+//                final int statusCode = apiException.getStatusCode();
+//
+//            }
+//        });
+//    });
+//
+//}
+//public List<Place>getPlacesDetails(List<String> placeIdList) {
+//    // Define a Place ID.
+//    final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS,
+//            Place.Field.RATING, Place.Field.LAT_LNG);
+//  List<Place> theOutPut = new ArrayList<>();
+//  //  for (int i = 0; i < placeIdList.size(); i++){
+//
+//        final String placeId = placeIdList.get(placeIdList.get(0));
+//
+//// Specify the fields to return.
+//
+//
+//// Construct a request object, passing the place ID and fields array.
+//    final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+//
+//    placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+//        Place place = response.getPlace();
+//        Log.i(TAG, "Place found: " + place.getName());
+//
+//        theOutPut.add(place);
+//
+//    }).addOnFailureListener((exception) -> {
+//        if (exception instanceof ApiException) {
+//            final ApiException apiException = (ApiException) exception;
+//            Log.e(TAG, "Place not found: " + exception.getMessage());
+//            final int statusCode = apiException.getStatusCode();
+//
+//            // TODO: Handle error with given status code.
+//        }
+//    });
+////}
+//
+//    return theOutPut;
+//}
 
 //  class GetPlasesList implements Runnable {
 
@@ -43,7 +148,9 @@ public class deadCode {
 //      }
 //  }
 
-    //THIS CODE WILL BE MAYBE USED
+    // Thread thread = new Thread(new GetPlasesList());
+    // thread.start();
+
 
 //    public List<String> getPlaceLikeHoo2d() {
 //// Use fields to define the data types to return.
@@ -84,9 +191,6 @@ public class deadCode {
 //        return getPlacesID;
 //
 //    }
-
-
-
 
 
     // public void getPlaces() {
@@ -159,7 +263,6 @@ public class deadCode {
 //              e.printStackTrace();
 //              Log.d(TAG, "error: " + e.getMessage(), e);
 //          }
-
 
 
 //      }
@@ -353,8 +456,6 @@ public class deadCode {
 //     return latLng;
 
 // }
-
-
 
 
 //some stuf from mapFragment
