@@ -26,6 +26,9 @@
     <string name="worckmates">worckmates</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="like">LIKE</string>
+    <string name="call">CALL</string>
+    <string name="website">WEBSITE</string>
 
 
 </resources>

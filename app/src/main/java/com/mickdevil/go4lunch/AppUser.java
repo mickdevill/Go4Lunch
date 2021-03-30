@@ -7,21 +7,22 @@ import android.os.Parcelable;
 import java.net.URI;
 import java.net.URL;
 
-public class AppUser implements Parcelable  {
+public class AppUser implements Parcelable {
 
-    public String ID, Fname, Lname, email, photo;
+    public String ID, Fname, Lname, email, photo, placeID;
 
 
     public AppUser() {
 
     }
 
-    public AppUser(String ID, String Fname, String Lname, String email, String photo) {
+    public AppUser(String ID, String Fname, String Lname, String email, String photo, String placeID) {
         this.ID = ID;
         this.Fname = Fname;
         this.email = email;
         this.Lname = Lname;
-       this.photo = photo;
+        this.photo = photo;
+        this.placeID = placeID;
     }
 
     protected AppUser(Parcel in) {
@@ -30,6 +31,7 @@ public class AppUser implements Parcelable  {
         Lname = in.readString();
         email = in.readString();
         photo = in.readString();
+        placeID = in.readString();
     }
 
     public static final Creator<AppUser> CREATOR = new Creator<AppUser>() {
@@ -56,5 +58,6 @@ public class AppUser implements Parcelable  {
         dest.writeString(Lname);
         dest.writeString(email);
         dest.writeString(photo);
+        dest.writeString(placeID);
     }
 }

@@ -46,7 +46,7 @@ public class GetPlaces {
     }
 
     public static List<CustomPlace> myPlaces = new ArrayList<>();
-    public static List<Bitmap> myPlaceIMG = new ArrayList<>();
+
 
 
     public void getPlacesLikeHood() {

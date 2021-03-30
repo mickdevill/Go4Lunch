@@ -160,7 +160,7 @@ public class MainSigninActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
                             appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
-                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString());
+                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null);
                             Log.d(TAG, "onComplete: " + appUser);
 
                            chekIfUserExistAndPush(appUser);
