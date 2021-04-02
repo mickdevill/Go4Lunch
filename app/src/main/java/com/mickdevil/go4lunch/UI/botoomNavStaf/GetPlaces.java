@@ -51,7 +51,7 @@ public class GetPlaces {
 
     public void getPlacesLikeHood() {
 // Use fields to define the data types to return.
-        List<String> getPlacesID = new ArrayList<>();
+
 
         List<Place.Field> placeFields = Collections.singletonList(Place.Field.ID);
 
@@ -73,12 +73,10 @@ public class GetPlaces {
 
                         FindCurrentPlaceResponse response = task.getResult();
                         for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+
                             Log.i(TAG, String.format("Place '%s' has likelihood: %f",
                                     placeLikelihood.getPlace().getId(),
                                     placeLikelihood.getLikelihood()));
-
-                            getPlacesID.add(placeLikelihood.getPlace().getId());
-                            Log.i(TAG, "and my list is: " + getPlacesID.size());
 
                             getPlaceDetail(placeLikelihood.getPlace().getId());
                             //  getPlacePhoto(placeLikelihood.getPlace().getId());
@@ -106,7 +104,7 @@ public class GetPlaces {
 
         // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.OPENING_HOURS, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS);
+                Place.Field.OPENING_HOURS, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.TYPES, Place.Field.WEBSITE_URI);
 
         // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -114,35 +112,42 @@ public class GetPlaces {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
 
-            // Get the photo metadata.
-            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-            if (metadata == null || metadata.isEmpty()) {
-                Log.w(TAG, "No photo metadata.");
-                return;
-            }
-            final PhotoMetadata photoMetadata = metadata.get(0);
+           // if (place.getTypes().equals(Place.Type.FOOD) ) {
 
-            // Get the attribution text.
-            final String attributions = photoMetadata.getAttributions();
 
-            // Create a FetchPhotoRequest.
-            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                    .setMaxWidth(500) // Optional.
-                    .setMaxHeight(300) // Optional.
-                    .build();
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                // Get the photo metadata.
+                final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+                if (metadata == null || metadata.isEmpty()) {
+                    Log.w(TAG, "No photo metadata.");
+                    return;
+                }
+                final PhotoMetadata photoMetadata = metadata.get(0);
 
-                CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
-                        response.getPlace().getOpeningHours(),
-                        response.getPlace().getLatLng(), bitmap);
+                // Get the attribution text.
+                final String attributions = photoMetadata.getAttributions();
 
-                myPlaces.add(customPlace);
+                // Create a FetchPhotoRequest.
+                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                        .setMaxWidth(500) // Optional.
+                        .setMaxHeight(300) // Optional.
+                        .build();
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
 
-                Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
 
-            });
+                    CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
+                            response.getPlace().getOpeningHours(),
+                            response.getPlace().getLatLng(), bitmap);
 
+                    myPlaces.add(customPlace);
+
+                    Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
+
+
+                });
+
+                //the end of scope
+          //  }
         })
 
                 .addOnFailureListener((exception) -> {

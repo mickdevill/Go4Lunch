@@ -95,9 +95,9 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-         handleMSG(0);
-
-
+         handleMSG(1);
+//GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay();
+//getPlacesTheRightWay.getPlaces();
 
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation

@@ -35,7 +35,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     ImageView placeDetailImage, callResto, LikeResto, webSiteResto;
     RecyclerView placeDetailsRCV;
     FloatingActionButton goToThePlace;
-DatabaseReference DBRef;
+    DatabaseReference DBRef;
 
 
     @Override
@@ -72,6 +72,7 @@ DatabaseReference DBRef;
 
                     placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
                 }
+
             }
 
             @Override
@@ -81,6 +82,27 @@ DatabaseReference DBRef;
         };
         DBRef.addValueEventListener(valueEventListener);
 
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+   finish();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
 
