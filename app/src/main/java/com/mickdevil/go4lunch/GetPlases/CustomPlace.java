@@ -1,4 +1,4 @@
-package com.mickdevil.go4lunch.UI.botoomNavStaf;
+package com.mickdevil.go4lunch.GetPlases;
 
 import android.graphics.Bitmap;
 import android.os.Parcel;
@@ -6,7 +6,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.OpeningHours;
-import com.google.android.libraries.places.api.model.Place;
 
 public class CustomPlace implements Parcelable {
 

@@ -49,6 +49,8 @@
     android:layout_marginTop="30dp"
     android:layout_marginStart="100dp"
     android:layout_centerHorizontal="true"
+  android:text="mark sukerberg blow up my large cook"
+
     />
 
     <com.google.android.gms.common.SignInButton

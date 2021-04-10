@@ -1,7 +1,6 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.PlaceDetailsActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
+import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 
 import java.util.List;
 

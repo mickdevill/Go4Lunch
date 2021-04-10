@@ -18,9 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.CustomPlace;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListViewAdapter;
+import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
 
 import java.util.ArrayList;

@@ -62,6 +62,7 @@ public class G4LunchMain extends AppCompatActivity {
     private static final String apikey = "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
 
     //-----------------------------------------------------------------------------------------
+    private static HavyTasksThread havyTasksThread;
 
 
     //PSF strings
@@ -70,7 +71,8 @@ public class G4LunchMain extends AppCompatActivity {
     public static final String appUserKey = "appUser";
     //-----------------------------------------------------------------------------------------
 
-    HavyTasksThread havyTasksThread = new HavyTasksThread("havy task thread" , G4LunchMain.this);
+    private AppUser appUserFromParcelForTest;
+    private AppUser appUserToUse = null;
 
 
     //the onCreate
@@ -81,10 +83,7 @@ public class G4LunchMain extends AppCompatActivity {
         setContentView(R.layout.activity_g4_lunch_main);
 
 
-          if (!havyTasksThread.isAlive()) {
-              havyTasksThread.start();
-          }
-        AppUser appUser = getIntent().getParcelableExtra(G4LunchMain.appUserKey);
+        appUserFromParcelForTest = getIntent().getParcelableExtra(G4LunchMain.appUserKey);
 
 
         fieldList = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.RATING);
@@ -95,9 +94,15 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-         handleMSG(1);
-//GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay();
-//getPlacesTheRightWay.getPlaces();
+
+//work With my thread!!!!!!!!!!
+        havyTasksThread = new HavyTasksThread("havy task thread", G4LunchMain.this);
+
+        if (!havyTasksThread.isAlive()) {
+            havyTasksThread.start();
+        }
+
+//        handleMSG(1);
 
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation
@@ -136,19 +141,23 @@ public class G4LunchMain extends AppCompatActivity {
         TextView sideNavFLname = header.findViewById(R.id.sideNavFLname);
         TextView sideNavEmail = header.findViewById(R.id.sideNavEmail);
         ImageView sideNavProfilePhoto = header.findViewById(R.id.sideNavProfilePhoto);
-if (appUser.Lname != null) {
-    sideNavFLname.setText(appUser.Fname + " " + appUser.Lname);
-}
-else {
-    sideNavFLname.setText(appUser.Fname);
-}
-        sideNavEmail.setText(appUser.email);
-        Glide.with(sideNavProfilePhoto)
-                .load(appUser.photo)
-                .apply(RequestOptions.circleCropTransform())
-                .into(sideNavProfilePhoto);
 
+        if (appUserFromParcelForTest != null) {
 
+            appUserToUse = appUserFromParcelForTest;
+
+            if (appUserToUse.Lname != null) {
+                sideNavFLname.setText(appUserToUse.Fname + " " + appUserToUse.Lname);
+            } else {
+                sideNavFLname.setText(appUserToUse.Fname);
+            }
+            sideNavEmail.setText(appUserToUse.email);
+            Glide.with(sideNavProfilePhoto)
+                    .load(appUserToUse.photo)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(sideNavProfilePhoto);
+
+        }
         //----------------------------------------------------------------------------------------------------------------------------------------------
 
     }
@@ -193,15 +202,14 @@ else {
     }
 
 
-      private void handleMSG(int taskCode) {
-          Message msg = Message.obtain();
-          msg.what = taskCode;
-          havyTasksThread.getHuendler().sendMessage(msg);
-      }
+    public static void handleMSG(int taskCode) {
+        Message msg = Message.obtain();
+        msg.what = taskCode;
+        havyTasksThread.getHuendler().sendMessage(msg);
+    }
 
 
     public static void start(Activity activity, Intent intent) {
-
         activity.startActivity(intent);
     }
 
@@ -219,8 +227,9 @@ else {
         return apikey;
     }
 
-
-
+    public HavyTasksThread getHavyTasksThread() {
+        return havyTasksThread;
+    }
 
 }
 

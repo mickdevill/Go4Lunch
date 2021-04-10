@@ -18,6 +18,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 
 import java.util.ArrayList;
 import java.util.Arrays;

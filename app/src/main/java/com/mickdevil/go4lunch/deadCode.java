@@ -51,11 +51,137 @@ public class deadCode {
 
 
 
+//  faceBookSignIN.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            fbOrGoogle = false;
+//            faceBookSignIN.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+//                @Override
+//                public void onSuccess(LoginResult loginResult) {
+//                    handleFacebookAccessToken(loginResult.getAccessToken());
+//                }
+
+//                @Override
+//                public void onCancel() {
+//                    Toast.makeText(getApplicationContext(), "ну все пиздец", Toast.LENGTH_LONG).show();
+//                }
+
+//                @Override
+//                public void onError(FacebookException exception) {
+//                    Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//    });
+
+    //fb stuf
+
+
+//  private void fbSignIn() {
+
+//      faceBookSignIN.setReadPermissions("public_profile", "email", "user_birthday", "user_friends");
+
+//      faceBookSignIN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//          @Override
+//          public void onSuccess(LoginResult loginResult) {
+
+
+//              handleFacebookAccessToken(loginResult.getAccessToken());
+
+
+//              GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+//                  @Override
+//                  public void onCompleted(JSONObject object, GraphResponse response) {
+//                      //G4LunchMain.start(MainSigninActivity.this);
+//                  }
+//              });
+
+//              Bundle parameters = new Bundle();
+//              parameters.putString("fields", "id");
+//              request.setParameters(parameters);
+//              request.setAccessToken(loginResult.getAccessToken());
+//              request.executeAsync();
+//          }
+
+//          @Override
+//          public void onCancel() {
+
+//          }
+
+//          @Override
+//          public void onError(FacebookException error) {
+
+//          }
+//      });
+//  }
+
+
+    //  String AUTH_TYPE = "rerequest";
+    //  String EMAIL = "email";
+    //  String USER_POSTS = "user_posts";
 
 
 
 
+    //  faceBookSignIN.setAuthType(AUTH_TYPE);
 
+    //faceBookSignIN.registerCallback(
+    //        mCallbackManager,
+    //        new FacebookCallback<LoginResult>() {
+    //            @Override
+    //            public void onSuccess(LoginResult loginResult) {
+    //                setResult(RESULT_OK);
+    //                fbOrGoogle = false;
+    //                Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
+    //                G4LunchMain.start(MainSigninActivity.this, intent);
+    //            }
+
+    //            @Override
+    //            public void onCancel() {
+    //                setResult(RESULT_CANCELED);
+    //                finish();
+    //            }
+
+    //            @Override
+    //            public void onError(FacebookException e) {
+    //                // Handle exception
+    //            }
+    //        });
+
+    //    faceBookSignIN.setOnClickListener(new View.OnClickListener() {
+    //        @Override
+    //        public void onClick(View v) {
+    //            fbOrGoogle = false;
+    //            // fbSignIn();
+    //
+    //        }
+    //    });
+    // LoginManager.getInstance().logOut();
+    // FirebaseAuth.getInstance().signOut();
+
+    //  private void startSignInActivity() {
+    //      startActivityForResult(
+    //              AuthUI.getInstance()
+    //                      .createSignInIntentBuilder()
+//
+    //                      .setAvailableProviders(
+    //                              Arrays.asList(
+    //                                      new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build())) // FACEBOOK
+    //                      .setIsSmartLockEnabled(false, true)
+//
+    //                      .build(),
+    //              RC_SIGN_IN);
+    //  }
+
+
+    //  googleMap.addMarker(new MarkerOptions().position(me));
+    //  for (int i = 0; i < GetPlaces.myPlaces.size(); i++) {
+    //      googleMap.addMarker(new MarkerOptions().position(GetPlaces.myPlaces.get(i).getLatLng()));
+
+    //  }
+
+    //  Log.d(TAG, "location = " + location);
+    //  //    Myloc = location;
 //public void getPlacePhoto( String placeID){
 //    // Define a Place ID.
 //    final String placeId = placeID;

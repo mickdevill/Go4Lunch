@@ -48,12 +48,22 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.TreadManager.HandlerForMsg;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -72,6 +82,10 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     public final static int GPS_REQUEST_CODE = 90001;
 
+    static double userLat = 0;
+    static double userLng = 0;
+
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -81,6 +95,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
             locationProviderClient = new FusedLocationProviderClient(getContext());
 
+
+            //the main thing in the class
             findMe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,6 +121,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         findMe = view.findViewById(R.id.findMe);
 
         Log.d(TAG, "BTN find me: = " + findMe);
+
         return view;
 
     }
@@ -135,14 +152,12 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     private void getCurentLoc(GoogleMap googleMap) {
 
-      if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-              Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-          Log.d(TAG, "pas de permissions");
-      }
-
-
+            Log.d(TAG, "pas de permissions");
+        }
         locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -150,16 +165,15 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 if (location != null) {
                     LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
-                  //  googleMap.addMarker(new MarkerOptions().position(me));
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
 
-                    for (int i = 0; i < GetPlaces.myPlaces.size(); i++) {
-                        googleMap.addMarker(new MarkerOptions().position(GetPlaces.myPlaces.get(i).getLatLng()));
+userLat = location.getLatitude();
+userLng = location.getLongitude();
 
-                    }
+G4LunchMain.handleMSG(1);
 
-                    Log.d(TAG, "location = " + location);
-                    //    Myloc = location;
+
+
                 }
             }
 
@@ -169,6 +183,46 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 Log.d(TAG, "god damn" + e.getMessage());
             }
         });
+    }
+
+
+
+    public static void getPlaces() {
+
+        Log.d(TAG, "lat lng " + " " + userLat + " " + userLng);
+
+       String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="  + userLat+ "," + userLng +
+               "&radius=5000&type=restaurant&key=" +
+               "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+
+
+
+        String line = "";
+        String data = "";
+
+
+        try {
+            URL url = new URL(myURL);
+            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+            //  urlConnection.setRequestMethod("GET");
+            InputStream inputStream = urlConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            while(line !=null)
+
+            {
+
+                line = bufferedReader.readLine();
+                data += line;
+            }
+
+            Log.d(TAG, "getPlaces: " + data );
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

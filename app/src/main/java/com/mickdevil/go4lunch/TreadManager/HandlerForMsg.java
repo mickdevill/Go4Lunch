@@ -7,8 +7,9 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.GetPlacesTheRightWay;
+import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 
 public class HandlerForMsg extends Handler {
 
@@ -28,8 +29,7 @@ Context context;
                 break;
 
             case 1:
-                GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay();
-                getPlacesTheRightWay.getPlaces();
+       MapFragment.getPlaces();
                 break;
 
         }
