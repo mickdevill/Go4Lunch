@@ -2,8 +2,11 @@
 
     <string name="app_name">Go4lunch</string>
     <string name="app_divise">Find a nice restaurant and invite your co-workers for lunch!</string>
+
     <string name="facebook_app_id">399525961109440</string>
-    <string name="fb_login_protocol_scheme">fb{399525961109440}</string>
+    <string name="fb_login_protocol_scheme">fb399525961109440</string>
+
+
     <string name="title_activity_g4_lunch_main">G4LunchMain</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

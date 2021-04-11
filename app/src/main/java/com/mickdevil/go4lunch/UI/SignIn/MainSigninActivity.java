@@ -1,14 +1,17 @@
 package com.mickdevil.go4lunch.UI.SignIn;
 
+
+
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,13 +24,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,9 +34,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,11 +54,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
 
-import org.json.JSONObject;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,8 +68,6 @@ public class MainSigninActivity extends AppCompatActivity {
     //all things used for auth
 
     private FirebaseAuth firebaseAuth;
-  FacebookAuthProvider facebookAuthProvider;
-  FirebaseUser firebaseUser;
     //my fierBase database
     public FirebaseDatabase database;
     public DatabaseReference fierBaseDBRef;
@@ -84,43 +79,65 @@ public class MainSigninActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 1001;
 
-    public static final int fierUI = 51;
-
     private LoginButton faceBookSignIN;
-
-   // private Button faceBookSignIN;
 
     private com.google.android.gms.common.SignInButton googleSignIn;
 
     private CallbackManager mCallbackManager;
 
-
-    private Boolean fbOrGoogle;
-
-
+private LoginManager loginManager;
 
     AppUser appUser;
+
+    List<String>  permisionsForGodDamnFB = Arrays.asList( "email","public_profile");
+
+ ArrayList<String> permissions = new ArrayList<String>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity);
+        firebaseAuth = FirebaseAuth.getInstance();
+        FacebookSdk.sdkInitialize(MainSigninActivity.this);
         askPermisions();
         configureGoogleClient();
+
+
+        //--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
+        //THIS IS THE FUCKING BEST WAY TO GET THE HASH FOR FACEBOOK. THANK YOU  INDIAN DUDE
+
+      //  try {
+      //      PackageInfo info = getPackageManager().getPackageInfo(
+      //              getPackageName(),
+      //              PackageManager.GET_SIGNATURES);
+      //      for (Signature signature : info.signatures) {
+      //          MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+      //          messageDigest.update(signature.toByteArray());
+      //          Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
+      //      }
+      //  }
+      //  catch (PackageManager.NameNotFoundException e) {
+//
+      //  }
+      //  catch (NoSuchAlgorithmException e) {
+//
+      //  }
+//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
+
+
+
+        permissions.add("email");
+        permissions.add("public_profile");
+
+
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        LoginManager.getInstance().logOut();
+        FirebaseAuth.getInstance().signOut();
 
-
-
-        //init firebaseAuth
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-
-
-
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
         //init fierBase DB
         database = FirebaseDatabase.getInstance();
@@ -133,10 +150,7 @@ public class MainSigninActivity extends AppCompatActivity {
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbOrGoogle = true;
-
                 signInToGoogle();
-
             }
         });
 
@@ -144,7 +158,7 @@ public class MainSigninActivity extends AppCompatActivity {
 
 
       //  faceBookSignIN.setPermissions(Arrays.asList(EMAIL, USER_POSTS));
-       faceBookSignIN.setReadPermissions("email","public_profile");
+       faceBookSignIN.setReadPermissions(  permissions);
         mCallbackManager = CallbackManager.Factory.create();
 
 
@@ -156,7 +170,6 @@ public class MainSigninActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         handleFacebookAccessToken(loginResult.getAccessToken());
-                        Toast.makeText(getApplicationContext(), "vashe nistak", Toast.LENGTH_LONG).show();
                     }
 
 
@@ -182,20 +195,30 @@ public class MainSigninActivity extends AppCompatActivity {
 
 
     private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "my AccessToken: " + token.getToken());
      AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        Toast.makeText(getApplicationContext(), "token henditsa", Toast.LENGTH_LONG).show();
+
      firebaseAuth.signInWithCredential(credential)
-             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+             .addOnCompleteListener(MainSigninActivity.this, new OnCompleteListener<AuthResult>() {
                  @Override
                  public void onComplete(@NonNull Task<AuthResult> task) {
                      if (task.isSuccessful()) {
-                         // Sign in success, update UI with the signed-in user's information
-                         FirebaseUser user = task.getResult().getUser();
+                         Toast.makeText(getApplicationContext(), "ЗАЕБИСЬ!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
 
+                         FirebaseUser firebaseUser = task.getResult().getUser();
 
                          Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
-                         G4LunchMain.start(MainSigninActivity.this, intent);
 
+                       appUser = new AppUser(fierBaseDBRef.getKey(),firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString()
+                       , null);
+
+                         Log.d(TAG, "user FB photo " + firebaseUser.getPhotoUrl().toString());
+
+                       chekIfUserExistAndPush(appUser);
+
+                       intent.putExtra(G4LunchMain.appUserKey, appUser);
+
+                         G4LunchMain.start(MainSigninActivity.this, intent);
 
                      } else {
                          // If sign in fails, display a message to the user.

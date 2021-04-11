@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -157,6 +158,8 @@ public class G4LunchMain extends AppCompatActivity {
                     .apply(RequestOptions.circleCropTransform())
                     .into(sideNavProfilePhoto);
 
+
+
         }
         //----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -167,8 +170,11 @@ public class G4LunchMain extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.g4_lunch_main, menu);
+
+
         return true;
     }
+
 
     //working with menu
     @Override
@@ -185,6 +191,17 @@ public class G4LunchMain extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+int id = item.getItemId();
+if (id == R.id.your_lunch){
+    Toast.makeText(getApplicationContext(), "менюшка работает, все ништяк", Toast.LENGTH_SHORT).show();
+}
+
+        return  true;
+    }
+
 
 
     //this on activity result is used for alot of things. and the only working is autocmplete with places api

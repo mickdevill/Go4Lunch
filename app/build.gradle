@@ -46,46 +46,55 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.navigation:navigation-fragment:2.3.3'
     implementation 'androidx.navigation:navigation-ui:2.3.3'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     implementation 'com.google.firebase:firebase-database:19.7.0'
+
     testImplementation 'junit:junit:4.+'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 //google services
-    implementation platform('com.google.firebase:firebase-bom:26.3.0')//somme fierbase stuа
-    implementation 'com.google.firebase:firebase-auth:20.0.2'//authentification thingss
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'//for the app chat
+   implementation platform('com.google.firebase:firebase-bom:26.3.0')//somme fierbase stuа
+
+
+
+    implementation 'com.google.firebase:firebase-auth:20.0.4'//authentification thingss
+
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'//for the app chat
 
     //facebook stuf
     //implementation 'com.facebook.android:facebook-android-sdk:8.2.0'
     implementation 'com.facebook.android:facebook-login:[4,5)'
 
+
+
     //glide lib to get images
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
-//UI things
-   // implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
-    //implementation 'com.nineoldandroids:library:2.4.0'
 
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:26.3.0')
+
 
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-auth'
+   // implementation 'com.google.firebase:firebase-auth'
 
-    implementation 'com.firebaseui:firebase-ui-auth:3.1.3'
+
     // Google Sign In SDK (only required for Google Sign In)
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
-    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
+
+
 
 
 
@@ -98,6 +107,21 @@ dependencies {
 
 //lib to parse Json and get nearby places
     implementation 'com.android.volley:volley:1.2.0'
+
+
+
+
+
+
+    //implementation 'com.google.firebase:firebase-auth:16.0.5'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+
+
 
 }
 
