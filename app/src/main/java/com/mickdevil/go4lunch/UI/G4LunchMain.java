@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,12 +40,13 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HandlerForMsg;
 import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
+import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class G4LunchMain extends AppCompatActivity {
+public class G4LunchMain extends AppCompatActivity  {
     private static final String TAG = "G4LunchMain";
     //views
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +77,8 @@ public class G4LunchMain extends AppCompatActivity {
     private AppUser appUserFromParcelForTest;
     private AppUser appUserToUse = null;
 
-
+    NavigationView sideNavView;
+    View header;
     //the onCreate
     @SuppressLint("VisibleForTests")
     @Override
@@ -110,7 +113,7 @@ public class G4LunchMain extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //find the drawer layout
         drawer = findViewById(R.id.drawer_layout);
-        NavigationView sideNavView = findViewById(R.id.side_nav_view);
+        sideNavView = findViewById(R.id.side_nav_view);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,8 +124,11 @@ public class G4LunchMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.LEFT);
+                menegeDrawerMenu();
             }
         });
+
+
 
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
         // Passing each menu ID as a set of Ids because each
@@ -137,7 +143,9 @@ public class G4LunchMain extends AppCompatActivity {
 
         //set user info in side nav header and initing this views
 
-        View header = sideNavView.getHeaderView(0);
+        header = sideNavView.getHeaderView(0);
+
+
 
         TextView sideNavFLname = header.findViewById(R.id.sideNavFLname);
         TextView sideNavEmail = header.findViewById(R.id.sideNavEmail);
@@ -176,7 +184,11 @@ public class G4LunchMain extends AppCompatActivity {
     }
 
 
-    //working with menu
+
+
+
+    //WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS
+    //WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -192,17 +204,44 @@ public class G4LunchMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void menegeDrawerMenu(){
 
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-int id = item.getItemId();
-if (id == R.id.your_lunch){
-    Toast.makeText(getApplicationContext(), "менюшка работает, все ништяк", Toast.LENGTH_SHORT).show();
-}
+        MenuItem yourLunch = sideNavView.getMenu().findItem(R.id.your_lunch);
+        MenuItem setthings = sideNavView.getMenu().findItem(R.id.setthings);
+        MenuItem logOut = sideNavView.getMenu().findItem(R.id.log_out);
 
-        return  true;
+        yourLunch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(G4LunchMain.this, "this is my \" YOUR LUNCH\" action", Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        });
+
+        setthings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //this is the last thing i will do becose i need to finish all project to do action on all strings at same time
+                Toast.makeText(G4LunchMain.this, "this is my \" SETTHINGS\" action", Toast.LENGTH_SHORT).show();
+
+
+                return false;
+            }
+        });
+
+        logOut.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+finish();
+                return false;
+            }
+        });
+
     }
 
-
+//WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!!  ////////
+//WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! ////////
 
     //this on activity result is used for alot of things. and the only working is autocmplete with places api
     @Override
@@ -247,6 +286,8 @@ if (id == R.id.your_lunch){
     public HavyTasksThread getHavyTasksThread() {
         return havyTasksThread;
     }
+
+
 
 }
 

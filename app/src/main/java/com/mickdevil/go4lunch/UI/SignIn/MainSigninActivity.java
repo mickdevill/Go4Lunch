@@ -67,10 +67,10 @@ public class MainSigninActivity extends AppCompatActivity {
     private static final String TAG = "MainSigninActivity";
     //all things used for auth
 
-    private FirebaseAuth firebaseAuth;
+    private static FirebaseAuth firebaseAuth;
     //my fierBase database
     public FirebaseDatabase database;
-    public DatabaseReference fierBaseDBRef;
+    public static DatabaseReference fierBaseDBRef;
     public static final String USER_KEY = "App users";
 
     private GoogleSignInClient googleSignInClient;
@@ -408,9 +408,30 @@ private LoginManager loginManager;
 
     }
 
+    public static void getTheFuckOutOfHere(int fromWhereChumba){
+     switch (fromWhereChumba){
+         case 0:
+firebaseAuth.signOut();
+             break;
 
+         case 1:
+LoginManager.getInstance().logOut();
+break;
 
+     }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+   //I need do EXACTLY THIS with the dellete user, becose if the user have register his facebook with the
+        // same mail the app broke and facebook throws auth fail, becose mails are same
+     if (firebaseAuth.getCurrentUser() != null){
+       firebaseAuth.getCurrentUser().delete();
+     }
+
+        LoginManager.getInstance().logOut();
+    }
 }
 
 
