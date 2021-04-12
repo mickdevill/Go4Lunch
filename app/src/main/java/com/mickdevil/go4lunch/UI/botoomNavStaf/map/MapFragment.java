@@ -37,8 +37,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,6 +68,8 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 
 
 public class MapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -79,13 +83,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     private FusedLocationProviderClient locationProviderClient;
 
-
-    public final static int GPS_REQUEST_CODE = 90001;
-
-    static double userLat = 0;
-    static double userLng = 0;
-
-
+    public static Location locationForPlaces;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -158,72 +156,81 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
             Log.d(TAG, "pas de permissions");
         }
-        locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-
-                if (location != null) {
-                    LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
-
-userLat = location.getLatitude();
-userLng = location.getLongitude();
-
-G4LunchMain.handleMSG(1);
+       locationProviderClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+           @Override
+           public boolean isCancellationRequested() {
 
 
+               return false;
+           }
 
-                }
-            }
+           @NonNull
+           @Override
+           public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+               return null;
+           }
+       }).addOnSuccessListener(new OnSuccessListener<Location>() {
+           @Override
+           public void onSuccess(Location location) {
+               if (location != null) {
+                 locationForPlaces = location;
 
-        }).addOnFailureListener(getActivity(), new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "god damn" + e.getMessage());
-            }
-        });
+                   LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
+                   googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
+                   googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
+
+                   G4LunchMain.handleMSG(1);
+
+
+
+               }
+
+
+           }
+       });
+
+
     }
 
 
 
-    public static void getPlaces() {
+//   public static void getPlaces() {
 
-        Log.d(TAG, "lat lng " + " " + userLat + " " + userLng);
+//       Log.d(TAG, "lat lng " + " " + userLat + " " + userLng);
 
-       String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="  + userLat+ "," + userLng +
-               "&radius=5000&type=restaurant&key=" +
-               "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
-
-
-
-        String line = "";
-        String data = "";
+//      String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="  + userLat+ "," + userLng +
+//              "&radius=5000&type=restaurant&key=" +
+//              "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
 
-        try {
-            URL url = new URL(myURL);
-            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-            //  urlConnection.setRequestMethod("GET");
-            InputStream inputStream = urlConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            while(line !=null)
+//       String line = "";
+//       String data = "";
 
-            {
 
-                line = bufferedReader.readLine();
-                data += line;
-            }
+//       try {
+//           URL url = new URL(myURL);
+//           HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+//           //  urlConnection.setRequestMethod("GET");
+//           InputStream inputStream = urlConnection.getInputStream();
+//           BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            Log.d(TAG, "getPlaces: " + data );
+//           while(line !=null)
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//           {
+
+//               line = bufferedReader.readLine();
+//               data += line;
+//           }
+
+//           Log.d(TAG, "getPlaces: " + data );
+
+//       } catch (MalformedURLException e) {
+//           e.printStackTrace();
+//       } catch (IOException e) {
+//           e.printStackTrace();
+//       }
+//   }
 
 
 }

@@ -29,7 +29,8 @@ Context context;
                 break;
 
             case 1:
-       MapFragment.getPlaces();
+       GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay(MapFragment.locationForPlaces);
+getPlacesTheRightWay.getPlaces();
                 break;
 
         }

@@ -51,6 +51,72 @@ public class deadCode {
 
 
 
+//      <!--
+//    The API key for Google Maps-based APIs is defined as a string resource.
+//            (See the file "res/values/google_maps_api.xml").
+//    Note that the API key is linked to the encryption key used to sign the APK.
+//    You need a different API key for each encryption key, including the release key that is used to
+//    sign the APK for publishing.
+//    You can define the keys for the debug and release targets in src/debug/ and src/release/.
+//
+//        <meta-data
+//    android:name="com.google.android.geo.API_KEY"
+//    android:value="@string/google_maps_key" />
+//        <meta-data
+//    android:name="com.google.android.gms.version"
+//    android:value="@integer/google_play_services_version" />
+//
+//        <meta-data android:name="com.facebook.sdk.ApplicationId"
+//    android:value="@string/facebook_app_id"/>
+//        <activity android:name="com.facebook.FacebookActivity"
+//    android:configChanges= "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+//    android:label="@string/app_name" /> <activity android:name="com.facebook.CustomTabActivity"
+//    android:exported="true"> <intent-filter>
+//        <action android:name="android.intent.action.VIEW" />
+//        <category android:name="android.intent.category.DEFAULT" />
+//        <category android:name="android.intent.category.BROWSABLE" />
+//        <data android:scheme="@string/fb_login_protocol_scheme" />
+//    </intent-filter> </activity>
+//            -->
+//
+//
+//        <!--
+//  <meta-data
+//    android:name="com.facebook.sdk.ApplicationId"
+//    android:value="@string/facebook_app_id" />
+//
+//
+//          <meta-data
+//    android:name="com.google.android.geo.API_KEY"
+//    android:value="${mapsApiKey}" />
+//            -->
+
+//        locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//
+//                if (location != null) {
+//                    LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
+//                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
+//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
+//
+//userLat = location.getLatitude();
+//userLng = location.getLongitude();
+//
+//G4LunchMain.handleMSG(1);
+//
+//
+//
+//                }
+//            }
+//
+//        }).addOnFailureListener(getActivity(), new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "god damn" + e.getMessage());
+//            }
+//        });
+
 //  faceBookSignIN.setOnClickListener(new View.OnClickListener() {
 //        @Override
 //        public void onClick(View v) {
