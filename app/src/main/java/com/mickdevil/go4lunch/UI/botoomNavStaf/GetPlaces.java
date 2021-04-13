@@ -75,7 +75,7 @@ public class GetPlaces {
                         FindCurrentPlaceResponse response = task.getResult();
                         for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
 
-                            Log.i(TAG, String.format("Place '%s' has likelihood: %f",
+                            Log.i(TAG, String.format("PlaceG4Lunch '%s' has likelihood: %f",
                                     placeLikelihood.getPlace().getId(),
                                     placeLikelihood.getLikelihood()));
 
@@ -89,7 +89,7 @@ public class GetPlaces {
                         Exception exception = task.getException();
                         if (exception instanceof ApiException) {
                             ApiException apiException = (ApiException) exception;
-                            Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                            Log.e(TAG, "PlaceG4Lunch not found: " + apiException.getStatusCode());
                         }
                     }
                 });
@@ -100,7 +100,7 @@ public class GetPlaces {
     }
 
     public void getPlaceDetail(String placeId) {
-        // Define a Place ID.
+        // Define a PlaceG4Lunch ID.
         //final String placeId = "INSERT_PLACE_ID_HERE";
 
         // Specify the fields to return.
@@ -113,7 +113,7 @@ public class GetPlaces {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
 
-           // if (place.getTypes().equals(Place.Type.FOOD) ) {
+           // if (place.getTypes().equals(PlaceG4Lunch.Type.FOOD) ) {
 
 
                 // Get the photo metadata.
@@ -142,7 +142,7 @@ public class GetPlaces {
 
                     myPlaces.add(customPlace);
 
-                    Log.i(TAG, "Place found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
+                    Log.i(TAG, "PlaceG4Lunch found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
 
 
                 });
@@ -154,7 +154,7 @@ public class GetPlaces {
                 .addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
                         final ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + exception.getMessage());
+                        Log.e(TAG, "PlaceG4Lunch not found: " + exception.getMessage());
                         final int statusCode = apiException.getStatusCode();
                         // TODO: Handle error with given status code.
                     }

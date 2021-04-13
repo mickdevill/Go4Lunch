@@ -51,6 +51,74 @@ public class deadCode {
 
 
 
+    //   johny = parseJohny(doItAgain(theFullResult.get(1)));
+    //   Log.d(TAG, "the max nePage  " + johny);
+    //   theFullResult.add(johny);
+
+    //   for (int i = 0; i < 2 ; i++) {
+    //      cheker = parseJohny(doItAgain(johny));
+    //       johny = cheker;
+    //       Log.d(TAG, "the max nePage  " + johny);
+//
+    //   }
+    //  while (cheker != null) {
+
+    //      int i = 0;
+
+    //      cheker = parseJohny(doItAgain(theFullResult.get(i)));
+
+    //      if (i != 0) {
+    //          if (cheker.remove("next_page_token").toString() == theFullResult.get(i - 1).remove("next_page_token").toString()) {
+    //              break;
+    //          }
+    //      }
+
+    //      if (cheker != null) {
+
+    //          theFullResult.add(cheker);
+
+    //          Log.d(TAG, "my whileD cheker" + theFullResult.size());
+    //      }
+    //      i++;
+
+
+    //  }
+
+
+//      String line = "";
+//      String data = "";
+
+
+//      try {
+//          URL url = new URL(myURL);
+//          HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+//          //  urlConnection.setRequestMethod("GET");
+//          InputStream inputStream = urlConnection.getInputStream();
+//          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+//          while (line != null) {
+
+//              line = bufferedReader.readLine();
+//              data += line;
+//          }
+
+//          JSONObject Johny = new JSONObject(data);
+
+//          String nextPge = Johny.getString("next_page_token");
+
+
+//          Log.d(TAG, "getPlaces: " + nextPge);
+
+
+//      } catch (MalformedURLException e) {
+//          e.printStackTrace();
+//      } catch (IOException e) {
+//          e.printStackTrace();
+//      } catch (JSONException e) {
+//          e.printStackTrace();
+//      }
+
+
 //      <!--
 //    The API key for Google Maps-based APIs is defined as a string resource.
 //            (See the file "res/values/google_maps_api.xml").
@@ -249,17 +317,17 @@ public class deadCode {
     //  Log.d(TAG, "location = " + location);
     //  //    Myloc = location;
 //public void getPlacePhoto( String placeID){
-//    // Define a Place ID.
+//    // Define a PlaceG4Lunch ID.
 //    final String placeId = placeID;
 //
 //// Specify fields. Requests for photos must always have the PHOTO_METADATAS field.
-//    final List<Place.Field> fields = Collections.singletonList(Place.Field.PHOTO_METADATAS);
+//    final List<PlaceG4Lunch.Field> fields = Collections.singletonList(PlaceG4Lunch.Field.PHOTO_METADATAS);
 //
-//// Get a Place object (this example uses fetchPlace(), but you can also use findCurrentPlace())
+//// Get a PlaceG4Lunch object (this example uses fetchPlace(), but you can also use findCurrentPlace())
 //    final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
 //
 //    placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
-//        final Place place = response.getPlace();
+//        final PlaceG4Lunch place = response.getPlace();
 //
 //        // Get the photo metadata.
 //        final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
@@ -287,7 +355,7 @@ public class deadCode {
 //        }).addOnFailureListener((exception) -> {
 //            if (exception instanceof ApiException) {
 //                final ApiException apiException = (ApiException) exception;
-//                Log.e(TAG, "Place not found: " + exception.getMessage());
+//                Log.e(TAG, "PlaceG4Lunch not found: " + exception.getMessage());
 //                final int statusCode = apiException.getStatusCode();
 //
 //            }
@@ -295,11 +363,11 @@ public class deadCode {
 //    });
 //
 //}
-//public List<Place>getPlacesDetails(List<String> placeIdList) {
-//    // Define a Place ID.
-//    final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.OPENING_HOURS,
-//            Place.Field.RATING, Place.Field.LAT_LNG);
-//  List<Place> theOutPut = new ArrayList<>();
+//public List<PlaceG4Lunch>getPlacesDetails(List<String> placeIdList) {
+//    // Define a PlaceG4Lunch ID.
+//    final List<PlaceG4Lunch.Field> placeFields = Arrays.asList(PlaceG4Lunch.Field.ID, PlaceG4Lunch.Field.NAME, PlaceG4Lunch.Field.ADDRESS, PlaceG4Lunch.Field.OPENING_HOURS,
+//            PlaceG4Lunch.Field.RATING, PlaceG4Lunch.Field.LAT_LNG);
+//  List<PlaceG4Lunch> theOutPut = new ArrayList<>();
 //  //  for (int i = 0; i < placeIdList.size(); i++){
 //
 //        final String placeId = placeIdList.get(placeIdList.get(0));
@@ -311,15 +379,15 @@ public class deadCode {
 //    final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
 //
 //    placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-//        Place place = response.getPlace();
-//        Log.i(TAG, "Place found: " + place.getName());
+//        PlaceG4Lunch place = response.getPlace();
+//        Log.i(TAG, "PlaceG4Lunch found: " + place.getName());
 //
 //        theOutPut.add(place);
 //
 //    }).addOnFailureListener((exception) -> {
 //        if (exception instanceof ApiException) {
 //            final ApiException apiException = (ApiException) exception;
-//            Log.e(TAG, "Place not found: " + exception.getMessage());
+//            Log.e(TAG, "PlaceG4Lunch not found: " + exception.getMessage());
 //            final int statusCode = apiException.getStatusCode();
 //
 //            // TODO: Handle error with given status code.
@@ -348,7 +416,7 @@ public class deadCode {
 //// Use fields to define the data types to return.
 //
 //        List<String> getPlacesID = new ArrayList<>();
-//        List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
+//        List<PlaceG4Lunch.Field> placeFields = Collections.singletonList(PlaceG4Lunch.Field.NAME);
 //
 //// Use the builder to create a FindCurrentPlaceRequest.
 //        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
@@ -361,7 +429,7 @@ public class deadCode {
 //            if (response.size() != 0) {
 //
 //                for (PlaceLikelihood placeLikelihood : response) {
-//                    Log.i(TAG, String.format("Place '%s' has likelihood: %f",
+//                    Log.i(TAG, String.format("PlaceG4Lunch '%s' has likelihood: %f",
 //                            placeLikelihood.getPlace().getName(),
 //                            placeLikelihood.getLikelihood()));
 //
@@ -375,7 +443,7 @@ public class deadCode {
 //            //     Exception exception = placeResponse.getException();
 //            //     if (exception instanceof ApiException) {
 //            //         ApiException apiException = (ApiException) exception;
-//            //         Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+//            //         Log.e(TAG, "PlaceG4Lunch not found: " + apiException.getStatusCode());
 //            //     }
 //            // }
 //
@@ -739,4 +807,13 @@ public class deadCode {
 //     });
 // }
 
+
+                                                                                                     /////////////////
+/////////////////                             ///////////                                ///////////////////////vvvvvv
+    //////////////////////          ///////////////////////////////            /////////     /////////vvvvvvvvvv
+    /////////////////////////////////////// THE GRAVE GRAVE WARM  ////////////////////    o   ///////
+    /////////////////////////////////////////////////////////////////////////////////////   /////////
+               ///////////////////////////////           /////////////////////1//////////////////////^^^^^^^^^^
+                        ///////////                                /////////              //////////////////////^^^^
+                                                                                                     ////////////////
 }

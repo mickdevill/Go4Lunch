@@ -9,11 +9,28 @@ import com.google.android.libraries.places.api.model.OpeningHours;
 
 public class CustomPlace implements Parcelable {
 
+
+  //             googlePlaceMap.put("place_name", placeName);
+  //         googlePlaceMap.put("vicinity", vicinity);
+  //         googlePlaceMap.put("lat", latitude);
+  //         googlePlaceMap.put("lng", longitude);
+  //         googlePlaceMap.put("place_id", placeId);
+  //         googlePlaceMap.put("photo_reference", photo);
+  //         googlePlaceMap.put("open_now", String.valueOf(opened));
+
+
+
+
+
+
+
     private String name;
     private String address;
     private OpeningHours openTime;
     private LatLng latLng;
     private Bitmap bitmap;
+
+
 
     public CustomPlace(String name, String address, OpeningHours openTime,
                        LatLng latLng, Bitmap bitmap) {
@@ -89,4 +106,6 @@ public class CustomPlace implements Parcelable {
         dest.writeParcelable(latLng, flags);
         dest.writeParcelable(bitmap, flags);
     }
+
+
 }

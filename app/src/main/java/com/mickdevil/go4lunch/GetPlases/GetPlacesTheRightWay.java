@@ -2,7 +2,9 @@ package com.mickdevil.go4lunch.GetPlases;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -11,6 +13,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPhotoResponse;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.gson.JsonArray;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONArray;
@@ -24,6 +37,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -34,83 +49,43 @@ public class GetPlacesTheRightWay {
     private static final String TAG = "GetPlacesTheRightWay";
 
     Location location;
+    PlacesClient placesClient;
+
 
     public static List<JSONObject> theFullResult = new ArrayList<>();
+    public static List<CustomPlace> places = new ArrayList<>();
 
-
-    public GetPlacesTheRightWay(Location location) {
+    public GetPlacesTheRightWay(Location location, PlacesClient placesClient) {
         this.location = location;
+        this.placesClient = placesClient;
     }
 
     public void getPlaces() {
         String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
-                location.getLongitude() + "&radius=15000&type=restaurant&keyword=kebab&key=" +
+                location.getLongitude() + "&radius=50000&type=restaurant&keyword=kebab&key=" +
                 "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
+
         JSONObject johny = parseJohny(myURL);
-
-        JSONObject cheker = johny;
-
         theFullResult.add(johny);
+        JSONObject cheker = johny;
+        //   Log.d(TAG, "johny is " + johny);
 
-        while (cheker != null){
+        while (cheker != null) {
+            SystemClock.sleep(1500);
+            cheker = parseJohny(doItAgain(johny));
 
-            int i = 0;
-
-            cheker =  parseJohny(doItAgain(theFullResult.get(i)));
-
-            if (i != 0){
-                if (cheker.remove("next_page_token").toString() == theFullResult.get(i-1).remove("next_page_token").toString()){
-                    break;
-                }
+            johny = cheker;
+            if (johny != null) {
+                theFullResult.add(johny);
             }
-
-            if (cheker != null){
-
-                theFullResult.add(cheker);
-
-                Log.d(TAG, "my whileD cheker" +  theFullResult.size());
-            }
-i++;
-
+            //  Log.d(TAG, "johny is " + theFullResult.size());
 
         }
 
+        queDes10EtDes20(theFullResult);
 
 
-
-//      String line = "";
-//      String data = "";
-
-
-//      try {
-//          URL url = new URL(myURL);
-//          HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-//          //  urlConnection.setRequestMethod("GET");
-//          InputStream inputStream = urlConnection.getInputStream();
-//          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-//          while (line != null) {
-
-//              line = bufferedReader.readLine();
-//              data += line;
-//          }
-
-//          JSONObject Johny = new JSONObject(data);
-
-//          String nextPge = Johny.getString("next_page_token");
-
-
-//          Log.d(TAG, "getPlaces: " + nextPge);
-
-
-//      } catch (MalformedURLException e) {
-//          e.printStackTrace();
-//      } catch (IOException e) {
-//          e.printStackTrace();
-//      } catch (JSONException e) {
-//          e.printStackTrace();
-//      }
     }
 
 
@@ -134,7 +109,7 @@ i++;
 
             Johny = new JSONObject(data);
 
-          //  Log.d(TAG, "getPlaces: " + data);
+            //  Log.d(TAG, "getPlaces: " + data);
 
 
         } catch (MalformedURLException e) {
@@ -155,14 +130,16 @@ i++;
         String myURL = "";
 
         try {
+
+
             nextPage = johny.getString("next_page_token");
 
-          //  Log.d(TAG, "doItAgain: " + nextPage);
+            //  Log.d(TAG, "doItAgain: " + nextPage);
 
-            myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
-                    location.getLongitude() + "&radius=15000&type=restaurant&page_token=" + nextPage + "&key=" +
+            myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + nextPage + "&key=" +
 
                     "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -172,6 +149,154 @@ i++;
         return myURL;
 
     }
+
+
+    private List<JSONObject> queDes10EtDes20(List<JSONObject> objects) {
+
+        JSONObject jah;
+        JSONArray result;
+
+        List<JSONObject> allMyPlaces = new ArrayList<>();
+
+        String name;
+        String address;
+        OpeningHours openTime;
+        LatLng latLng;
+        Bitmap bitmap;
+        boolean isOpen = false;
+
+
+        for (Iterator<JSONObject> iterator = objects.iterator(); iterator.hasNext(); ) {
+            jah = iterator.next();
+
+            try {
+                result = jah.getJSONArray("results");
+
+                for (int i = 0; i < result.length(); i++) {
+                    allMyPlaces.add((JSONObject) result.get(i));
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        Log.d(TAG, "decriptThatShit:  " + allMyPlaces.size());
+
+
+        return allMyPlaces;
+
+    }
+
+
+    public List<PlaceG4Lunch> createTheFinalList(List<JSONObject> allMyPlaces) {
+
+        List<PlaceG4Lunch> theFinalList = new ArrayList<>();
+        PlaceG4Lunch placeG4Lunch;
+
+        JSONObject thatPlace;
+
+        String placeName = "empty";
+        String vicinity = "empty";
+        double latitude = 66.666666;
+        double longitude = 66.666666;
+        String placeId = "empty";
+        boolean opened = false;
+        Bitmap photo;
+        boolean isSomeBodyGoing = false;
+
+
+        for (Iterator<JSONObject> iterator = allMyPlaces.iterator(); iterator.hasNext(); ) {
+
+            thatPlace = iterator.next();
+
+            try {
+                if (thatPlace.get("name") != null) {
+                    placeName = thatPlace.getString("name");
+                }
+
+                if (thatPlace.get("vicinity") != null) {
+                    vicinity = thatPlace.getString("vicinity");
+                }
+
+                if (thatPlace.get("place_id") != null) {
+                    placeId = thatPlace.getString("place_id");
+                }
+
+
+                if (thatPlace.getJSONObject("geometry").getJSONObject("location").getString("lat") != null) {
+                    latitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+
+                }
+
+                if (thatPlace.getJSONObject("geometry").getJSONObject("location").getString("lng") != null) {
+                    longitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+
+                }
+
+                if (thatPlace.getJSONObject("opening_hours") != null) {
+                    opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
+                }
+
+
+                final List<Place.Field> fields = Collections.singletonList(Place.Field.PHOTO_METADATAS);
+
+                final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(thatPlace.getString("place_id"), fields);
+
+                placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+                    final Place place = response.getPlace();
+
+                    // Get the photo metadata.
+                    final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+                    if (metadata == null || metadata.isEmpty()) {
+                        Log.w(TAG, "No photo metadata.");
+                        return;
+                    }
+                    final PhotoMetadata photoMetadata = metadata.get(0);
+
+                    // Get the attribution text.
+                    final String attributions = photoMetadata.getAttributions();
+
+                    // Create a FetchPhotoRequest.
+                    final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                            .setMaxWidth(500) // Optional.
+                            .setMaxHeight(300) // Optional.
+                            .build();
+                    placesClient.fetchPhoto(photoRequest).addOnSuccessListener(new OnSuccessListener<FetchPhotoResponse>() {
+                        @Override
+                        public void onSuccess(FetchPhotoResponse fetchPhotoResponse) {
+                      photo =  fetchPhotoResponse.getBitmap();
+
+
+
+                        }
+                    }).addOnFailureListener((exception) -> {
+
+                        if (exception instanceof ApiException) {
+                            final ApiException apiException = (ApiException) exception;
+                            Log.e(TAG, "Place not found: " + exception.getMessage());
+                            final int statusCode = apiException.getStatusCode();
+                            // TODO: Handle error with given status code.
+                        }
+                    });
+                });
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+        return theFinalList;
+
+    }
+
 
 }
 
