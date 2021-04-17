@@ -100,7 +100,7 @@ public class G4LunchMain extends AppCompatActivity  {
 
 
 //work With my thread!!!!!!!!!!
-        havyTasksThread = new HavyTasksThread("havy task thread", G4LunchMain.this);
+        havyTasksThread = new HavyTasksThread("havy task thread", G4LunchMain.this, G4LunchMain.this);
 
         if (!havyTasksThread.isAlive()) {
             havyTasksThread.start();

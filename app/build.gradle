@@ -80,6 +80,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
 
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
 
 // Import the BoM for the Firebase platform

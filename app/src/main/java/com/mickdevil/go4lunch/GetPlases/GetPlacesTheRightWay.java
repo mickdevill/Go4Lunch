@@ -3,6 +3,7 @@ package com.mickdevil.go4lunch.GetPlases;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.SystemClock;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.gson.JsonArray;
+import com.google.maps.android.SphericalUtil;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONArray;
@@ -49,15 +51,13 @@ public class GetPlacesTheRightWay {
     private static final String TAG = "GetPlacesTheRightWay";
 
     Location location;
-    PlacesClient placesClient;
 
 
     public static List<JSONObject> theFullResult = new ArrayList<>();
     public static List<CustomPlace> places = new ArrayList<>();
 
-    public GetPlacesTheRightWay(Location location, PlacesClient placesClient) {
+    public GetPlacesTheRightWay(Location location) {
         this.location = location;
-        this.placesClient = placesClient;
     }
 
     public void getPlaces() {
@@ -68,6 +68,8 @@ public class GetPlacesTheRightWay {
 
         JSONObject johny = parseJohny(myURL);
         theFullResult.add(johny);
+        Log.d(TAG, "getPlaces: " + johny);
+
         JSONObject cheker = johny;
         //   Log.d(TAG, "johny is " + johny);
 
@@ -199,14 +201,16 @@ public class GetPlacesTheRightWay {
 
         JSONObject thatPlace;
 
-        String placeName = "empty";
-        String vicinity = "empty";
+        String placeName;
+        String vicinity;
         double latitude = 66.666666;
         double longitude = 66.666666;
-        String placeId = "empty";
+        String placeId;
         boolean opened = false;
         Bitmap photo;
         boolean isSomeBodyGoing = false;
+        double distenceToUser;
+        JSONArray photosArray;
 
 
         for (Iterator<JSONObject> iterator = allMyPlaces.iterator(); iterator.hasNext(); ) {
@@ -214,85 +218,55 @@ public class GetPlacesTheRightWay {
             thatPlace = iterator.next();
 
             try {
-                if (thatPlace.get("name") != null) {
-                    placeName = thatPlace.getString("name");
-                }
 
-                if (thatPlace.get("vicinity") != null) {
-                    vicinity = thatPlace.getString("vicinity");
-                }
+                placeName = thatPlace.getString("name");
 
-                if (thatPlace.get("place_id") != null) {
-                    placeId = thatPlace.getString("place_id");
-                }
+                vicinity = thatPlace.getString("vicinity");
 
+                placeId = thatPlace.getString("place_id");
 
-                if (thatPlace.getJSONObject("geometry").getJSONObject("location").getString("lat") != null) {
-                    latitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                latitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
 
-                }
+                longitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
 
-                if (thatPlace.getJSONObject("geometry").getJSONObject("location").getString("lng") != null) {
-                    longitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-
-                }
-
-                if (thatPlace.getJSONObject("opening_hours") != null) {
-                    opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
-                }
+                opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
 
 
-                final List<Place.Field> fields = Collections.singletonList(Place.Field.PHOTO_METADATAS);
-
-                final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(thatPlace.getString("place_id"), fields);
-
-                placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
-                    final Place place = response.getPlace();
-
-                    // Get the photo metadata.
-                    final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-                    if (metadata == null || metadata.isEmpty()) {
-                        Log.w(TAG, "No photo metadata.");
-                        return;
-                    }
-                    final PhotoMetadata photoMetadata = metadata.get(0);
-
-                    // Get the attribution text.
-                    final String attributions = photoMetadata.getAttributions();
-
-                    // Create a FetchPhotoRequest.
-                    final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                            .setMaxWidth(500) // Optional.
-                            .setMaxHeight(300) // Optional.
-                            .build();
-                    placesClient.fetchPhoto(photoRequest).addOnSuccessListener(new OnSuccessListener<FetchPhotoResponse>() {
-                        @Override
-                        public void onSuccess(FetchPhotoResponse fetchPhotoResponse) {
-                      photo =  fetchPhotoResponse.getBitmap();
+                photosArray = thatPlace.getJSONArray("photos");
+                String photoReference = photosArray.getString(3);
 
 
 
-                        }
-                    }).addOnFailureListener((exception) -> {
+                URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                        photoReference +"&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk");
+                HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                //  urlConnection.setRequestMethod("GET");
+                InputStream inputStream = urlConnection.getInputStream();
+              photo = BitmapFactory.decodeStream(inputStream);
 
-                        if (exception instanceof ApiException) {
-                            final ApiException apiException = (ApiException) exception;
-                            Log.e(TAG, "Place not found: " + exception.getMessage());
-                            final int statusCode = apiException.getStatusCode();
-                            // TODO: Handle error with given status code.
-                        }
-                    });
-                });
+              LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+              LatLng placeLatLng = new LatLng(latitude, longitude);
 
+                distenceToUser = SphericalUtil.computeDistanceBetween(user, placeLatLng);
+
+if (placeName != null && placeId != null && photo != null && vicinity != null) {
+    placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
+            false, new ArrayList<>(), distenceToUser);
+theFinalList.add(placeG4Lunch);
+}
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
 
         }
 
-
+        Log.d(TAG, "createTheFinalList: " + theFinalList.size());
         return theFinalList;
 
     }

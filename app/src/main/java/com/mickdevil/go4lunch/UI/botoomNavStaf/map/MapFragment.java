@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.android.SphericalUtil;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -180,6 +181,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
 
                    G4LunchMain.handleMSG(1);
+
 
 
 

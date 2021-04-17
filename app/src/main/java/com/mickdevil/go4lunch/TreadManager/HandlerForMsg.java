@@ -1,5 +1,6 @@
 package com.mickdevil.go4lunch.TreadManager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -14,9 +15,10 @@ import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 public class HandlerForMsg extends Handler {
 
 Context context;
-
-    public HandlerForMsg(Context context) {
+    Activity mActivity;
+    public HandlerForMsg(Context context, Activity mActivity) {
         this.context = context;
+   this.mActivity = mActivity;
     }
 
     @Override

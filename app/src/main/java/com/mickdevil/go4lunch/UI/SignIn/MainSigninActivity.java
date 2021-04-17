@@ -108,22 +108,22 @@ private LoginManager loginManager;
 //--------------------------------------------------------------------------------------------
         //THIS IS THE FUCKING BEST WAY TO GET THE HASH FOR FACEBOOK. THANK YOU  INDIAN DUDE
 
-      //  try {
-      //      PackageInfo info = getPackageManager().getPackageInfo(
-      //              getPackageName(),
-      //              PackageManager.GET_SIGNATURES);
-      //      for (Signature signature : info.signatures) {
-      //          MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-      //          messageDigest.update(signature.toByteArray());
-      //          Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
-      //      }
-      //  }
-      //  catch (PackageManager.NameNotFoundException e) {
-//
-      //  }
-      //  catch (NoSuchAlgorithmException e) {
-//
-      //  }
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    getPackageName(),
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+                messageDigest.update(signature.toByteArray());
+                Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+
+        }
+        catch (NoSuchAlgorithmException e) {
+
+        }
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
 
