@@ -203,7 +203,6 @@ private LoginManager loginManager;
                  @Override
                  public void onComplete(@NonNull Task<AuthResult> task) {
                      if (task.isSuccessful()) {
-                         Toast.makeText(getApplicationContext(), "ЗАЕБИСЬ!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
 
                          FirebaseUser firebaseUser = task.getResult().getUser();
 

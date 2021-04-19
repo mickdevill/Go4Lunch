@@ -52,6 +52,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
+import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HandlerForMsg;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
@@ -86,11 +87,15 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     public static Location locationForPlaces;
 
+    private static GoogleMap TheStaticMap;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @SuppressLint("VisibleForTests")
         @Override
         public void onMapReady(GoogleMap googleMap) {
+
+            TheStaticMap = googleMap;
 
             locationProviderClient = new FusedLocationProviderClient(getContext());
 
@@ -195,44 +200,24 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
 
-
-//   public static void getPlaces() {
-
-//       Log.d(TAG, "lat lng " + " " + userLat + " " + userLng);
-
-//      String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="  + userLat+ "," + userLng +
-//              "&radius=5000&type=restaurant&key=" +
-//              "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
+    PlaceG4Lunch placeG4Lunch;
+    LatLng latLng;
 
 
+        for (int i = 0; i < places.size(); i++) {
+        placeG4Lunch = places.get(i);
+        latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
+        TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
 
-//       String line = "";
-//       String data = "";
 
 
-//       try {
-//           URL url = new URL(myURL);
-//           HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-//           //  urlConnection.setRequestMethod("GET");
-//           InputStream inputStream = urlConnection.getInputStream();
-//           BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    }
 
-//           while(line !=null)
+}
 
-//           {
 
-//               line = bufferedReader.readLine();
-//               data += line;
-//           }
 
-//           Log.d(TAG, "getPlaces: " + data );
-
-//       } catch (MalformedURLException e) {
-//           e.printStackTrace();
-//       } catch (IOException e) {
-//           e.printStackTrace();
-//       }
-//   }
 
 
 }

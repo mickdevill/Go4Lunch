@@ -26,6 +26,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.gson.JsonArray;
 import com.google.maps.android.SphericalUtil;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONArray;
@@ -47,24 +48,26 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class GetPlacesTheRightWay {
 
+    public static List<PlaceG4Lunch> finalPlacesResult = new ArrayList<>();
+
 
     private static final String TAG = "GetPlacesTheRightWay";
 
     Location location;
 
-
-    public static List<JSONObject> theFullResult = new ArrayList<>();
-    public static List<CustomPlace> places = new ArrayList<>();
-
     public GetPlacesTheRightWay(Location location) {
         this.location = location;
     }
+
+
+
 
     public void getPlaces() {
         String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
                 location.getLongitude() + "&radius=50000&type=restaurant&keyword=kebab&key=" +
                 "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
+         List<JSONObject> theFullResult = new ArrayList<>();
 
         JSONObject johny = parseJohny(myURL);
         theFullResult.add(johny);
@@ -85,7 +88,11 @@ public class GetPlacesTheRightWay {
 
         }
 
-        queDes10EtDes20(theFullResult);
+      finalPlacesResult = createTheFinalList(queDes10EtDes20(theFullResult));
+
+
+        G4LunchMain.handleMSG(2);
+
 
 
     }

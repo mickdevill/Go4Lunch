@@ -35,6 +35,15 @@ Context context;
 getPlacesTheRightWay.getPlaces();
                 break;
 
+            case 2:
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MapFragment.PutMarckersOnMap(GetPlacesTheRightWay.finalPlacesResult);
+                    }
+                });
+                break;
+
         }
 
 
