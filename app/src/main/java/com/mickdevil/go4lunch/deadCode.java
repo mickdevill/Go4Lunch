@@ -51,6 +51,48 @@ public class deadCode {
 
 
 
+
+
+
+
+//   public static void getPlaces() {
+
+//       Log.d(TAG, "lat lng " + " " + userLat + " " + userLng);
+
+//      String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="  + userLat+ "," + userLng +
+//              "&radius=5000&type=restaurant&key=" +
+//              "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+
+
+
+//       String line = "";
+//       String data = "";
+
+
+//       try {
+//           URL url = new URL(myURL);
+//           HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+//           //  urlConnection.setRequestMethod("GET");
+//           InputStream inputStream = urlConnection.getInputStream();
+//           BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+//           while(line !=null)
+
+//           {
+
+//               line = bufferedReader.readLine();
+//               data += line;
+//           }
+
+//           Log.d(TAG, "getPlaces: " + data );
+
+//       } catch (MalformedURLException e) {
+//           e.printStackTrace();
+//       } catch (IOException e) {
+//           e.printStackTrace();
+//       }
+//   }
+
     //   johny = parseJohny(doItAgain(theFullResult.get(1)));
     //   Log.d(TAG, "the max nePage  " + johny);
     //   theFullResult.add(johny);
@@ -816,4 +858,22 @@ public class deadCode {
                ///////////////////////////////           /////////////////////1//////////////////////^^^^^^^^^^
                         ///////////                                /////////              //////////////////////^^^^
                                                                                                      ////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //hey dude, the one who reed it, try to get high when you code next time, it will increese the concentration
+
+
 }
