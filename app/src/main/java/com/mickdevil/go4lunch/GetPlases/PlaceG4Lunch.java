@@ -8,19 +8,22 @@ import java.util.List;
 
 public class PlaceG4Lunch implements Parcelable {
 
-  private String placeName;
-  private String vicinity;
-  private double latitude;
-  private double longitude;
-  private String placeId;
-  private boolean opened;
-  private Bitmap photo;
-  private boolean isSomeBodyGoing;
-  private List<String> usersMails;
-  private double distenceToUser;
+    private String placeName;
+    private String vicinity;
+    private double latitude;
+    private double longitude;
+    private String placeId;
+    private boolean opened;
+    private Bitmap photo;
+    private boolean isSomeBodyGoing;
+    private List<String> usersMails;
+    private double distenceToUser;
+    private String photoReff;
+    private double rating;
 
-    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double
-            longitude, String placeId, boolean opened, Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser) {
+
+    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId, boolean opened,
+                        Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser, String photoReff, double rating) {
         this.placeName = placeName;
         this.vicinity = vicinity;
         this.latitude = latitude;
@@ -31,6 +34,8 @@ public class PlaceG4Lunch implements Parcelable {
         this.isSomeBodyGoing = isSomeBodyGoing;
         this.usersMails = usersMails;
         this.distenceToUser = distenceToUser;
+        this.photoReff = photoReff;
+        this.rating = rating;
     }
 
     protected PlaceG4Lunch(Parcel in) {
@@ -44,25 +49,8 @@ public class PlaceG4Lunch implements Parcelable {
         isSomeBodyGoing = in.readByte() != 0;
         usersMails = in.createStringArrayList();
         distenceToUser = in.readDouble();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(placeName);
-        dest.writeString(vicinity);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeString(placeId);
-        dest.writeByte((byte) (opened ? 1 : 0));
-        dest.writeParcelable(photo, flags);
-        dest.writeByte((byte) (isSomeBodyGoing ? 1 : 0));
-        dest.writeStringList(usersMails);
-        dest.writeDouble(distenceToUser);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        photoReff = in.readString();
+        rating = in.readDouble();
     }
 
     public static final Creator<PlaceG4Lunch> CREATOR = new Creator<PlaceG4Lunch>() {
@@ -155,5 +143,42 @@ public class PlaceG4Lunch implements Parcelable {
 
     public void setDistenceToUser(double distenceToUser) {
         this.distenceToUser = distenceToUser;
+    }
+
+    public String getPhotoReff() {
+        return photoReff;
+    }
+
+    public void setPhotoReff(String photoReff) {
+        this.photoReff = photoReff;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(placeName);
+        parcel.writeString(vicinity);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(longitude);
+        parcel.writeString(placeId);
+        parcel.writeByte((byte) (opened ? 1 : 0));
+        parcel.writeParcelable(photo, i);
+        parcel.writeByte((byte) (isSomeBodyGoing ? 1 : 0));
+        parcel.writeStringList(usersMails);
+        parcel.writeDouble(distenceToUser);
+        parcel.writeString(photoReff);
+        parcel.writeDouble(rating);
     }
 }

@@ -32,6 +32,8 @@
     <string name="like">LIKE</string>
     <string name="call">CALL</string>
     <string name="website">WEBSITE</string>
+    <string name="isOpen">it\'s open, and wait for you</string>
+    <string name="isClose">it\'s close for now</string>
 
 
 </resources>

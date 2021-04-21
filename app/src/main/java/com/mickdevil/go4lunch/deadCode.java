@@ -47,12 +47,79 @@ public class deadCode {
                                                   //                                  //                           //////
                                                   //                                  //                          //////
                                                   //                                  //                         ///////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//   else {
+//       try {
+//       URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+//               place.getPhotoReff() + "&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk");
+//       URLConnection urlConnection = null;
+
+
+//           urlConnection = (HttpsURLConnection) url.openConnection();
+
+//           InputStream inputStream = urlConnection.getInputStream();
+//       Bitmap photo = BitmapFactory.decodeStream(inputStream);
+
+//           if (photo == null){
+//               holder.restImg.setImageResource(R.drawable.no_place_photo);
+//           }
+//           else{
+//               holder.restImg.setImageBitmap(photo);
+//           }
+
+
+
+//   } catch (IOException e) {
+//           e.printStackTrace();
+//       }
+
+
+//   }
+
+
+    //    try {
+    //    if (place.getPhoto() == null && place.getPhotoReff() != null){
+    //      URL  url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+    //                place.getPhotoReff() + "&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk");
+    //        URLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+    //        InputStream inputStream = urlConnection.getInputStream();
+    //       Bitmap photo = BitmapFactory.decodeStream(inputStream);
+
+    //           holder.restImg.setImageBitmap(photo);
+
+    //    }
+    //    else {
+    //        holder.restImg.setImageResource(R.drawable.no_place_photo);
+    //    }
+
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    }
 
 
 
 
 
+
+//        holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(v.getContext(), PlaceDetailsActivity.class);
+//        intent.putExtra(PlaceDetailsActivity.myCustomPlacePlarcelable, customPlace);
+//                v.getContext().startActivity(intent);
+//
+//
+//
+//            }
+//        });
+
+//holder.restoOpenColse.setText(customPlace.getOpenTime().getWeekdayText().get(6));
+//holder.restoDistance.setText(valueOf(customPlace.getLatLng().latitude));
 
 
 //   public static void getPlaces() {
@@ -873,7 +940,7 @@ public class deadCode {
 
 
 
-    //hey dude, the one who reed it, try to get high when you code next time, it will increese the concentration
+    //hey dude, the one who reed it, try to get high when you code next time, it will make you feel better XD
 
 
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
@@ -35,7 +36,7 @@ public class ListView extends Fragment {
 
         mapListView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mapListView.setAdapter(new ListViewAdapter(GetPlaces.myPlaces));
+        mapListView.setAdapter(new ListViewAdapter(GetPlacesTheRightWay.finalPlacesResult));
 
         return view;
     }

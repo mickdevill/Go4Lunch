@@ -1,6 +1,8 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +13,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.PlaceDetailsActivity;
 import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static java.lang.Double.valueOf;
 
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder> {
-    List<CustomPlace> places;
+    List<PlaceG4Lunch> places;
 
 
-    public ListViewAdapter(List<CustomPlace> places) {
+    public ListViewAdapter(List<PlaceG4Lunch> places) {
         this.places = places;
 
     }
@@ -38,31 +47,54 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        CustomPlace customPlace = places.get(position);
-        holder.restoName.setText(customPlace.getName());
-        holder.restoAddress.setText(customPlace.getAddress());
+        PlaceG4Lunch place = places.get(position);
+        holder.restoName.setText(place.getPlaceName());
 
-        if (customPlace.getBitmap() != null) {
-            holder.restImg.setImageBitmap(customPlace.getBitmap());
+        holder.restoDistance.setText(cutTheDistence(valueOf(place.getDistenceToUser()).toString()));
+
+        if (place.getVicinity().contains(",")) {
+            holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
+        }else {
+            holder.restoAddress.setText(place.getVicinity());
         }
-        else {
+
+        if (place.getPhoto() != null) {
+            holder.restImg.setImageBitmap(place.getPhoto());
+        }
+//set placePhoto
+    if (place.getPhoto() != null){
+        holder.restImg.setImageBitmap(place.getPhoto());
+    }
+       else{
             holder.restImg.setImageResource(R.drawable.no_place_photo);
         }
 
-        holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), PlaceDetailsActivity.class);
-intent.putExtra(PlaceDetailsActivity.myCustomPlacePlarcelable, customPlace);
-                v.getContext().startActivity(intent);
+       if (place.isOpened()){
+           holder.restoOpenColse.setText(R.string.isOpen);
 
+       }else {
+           holder.restoOpenColse.setText(R.string.isClose);
+       }
 
+       if (place.getRating() > 1.6 && place.getRating() < 3.2){
+           holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+       }
+       if (place.getRating() > 3.2 && place.getRating() < 4){
+           holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+           holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+       }
+        if (place.getRating() > 4){
+            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+            holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+            holder.rateStar3.setImageResource(R.drawable.star_rate_24);
+        }
 
-            }
-        });
+       holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
 
-//holder.restoOpenColse.setText(customPlace.getOpenTime().getWeekdayText().get(6));
-//holder.restoDistance.setText(valueOf(customPlace.getLatLng().latitude));
+           }
+       });
 
     }
 
@@ -74,7 +106,7 @@ intent.putExtra(PlaceDetailsActivity.myCustomPlacePlarcelable, customPlace);
     public class Holder extends RecyclerView.ViewHolder {
 
         TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo;
-        ImageView restImg, rateStar1, rateStar2, rateStar3, rateStar4, rateStar5;
+        ImageView restImg, rateStar1, rateStar2, rateStar3;
 RelativeLayout placesListViewHolder;
 
         public Holder(@NonNull View itemView) {
@@ -87,15 +119,28 @@ RelativeLayout placesListViewHolder;
             workmatesWillGo = itemView.findViewById(R.id.workmatesWillGo);
             placesListViewHolder = itemView.findViewById(R.id.placesListViewHolder);
 
-
             //the stars to set resto rate
             rateStar1 = itemView.findViewById(R.id.rateStar1);
             rateStar2 = itemView.findViewById(R.id.rateStar2);
             rateStar3 = itemView.findViewById(R.id.rateStar3);
-            rateStar4 = itemView.findViewById(R.id.rateStar4);
-            rateStar5 = itemView.findViewById(R.id.rateStar5);
+
 
 
         }
     }
+
+private String cutTheAdress(String vicinity){
+        String result;
+        result = vicinity.substring(0, vicinity.indexOf(","));
+        return result;
+    }
+
+    private String cutTheDistence(String distence){
+        String result;
+        result = distence.substring(0, distence.indexOf(".")) + "m";
+        return result;
+
+}
+
+
 }

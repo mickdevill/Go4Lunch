@@ -183,7 +183,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
                    LatLng me = new LatLng(location.getLatitude(), location.getLongitude());
                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(me));
-                   googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 16));
+                   googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(me, 12));
 
                    G4LunchMain.handleMSG(1);
 
@@ -203,15 +203,11 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
     PlaceG4Lunch placeG4Lunch;
     LatLng latLng;
-
-
-        for (int i = 0; i < places.size(); i++) {
+    for (int i = 0; i < places.size(); i++) {
         placeG4Lunch = places.get(i);
         latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
         TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
-
-
-
+        Log.d(TAG, "PutMarckersOnMap: the markers work");
     }
 
 }

@@ -60,14 +60,12 @@ public class GetPlacesTheRightWay {
     }
 
 
-
-
     public void getPlaces() {
         String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
-                location.getLongitude() + "&radius=50000&type=restaurant&keyword=kebab&key=" +
+                location.getLongitude() + "&radius=5000&type=restaurant&keyword=kebab&key=" +
                 "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
-         List<JSONObject> theFullResult = new ArrayList<>();
+        List<JSONObject> theFullResult = new ArrayList<>();
 
         JSONObject johny = parseJohny(myURL);
         theFullResult.add(johny);
@@ -88,11 +86,10 @@ public class GetPlacesTheRightWay {
 
         }
 
-      finalPlacesResult = createTheFinalList(queDes10EtDes20(theFullResult));
+        finalPlacesResult = createTheFinalList(queDes10EtDes20(theFullResult));
 
 
         G4LunchMain.handleMSG(2);
-
 
 
     }
@@ -214,11 +211,18 @@ public class GetPlacesTheRightWay {
         double longitude = 66.666666;
         String placeId;
         boolean opened = false;
-        Bitmap photo;
+        Bitmap photo = null;
         boolean isSomeBodyGoing = false;
         double distenceToUser;
+        double rating;
+        int photoCount = 10;
+        String photoReff;
         JSONArray photosArray;
 
+
+        URL url;
+        InputStream inputStream;
+        HttpsURLConnection urlConnection;
 
         for (Iterator<JSONObject> iterator = allMyPlaces.iterator(); iterator.hasNext(); ) {
 
@@ -238,29 +242,39 @@ public class GetPlacesTheRightWay {
 
                 opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
 
+                rating = thatPlace.getDouble("rating");
 
+                //   photosArray = thatPlace.getJSONArray("photos");
                 photosArray = thatPlace.getJSONArray("photos");
-                String photoReference = photosArray.getString(3);
+
+                JSONObject phtotoObj = (JSONObject) photosArray.getJSONObject(0);
 
 
+                photoReff = phtotoObj.getString("photo_reference");
 
-                URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                        photoReference +"&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk");
-                HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-                //  urlConnection.setRequestMethod("GET");
-                InputStream inputStream = urlConnection.getInputStream();
-              photo = BitmapFactory.decodeStream(inputStream);
 
-              LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-              LatLng placeLatLng = new LatLng(latitude, longitude);
+                url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                        photoReff + "&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk");
+                urlConnection = (HttpsURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                inputStream = urlConnection.getInputStream();
+                photo = BitmapFactory.decodeStream(inputStream);
+                inputStream.close();
+
+
+                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+                LatLng placeLatLng = new LatLng(latitude, longitude);
 
                 distenceToUser = SphericalUtil.computeDistanceBetween(user, placeLatLng);
 
-if (placeName != null && placeId != null && photo != null && vicinity != null) {
-    placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-            false, new ArrayList<>(), distenceToUser);
-theFinalList.add(placeG4Lunch);
-}
+                if (placeName != null && placeId != null && vicinity != null && photoReff != null) {
+
+                    placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
+                            false, new ArrayList<>(), distenceToUser, photoReff, rating);
+
+
+                    theFinalList.add(placeG4Lunch);
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
