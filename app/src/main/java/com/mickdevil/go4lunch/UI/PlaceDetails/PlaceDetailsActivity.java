@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mickdevil.go4lunch.AppUser;
+import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
@@ -28,13 +30,16 @@ import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
     public static final String keyForDetails = "thisPlace";
+    private static final String TAG = "PlaceDetailsActivity";
     PlaceG4Lunch place;
 
     ImageView placeDetailImage, callResto, LikeResto, webSiteResto;
@@ -81,12 +86,26 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    Toast.makeText(PlaceDetailsActivity.this, "this hobo place even don't have web site!!!", Toast.LENGTH_SHORT);
+                    Toast.makeText(PlaceDetailsActivity.this, "this hobo place even don't have web site!!!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
+        goToThePlace.setOnClickListener(new View.OnClickListener() {
+            PlaceG4Lunch placeG4L;
+            int placeID
+            @Override
+            public void onClick(View view) {
+                for (Iterator<PlaceG4Lunch> iterator = GetPlacesTheRightWay.finalPlacesResult.iterator(); iterator.hasNext(); ) {
+                placeG4L = iterator.next();
+
+                }
+
+               int i = GetPlacesTheRightWay.finalPlacesResult.indexOf(place);
+                Log.d(TAG, "onClick: " + i);
+            }
+        });
 
 
     }
@@ -112,10 +131,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }
         };
         DBRef.addValueEventListener(valueEventListener);
-
-
-
-
 
     }
 

@@ -265,6 +265,7 @@ public class GetPlacesTheRightWay {
                 }
 
                 weekDaysOpen = new ArrayList<>();
+                weekDaysOpen.add("");
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));

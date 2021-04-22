@@ -79,6 +79,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
             holder.rateStar2.setImageResource(R.drawable.star_rate_24);
             holder.rateStar3.setImageResource(R.drawable.star_rate_24);
         }
+if (place.getUsersMails() != null){
+    holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
+}
+else{
+    holder.workmatesWillGo.setText("0");
+}
+
 
        holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
            @Override

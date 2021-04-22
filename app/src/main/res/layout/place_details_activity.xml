@@ -17,7 +17,7 @@
         android:layout_marginEnd="25dp"
         android:layout_marginTop="275dp"
       android:backgroundTint="@color/white"
-        android:src="@drawable/ic_search_24"
+        android:src="@drawable/going_here"
         />
 
     <RelativeLayout
@@ -31,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-android:scaleType="centerCrop"
+        android:scaleType="centerCrop"
 
         />
 
