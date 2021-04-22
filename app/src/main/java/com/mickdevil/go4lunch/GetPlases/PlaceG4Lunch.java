@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class PlaceG4Lunch implements Parcelable {
@@ -20,10 +22,12 @@ public class PlaceG4Lunch implements Parcelable {
     private double distenceToUser;
     private String photoReff;
     private double rating;
+    private List<String> weekdaysOpen;
+    private String webSite;
+    private String phoneNumber;
 
-
-    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId, boolean opened,
-                        Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser, String photoReff, double rating) {
+    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId, boolean opened, Bitmap photo, boolean isSomeBodyGoing,
+                        List<String> usersMails, double distenceToUser, String photoReff, double rating, List<String> weekdaysOpen, String webSite, String phoneNumber) {
         this.placeName = placeName;
         this.vicinity = vicinity;
         this.latitude = latitude;
@@ -36,6 +40,9 @@ public class PlaceG4Lunch implements Parcelable {
         this.distenceToUser = distenceToUser;
         this.photoReff = photoReff;
         this.rating = rating;
+        this.weekdaysOpen = weekdaysOpen;
+        this.webSite = webSite;
+        this.phoneNumber = phoneNumber;
     }
 
     protected PlaceG4Lunch(Parcel in) {
@@ -51,6 +58,33 @@ public class PlaceG4Lunch implements Parcelable {
         distenceToUser = in.readDouble();
         photoReff = in.readString();
         rating = in.readDouble();
+        weekdaysOpen = in.createStringArrayList();
+        webSite = in.readString();
+        phoneNumber = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(placeName);
+        dest.writeString(vicinity);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(placeId);
+        dest.writeByte((byte) (opened ? 1 : 0));
+        dest.writeParcelable(photo, flags);
+        dest.writeByte((byte) (isSomeBodyGoing ? 1 : 0));
+        dest.writeStringList(usersMails);
+        dest.writeDouble(distenceToUser);
+        dest.writeString(photoReff);
+        dest.writeDouble(rating);
+        dest.writeStringList(weekdaysOpen);
+        dest.writeString(webSite);
+        dest.writeString(phoneNumber);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<PlaceG4Lunch> CREATOR = new Creator<PlaceG4Lunch>() {
@@ -161,24 +195,27 @@ public class PlaceG4Lunch implements Parcelable {
         this.rating = rating;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public List<String> getWeekdaysOpen() {
+        return weekdaysOpen;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(placeName);
-        parcel.writeString(vicinity);
-        parcel.writeDouble(latitude);
-        parcel.writeDouble(longitude);
-        parcel.writeString(placeId);
-        parcel.writeByte((byte) (opened ? 1 : 0));
-        parcel.writeParcelable(photo, i);
-        parcel.writeByte((byte) (isSomeBodyGoing ? 1 : 0));
-        parcel.writeStringList(usersMails);
-        parcel.writeDouble(distenceToUser);
-        parcel.writeString(photoReff);
-        parcel.writeDouble(rating);
+    public void setWeekdaysOpen(List<String> weekdaysOpen) {
+        this.weekdaysOpen = weekdaysOpen;
+    }
+
+    public String getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

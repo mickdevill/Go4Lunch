@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,10 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
-import com.mickdevil.go4lunch.TreadManager.HandlerForMsg;
 import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
-import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import java.util.Arrays;
 import java.util.List;

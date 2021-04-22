@@ -1,8 +1,6 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
-import com.mickdevil.go4lunch.UI.PlaceDetailsActivity;
-import com.mickdevil.go4lunch.GetPlases.CustomPlace;
+import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import static java.lang.Double.valueOf;
 
@@ -92,7 +83,9 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
        holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-
+               Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
+               intent.putExtra(PlaceDetailsActivity.keyForDetails, place);
+               view.getContext().startActivity(intent);
            }
        });
 

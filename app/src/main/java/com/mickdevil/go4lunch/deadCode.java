@@ -51,6 +51,141 @@ public class deadCode {
 
 
 
+//public class GetPlaces {
+//
+//
+//    private static final String TAG = "GetPlaces";
+//
+//    private FusedLocationProviderClient locationProviderClient;
+//    PlacesClient placesClient;
+//    String apiKey;
+//    Context context;
+//
+//
+//    public GetPlaces(FusedLocationProviderClient locationProviderClient, PlacesClient placesClient, String apiKey, Context context) {
+//        this.locationProviderClient = locationProviderClient;
+//        this.placesClient = placesClient;
+//        this.apiKey = apiKey;
+//        this.context = context;
+//
+//    }
+//
+//    public static List<CustomPlace> myPlaces = new ArrayList<>();
+//
+//
+//
+//    public void getPlacesLikeHood() {
+//// Use fields to define the data types to return.
+//
+//
+//        List<Place.Field> placeFields = Collections.singletonList(Place.Field.ID);
+//
+//// Use the builder to create a FindCurrentPlaceRequest.
+//        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+//
+//// Call findCurrentPlace and handle the response (first check that the user has granted permission).
+//        try {
+//
+//
+//            if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//
+//                Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+//
+//                placeResponse.addOnCompleteListener(task -> {
+//
+//                    if (task.isSuccessful()) {
+//
+//
+//                        FindCurrentPlaceResponse response = task.getResult();
+//                        for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+//
+//                            Log.i(TAG, String.format("PlaceG4Lunch '%s' has likelihood: %f",
+//                                    placeLikelihood.getPlace().getId(),
+//                                    placeLikelihood.getLikelihood()));
+//
+//                            getPlaceDetail(placeLikelihood.getPlace().getId());
+//                            //  getPlacePhoto(placeLikelihood.getPlace().getId());
+//
+//                        }
+//
+//
+//                    } else {
+//                        Exception exception = task.getException();
+//                        if (exception instanceof ApiException) {
+//                            ApiException apiException = (ApiException) exception;
+//                            Log.e(TAG, "PlaceG4Lunch not found: " + apiException.getStatusCode());
+//                        }
+//                    }
+//                });
+//            }
+//        } catch (NullPointerException np) {
+//            np.printStackTrace();
+//        }
+//    }
+//
+//    public void getPlaceDetail(String placeId) {
+//        // Define a PlaceG4Lunch ID.
+//        //final String placeId = "INSERT_PLACE_ID_HERE";
+//
+//        // Specify the fields to return.
+//        final List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
+//                Place.Field.OPENING_HOURS, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS, Place.Field.TYPES, Place.Field.WEBSITE_URI);
+//
+//        // Construct a request object, passing the place ID and fields array.
+//        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+//
+//        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+//            Place place = response.getPlace();
+//
+//           // if (place.getTypes().equals(PlaceG4Lunch.Type.FOOD) ) {
+//
+//
+//                // Get the photo metadata.
+//                final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+//                if (metadata == null || metadata.isEmpty()) {
+//                    Log.w(TAG, "No photo metadata.");
+//                    return;
+//                }
+//                final PhotoMetadata photoMetadata = metadata.get(0);
+//
+//                // Get the attribution text.
+//                final String attributions = photoMetadata.getAttributions();
+//
+//                // Create a FetchPhotoRequest.
+//                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+//                        .setMaxWidth(500) // Optional.
+//                        .setMaxHeight(300) // Optional.
+//                        .build();
+//                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+//                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
+//
+//
+//                    CustomPlace customPlace = new CustomPlace(response.getPlace().getName(), response.getPlace().getAddress(),
+//                            response.getPlace().getOpeningHours(),
+//                            response.getPlace().getLatLng(), bitmap);
+//
+//                    myPlaces.add(customPlace);
+//
+//                    Log.i(TAG, "PlaceG4Lunch found: " + customPlace.getAddress() + customPlace.getName() + customPlace.getOpenTime());
+//
+//
+//                });
+//
+//                //the end of scope
+//          //  }
+//        })
+//
+//                .addOnFailureListener((exception) -> {
+//                    if (exception instanceof ApiException) {
+//                        final ApiException apiException = (ApiException) exception;
+//                        Log.e(TAG, "PlaceG4Lunch not found: " + exception.getMessage());
+//                        final int statusCode = apiException.getStatusCode();
+//                        // TODO: Handle error with given status code.
+//                    }
+//                });
+//
+//
+//    }
 
 //   else {
 //       try {

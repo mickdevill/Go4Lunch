@@ -1,33 +1,15 @@
 package com.mickdevil.go4lunch.GetPlases;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.OpeningHours;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.gson.JsonArray;
 import com.google.maps.android.SphericalUtil;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.GetPlaces;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -215,8 +196,14 @@ public class GetPlacesTheRightWay {
         boolean isSomeBodyGoing = false;
         double distenceToUser;
         double rating;
-        int photoCount = 10;
         String photoReff;
+
+        JSONObject moreInfo;
+        String phoneNumber = "";
+        String webSite = "";
+        List<String> weekDaysOpen;
+
+
         JSONArray photosArray;
 
 
@@ -267,10 +254,31 @@ public class GetPlacesTheRightWay {
 
                 distenceToUser = SphericalUtil.computeDistanceBetween(user, placeLatLng);
 
+                moreInfo = getMoreInfoAboutThePlace(placeId);
+
+
+                if (moreInfo.getString("formatted_phone_number") != null){
+                    phoneNumber = moreInfo.getString("formatted_phone_number");
+                }
+                if (moreInfo.getString("website") != null){
+                    webSite = moreInfo.getString("website");
+                }
+
+                weekDaysOpen = new ArrayList<>();
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(3));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(4));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
+
+
+
                 if (placeName != null && placeId != null && vicinity != null && photoReff != null) {
 
                     placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-                            false, new ArrayList<>(), distenceToUser, photoReff, rating);
+                            false, new ArrayList<>(), distenceToUser, photoReff, rating, weekDaysOpen, webSite, phoneNumber);
 
 
                     theFinalList.add(placeG4Lunch);
@@ -289,6 +297,51 @@ public class GetPlacesTheRightWay {
 
         Log.d(TAG, "createTheFinalList: " + theFinalList.size());
         return theFinalList;
+
+    }
+
+
+    public JSONObject getMoreInfoAboutThePlace(String placeID) {
+        String line = "";
+        String data = "";
+        JSONObject johny;
+
+        JSONObject resultOBJ = null;
+
+
+        String myUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
+                "&fields=" + "formatted_phone_number,opening_hours,website" + "&key=AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+
+
+        try {
+            URL url = new URL(myUrl);
+            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+            //  urlConnection.setRequestMethod("GET");
+            InputStream inputStream = urlConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            while (line != null) {
+
+                line = bufferedReader.readLine();
+                data += line;
+            }
+
+            johny = new JSONObject(data);
+            resultOBJ = johny.getJSONObject("result");
+
+
+            Log.d(TAG, "getMoreInfoAboutThePlace: " + resultOBJ);
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return resultOBJ;
 
     }
 
