@@ -17,7 +17,6 @@
         android:layout_marginEnd="25dp"
         android:layout_marginTop="275dp"
       android:backgroundTint="@color/white"
-        android:src="@drawable/going_here"
         />
 
     <RelativeLayout

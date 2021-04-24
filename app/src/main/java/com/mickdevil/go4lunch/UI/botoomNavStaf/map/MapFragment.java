@@ -165,6 +165,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
 
 public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
+
     PlaceG4Lunch placeG4Lunch;
     LatLng latLng;
     for (int i = 0; i < places.size(); i++) {

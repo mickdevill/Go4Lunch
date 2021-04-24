@@ -42,36 +42,42 @@ public class GetPlacesTheRightWay {
 
 
     public void getPlaces() {
-        String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
-                location.getLongitude() + "&radius=5000&type=restaurant&keyword=kebab&key=" +
-                "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
-
-        List<JSONObject> theFullResult = new ArrayList<>();
-
-        JSONObject johny = parseJohny(myURL);
-        theFullResult.add(johny);
-        Log.d(TAG, "getPlaces: " + johny);
-
-        JSONObject cheker = johny;
-        //   Log.d(TAG, "johny is " + johny);
-
-        while (cheker != null) {
-            SystemClock.sleep(1500);
-            cheker = parseJohny(doItAgain(johny));
-
-            johny = cheker;
-            if (johny != null) {
-                theFullResult.add(johny);
-            }
-            //  Log.d(TAG, "johny is " + theFullResult.size());
-
-        }
-
-        finalPlacesResult = createTheFinalList(queDes10EtDes20(theFullResult));
+     if (finalPlacesResult.size() > 0 ){
+         G4LunchMain.handleMSG(2);
+     }
+     else {
 
 
-        G4LunchMain.handleMSG(2);
+         String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
+                 location.getLongitude() + "&radius=5000&type=restaurant&keyword=kebab&key=" +
+                 "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
+         List<JSONObject> theFullResult = new ArrayList<>();
+
+         JSONObject johny = parseJohny(myURL);
+         theFullResult.add(johny);
+         Log.d(TAG, "getPlaces: " + johny);
+
+         JSONObject cheker = johny;
+         //   Log.d(TAG, "johny is " + johny);
+
+         while (cheker != null) {
+             SystemClock.sleep(1500);
+             cheker = parseJohny(doItAgain(johny));
+
+             johny = cheker;
+             if (johny != null) {
+                 theFullResult.add(johny);
+             }
+             //  Log.d(TAG, "johny is " + theFullResult.size());
+
+         }
+
+         finalPlacesResult = createTheFinalList(queDes10EtDes20(theFullResult));
+
+
+         G4LunchMain.handleMSG(2);
+     }
 
     }
 

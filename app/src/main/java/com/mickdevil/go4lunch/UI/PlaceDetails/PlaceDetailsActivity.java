@@ -1,6 +1,7 @@
 package com.mickdevil.go4lunch.UI.PlaceDetails;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity.firebaseAuth;
+
 public class PlaceDetailsActivity extends AppCompatActivity {
 
     public static final String keyForDetails = "thisPlace";
@@ -47,6 +51,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     FloatingActionButton goToThePlace;
     DatabaseReference DBRef;
     TextView DetailsPlaceName;
+    List<AppUser> workmatesWillGo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +65,24 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         placeDetailImage.setImageBitmap(place.getPhoto());
         DetailsPlaceName.setText(place.getPlaceName());
 
+        workmatesWillGo = new ArrayList<>();
 
         placeDetailsRCV.setLayoutManager(new LinearLayoutManager(PlaceDetailsActivity.this));
         placeDetailsRCV.addItemDecoration(new DividerItemDecoration(PlaceDetailsActivity.this, DividerItemDecoration.VERTICAL));
+
         DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
 
-  callResto.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-          String call = "tel:0665807323";
-          Intent callIntent = new Intent(Intent.ACTION_CALL);
-          callIntent.setData(Uri.parse(call));
-          startActivity(callIntent);
-      }
-  });
+        getDataFromRTDB();
+
+        callResto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String call = "tel:" + place.getPhoneNumber();
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse(call));
+                startActivity(callIntent);
+            }
+        });
 
 
         webSiteResto.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +94,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     uri = Uri.parse(place.getWebSite());
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Toast.makeText(PlaceDetailsActivity.this, "this hobo place even don't have web site!!!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -94,16 +103,44 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         goToThePlace.setOnClickListener(new View.OnClickListener() {
             PlaceG4Lunch placeG4L;
-            int placeID
+            int thisOne = 666;
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            String userMail = user.getEmail();
+            List<AppUser> workmates = new ArrayList<>();
+            boolean ImGoing;
+            AppUser curentUser;
+
             @Override
             public void onClick(View view) {
-                for (Iterator<PlaceG4Lunch> iterator = GetPlacesTheRightWay.finalPlacesResult.iterator(); iterator.hasNext(); ) {
-                placeG4L = iterator.next();
+                for (int i = 0; i < workmatesWillGo.size(); i++) {
+                    if (workmatesWillGo.get(i).email.equals(userMail)){
+                        curentUser = workmatesWillGo.get(i);
+                        curentUser.placeID = place.getPlaceId();
 
+DBRef.child()
+                        DBRef.removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+
+                            }
+                        });
+
+
+                    }
                 }
 
-               int i = GetPlacesTheRightWay.finalPlacesResult.indexOf(place);
-                Log.d(TAG, "onClick: " + i);
+
+                for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
+
+                    if (place.getPlaceId().equals(GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId())) {
+                        thisOne = i;
+                        break;
+                    }
+                }
+
+                GetPlacesTheRightWay.finalPlacesResult.get(thisOne).setSomeBodyGoing(true);
+                Log.d(TAG, "onClick: " + thisOne + " " + place.getPlaceId());
+
             }
         });
 
@@ -111,19 +148,35 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     }
 
     private void getDataFromRTDB() {
-        List<AppUser> workmates = new ArrayList<>();
+
         ValueEventListener valueEventListener = new ValueEventListener() {
+            AppUser theDude;
+            List<AppUser> workmates = new ArrayList<>();
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     AppUser appUser = ds.getValue(AppUser.class);
-
                     workmates.add(appUser);
+                    workmatesWillGo.add(appUser);
 
-                    placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
                 }
 
+
+                for (int i = 0; i < workmates.size(); i++) {
+                    theDude = workmates.get(i);
+
+                    if (place.getPlaceId() != theDude.placeID) {
+                        workmates.remove(i);
+                    }
+
+                }
+
+                placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+
+
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

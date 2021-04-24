@@ -9,20 +9,21 @@ import java.net.URL;
 
 public class AppUser implements Parcelable {
 
-    public String ID, Fname, Lname, email, photo, placeID;
+    public String ID, Fname, Lname, email, photo, placeID, UserUID;
 
 
     public AppUser() {
 
     }
 
-    public AppUser(String ID, String Fname, String Lname, String email, String photo, String placeID) {
+    public AppUser(String ID, String fname, String lname, String email, String photo, String placeID, String userUID) {
         this.ID = ID;
-        this.Fname = Fname;
+        Fname = fname;
+        Lname = lname;
         this.email = email;
-        this.Lname = Lname;
         this.photo = photo;
         this.placeID = placeID;
+        UserUID = userUID;
     }
 
     protected AppUser(Parcel in) {
@@ -32,6 +33,23 @@ public class AppUser implements Parcelable {
         email = in.readString();
         photo = in.readString();
         placeID = in.readString();
+        UserUID = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(ID);
+        dest.writeString(Fname);
+        dest.writeString(Lname);
+        dest.writeString(email);
+        dest.writeString(photo);
+        dest.writeString(placeID);
+        dest.writeString(UserUID);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<AppUser> CREATOR = new Creator<AppUser>() {
@@ -45,19 +63,4 @@ public class AppUser implements Parcelable {
             return new AppUser[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(ID);
-        dest.writeString(Fname);
-        dest.writeString(Lname);
-        dest.writeString(email);
-        dest.writeString(photo);
-        dest.writeString(placeID);
-    }
 }

@@ -1,7 +1,6 @@
 package com.mickdevil.go4lunch.UI.SignIn;
 
 
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,7 +66,7 @@ public class MainSigninActivity extends AppCompatActivity {
     private static final String TAG = "MainSigninActivity";
     //all things used for auth
 
-    private static FirebaseAuth firebaseAuth;
+    public static FirebaseAuth firebaseAuth;
     //my fierBase database
     public FirebaseDatabase database;
     public static DatabaseReference fierBaseDBRef;
@@ -85,13 +84,13 @@ public class MainSigninActivity extends AppCompatActivity {
 
     private CallbackManager mCallbackManager;
 
-private LoginManager loginManager;
+    private LoginManager loginManager;
 
     AppUser appUser;
 
-    List<String>  permisionsForGodDamnFB = Arrays.asList( "email","public_profile");
+    List<String> permisionsForGodDamnFB = Arrays.asList("email", "public_profile");
 
- ArrayList<String> permissions = new ArrayList<String>();
+    ArrayList<String> permissions = new ArrayList<String>();
 
 
     @Override
@@ -117,16 +116,13 @@ private LoginManager loginManager;
                 messageDigest.update(signature.toByteArray());
                 Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
             }
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
 
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
 
         }
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
-
 
 
         permissions.add("email");
@@ -155,10 +151,8 @@ private LoginManager loginManager;
         });
 
 
-
-
-      //  faceBookSignIN.setPermissions(Arrays.asList(EMAIL, USER_POSTS));
-       faceBookSignIN.setReadPermissions(  permissions);
+        //  faceBookSignIN.setPermissions(Arrays.asList(EMAIL, USER_POSTS));
+        faceBookSignIN.setReadPermissions(permissions);
         mCallbackManager = CallbackManager.Factory.create();
 
 
@@ -191,46 +185,41 @@ private LoginManager loginManager;
     }
 
 
-
-
-
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "my AccessToken: " + token.getToken());
-     AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
-     firebaseAuth.signInWithCredential(credential)
-             .addOnCompleteListener(MainSigninActivity.this, new OnCompleteListener<AuthResult>() {
-                 @Override
-                 public void onComplete(@NonNull Task<AuthResult> task) {
-                     if (task.isSuccessful()) {
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(MainSigninActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
-                         FirebaseUser firebaseUser = task.getResult().getUser();
+                            FirebaseUser firebaseUser = task.getResult().getUser();
 
-                         Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
+                            Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
 
-                       appUser = new AppUser(fierBaseDBRef.getKey(),firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString()
-                       , null);
+                            appUser = new AppUser(fierBaseDBRef.getKey(), firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString()
+                                    , firebaseUser.getEmail());
 
-                         Log.d(TAG, "user FB photo " + firebaseUser.getPhotoUrl().toString());
+                            Log.d(TAG, "user FB photo " + firebaseUser.getPhotoUrl().toString());
 
-                       chekIfUserExistAndPush(appUser);
+                            chekIfUserExistAndPush(appUser);
 
-                       intent.putExtra(G4LunchMain.appUserKey, appUser);
+                            intent.putExtra(G4LunchMain.appUserKey, appUser);
 
-                         G4LunchMain.start(MainSigninActivity.this, intent);
+                            G4LunchMain.start(MainSigninActivity.this, intent);
 
-                     } else {
-                         // If sign in fails, display a message to the user.
-                         Toast.makeText(MainSigninActivity.this, "Authentication failed.",
-                                 Toast.LENGTH_SHORT).show();
-                     }
-
-
-                 }
-             });
- }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(MainSigninActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
 
+                    }
+                });
+    }
 
 
     private void configureGoogleClient() {
@@ -266,7 +255,7 @@ private LoginManager loginManager;
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
                             appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
-                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null);
+                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null, null);
                             Log.d(TAG, "onComplete: " + appUser);
 
                             chekIfUserExistAndPush(appUser);
@@ -285,8 +274,6 @@ private LoginManager loginManager;
     }
 
 
-
-
     //need tou implement after
     @Override
     public void onStart() {
@@ -302,41 +289,28 @@ private LoginManager loginManager;
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-            if (requestCode == RC_SIGN_IN) {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                try {
-                    // Google Sign In was successful, authenticate with Firebase
-                    GoogleSignInAccount account = task.getResult(ApiException.class);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
 
-                    firebaseAuthWithGoogle(account);
-                } catch (ApiException e) {
-                    // Google Sign In failed, update UI appropriately
-
-                }
-            }
-
-            else {
-                mCallbackManager.onActivityResult(requestCode, resultCode, data);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
 
             }
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
+        }
 
 
     }
-
-
-
-
-
-
-
-
 
 
 //methods not directly used for Auth
@@ -392,10 +366,12 @@ private LoginManager loginManager;
 
                 if (!myUsers.contains(appUser.email)) {
 
+
                     fierBaseDBRef.push().setValue(appUser);
 
                     Log.d(TAG, "app user " + appUser);
                 }
+
             }
 
             @Override
@@ -407,30 +383,32 @@ private LoginManager loginManager;
 
     }
 
-    public static void getTheFuckOutOfHere(int fromWhereChumba){
-     switch (fromWhereChumba){
-         case 0:
-firebaseAuth.signOut();
-             break;
+    public static void getTheFuckOutOfHere(int fromWhereChumba) {
+        switch (fromWhereChumba) {
+            case 0:
+                firebaseAuth.signOut();
+                break;
 
-         case 1:
-LoginManager.getInstance().logOut();
-break;
+            case 1:
+                LoginManager.getInstance().logOut();
+                break;
 
-     }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-   //I need do EXACTLY THIS with the dellete user, becose if the user have register his facebook with the
+        //I need do EXACTLY THIS with the dellete user, becose if the user have register his facebook with the
         // same mail the app broke and facebook throws auth fail, becose mails are same
-     if (firebaseAuth.getCurrentUser() != null){
-       firebaseAuth.getCurrentUser().delete();
-     }
+        if (firebaseAuth.getCurrentUser() != null) {
+            firebaseAuth.getCurrentUser().delete();
+        }
 
         LoginManager.getInstance().logOut();
     }
+
+
 }
 
 
