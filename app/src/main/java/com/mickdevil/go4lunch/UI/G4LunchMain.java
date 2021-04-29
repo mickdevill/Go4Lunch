@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -34,14 +35,20 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mickdevil.go4lunch.AppUser;
+import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
+import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
+import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class G4LunchMain extends AppCompatActivity  {
+public class G4LunchMain extends AppCompatActivity {
     private static final String TAG = "G4LunchMain";
     //views
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +57,9 @@ public class G4LunchMain extends AppCompatActivity  {
     private Toolbar toolbar;
     private com.google.android.material.appbar.AppBarLayout AppBarLayout;
     //-----------------------------------------------------------------------------------------
+
+    DatabaseReference databaseReference;
+
 
     //api stuff
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -70,10 +80,11 @@ public class G4LunchMain extends AppCompatActivity  {
     //-----------------------------------------------------------------------------------------
 
     private AppUser appUserFromParcelForTest;
-    private AppUser appUserToUse = null;
+    public static AppUser appUserToUse = null;
 
     NavigationView sideNavView;
     View header;
+
     //the onCreate
     @SuppressLint("VisibleForTests")
     @Override
@@ -94,14 +105,14 @@ public class G4LunchMain extends AppCompatActivity  {
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-//work With my thread!!!!!!!!!!
+//work With my SUPER thread!!!!!!!!!!
         havyTasksThread = new HavyTasksThread("havy task thread", G4LunchMain.this, G4LunchMain.this);
 
         if (!havyTasksThread.isAlive()) {
             havyTasksThread.start();
         }
 
-//        handleMSG(1);
+
 
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation
@@ -120,9 +131,9 @@ public class G4LunchMain extends AppCompatActivity  {
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.LEFT);
                 menegeDrawerMenu();
+
             }
         });
-
 
 
         BottomNavigationView botomNavigation = findViewById(R.id.botomNavigation);
@@ -138,8 +149,9 @@ public class G4LunchMain extends AppCompatActivity  {
 
         //set user info in side nav header and initing this views
 
-        header = sideNavView.getHeaderView(0);
+        databaseReference = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
 
+        header = sideNavView.getHeaderView(0);
 
 
         TextView sideNavFLname = header.findViewById(R.id.sideNavFLname);
@@ -162,7 +174,6 @@ public class G4LunchMain extends AppCompatActivity  {
                     .into(sideNavProfilePhoto);
 
 
-
         }
         //----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -177,9 +188,6 @@ public class G4LunchMain extends AppCompatActivity  {
 
         return true;
     }
-
-
-
 
 
     //WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS WORKING WITH MENUS
@@ -199,7 +207,7 @@ public class G4LunchMain extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    public void menegeDrawerMenu(){
+    public void menegeDrawerMenu() {
 
         MenuItem yourLunch = sideNavView.getMenu().findItem(R.id.your_lunch);
         MenuItem setthings = sideNavView.getMenu().findItem(R.id.setthings);
@@ -208,7 +216,45 @@ public class G4LunchMain extends AppCompatActivity  {
         yourLunch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(G4LunchMain.this, "this is my \" YOUR LUNCH\" action", Toast.LENGTH_SHORT).show();
+                if (GetPlacesTheRightWay.finalPlacesResult.size() != 0) {
+
+                     databaseReference.child(appUserToUse.email.substring(0,
+                            appUserToUse.email.indexOf("@"))).child("placeID").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                        @Override
+                        public void onSuccess(DataSnapshot dataSnapshot) {
+                            String placeID = dataSnapshot.getValue().toString();
+
+                            Log.d(TAG, "onMenuItemClick: " + placeID);
+
+                            boolean placeNotChose = true;
+
+                            for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
+
+                                if (placeID.equals(GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId())) {
+                                    placeNotChose = false;
+                                    drawer.closeDrawer(Gravity.LEFT);
+                                    Intent intent = new Intent(G4LunchMain.this, PlaceDetailsActivity.class);
+                                    intent.putExtra(PlaceDetailsActivity.keyForDetails, placeID);
+                                    G4LunchMain.this.startActivity(intent);
+
+                                    break;
+                                }
+
+                            }
+
+                            if (placeNotChose) {
+                                Toast.makeText(G4LunchMain.this, "you did not chose the place!!!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+
+
+                } else {
+                    Toast.makeText(G4LunchMain.this, "plese click the buton that look llike geolocation to get places, or this thing will not work", Toast.LENGTH_LONG).show();
+                }
+
 
                 return false;
             }
@@ -228,7 +274,7 @@ public class G4LunchMain extends AppCompatActivity  {
         logOut.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-finish();
+                finish();
                 return false;
             }
         });
@@ -281,7 +327,6 @@ finish();
     public HavyTasksThread getHavyTasksThread() {
         return havyTasksThread;
     }
-
 
 
 }

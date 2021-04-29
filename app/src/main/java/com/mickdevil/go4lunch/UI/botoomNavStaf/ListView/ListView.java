@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
+import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
+
+import java.util.List;
 
 public class ListView extends Fragment {
 
     RecyclerView mapListView;
 
 
-
+private List<PlaceG4Lunch> places;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +35,7 @@ public class ListView extends Fragment {
 
         mapListView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mapListView.setAdapter(new ListViewAdapter(GetPlacesTheRightWay.finalPlacesResult));
+        places = GetPlacesTheRightWay.finalPlacesResult;
 
         return view;
     }
@@ -40,9 +43,14 @@ public class ListView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        places = GetPlacesTheRightWay.finalPlacesResult;
 
+        mapListView.setAdapter(new ListViewAdapter(places));
 
 
     }
+
+
+
 
 }

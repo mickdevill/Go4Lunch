@@ -105,22 +105,22 @@ public class MainSigninActivity extends AppCompatActivity {
 
         //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
-        //THIS IS THE FUCKING BEST WAY TO GET THE HASH FOR FACEBOOK. THANK YOU  INDIAN DUDE
+   //    //THIS IS THE FUCKING BEST WAY TO GET THE HASH FOR FACEBOOK. THANK YOU  INDIAN DUDE
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-                messageDigest.update(signature.toByteArray());
-                Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
+   //    try {
+   //        PackageInfo info = getPackageManager().getPackageInfo(
+   //                getPackageName(),
+   //                PackageManager.GET_SIGNATURES);
+   //        for (Signature signature : info.signatures) {
+   //            MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+   //            messageDigest.update(signature.toByteArray());
+   //            Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
+   //        }
+   //    } catch (PackageManager.NameNotFoundException e) {
 
-        } catch (NoSuchAlgorithmException e) {
+   //    } catch (NoSuchAlgorithmException e) {
 
-        }
+   //    }
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
 
@@ -199,8 +199,8 @@ public class MainSigninActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(MainSigninActivity.this, G4LunchMain.class);
 
-                            appUser = new AppUser(fierBaseDBRef.getKey(), firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString()
-                                    , firebaseUser.getEmail());
+                            appUser = new AppUser(fierBaseDBRef.getKey(), firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString(), null
+                                    );
 
                             Log.d(TAG, "user FB photo " + firebaseUser.getPhotoUrl().toString());
 
@@ -255,7 +255,7 @@ public class MainSigninActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
                             appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
-                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null, null);
+                                    account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null);
                             Log.d(TAG, "onComplete: " + appUser);
 
                             chekIfUserExistAndPush(appUser);
@@ -318,7 +318,8 @@ public class MainSigninActivity extends AppCompatActivity {
     //I can add some permissions to this stuf. if i need after in the app
     public void askPermisions() {
         Dexter.withContext(MainSigninActivity.this).withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CALL_PHONE).withListener(new MultiplePermissionsListener() {
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CALL_PHONE).withListener(new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                 if (!multiplePermissionsReport.areAllPermissionsGranted()) {
@@ -366,8 +367,8 @@ public class MainSigninActivity extends AppCompatActivity {
 
                 if (!myUsers.contains(appUser.email)) {
 
-
-                    fierBaseDBRef.push().setValue(appUser);
+fierBaseDBRef.child(appUser.email.substring(0, appUser.email.indexOf("@"))).setValue(appUser);
+                   // fierBaseDBRef.push().setValue(appUser);
 
                     Log.d(TAG, "app user " + appUser);
                 }

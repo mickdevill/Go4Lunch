@@ -1,6 +1,7 @@
 package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import static java.lang.Double.valueOf;
 
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder> {
     List<PlaceG4Lunch> places;
-
+    private static final String TAG = "ListViewAdapter";
 
     public ListViewAdapter(List<PlaceG4Lunch> places) {
         this.places = places;
@@ -45,7 +46,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
         if (place.getVicinity().contains(",")) {
             holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
-        }else {
+        } else {
             holder.restoAddress.setText(place.getVicinity());
         }
 
@@ -53,50 +54,54 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
             holder.restImg.setImageBitmap(place.getPhoto());
         }
 //set placePhoto
-    if (place.getPhoto() != null){
-        holder.restImg.setImageBitmap(place.getPhoto());
-    }
-       else{
+        if (place.getPhoto() != null) {
+            holder.restImg.setImageBitmap(place.getPhoto());
+        } else {
             holder.restImg.setImageResource(R.drawable.no_place_photo);
         }
 
-       if (place.isOpened()){
-           holder.restoOpenColse.setText(R.string.isOpen);
+        if (place.isOpened()) {
+            holder.restoOpenColse.setText(R.string.isOpen);
 
-       }else {
-           holder.restoOpenColse.setText(R.string.isClose);
-       }
+        } else {
+            holder.restoOpenColse.setText(R.string.isClose);
+        }
 
-       if (place.getRating() > 1.6 && place.getRating() < 3.2){
-           holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-       }
-       if (place.getRating() > 3.2 && place.getRating() < 4){
-           holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-           holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-       }
-        if (place.getRating() > 4){
+        if (place.getRating() > 1.6 && place.getRating() < 3.2) {
+            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+        }
+        if (place.getRating() > 3.2 && place.getRating() < 4) {
+            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+            holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+        }
+        if (place.getRating() > 4) {
             holder.rateStar1.setImageResource(R.drawable.star_rate_24);
             holder.rateStar2.setImageResource(R.drawable.star_rate_24);
             holder.rateStar3.setImageResource(R.drawable.star_rate_24);
         }
-if (place.getUsersMails() != null){
-    holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
-}
-else{
-    holder.workmatesWillGo.setText("0");
-}
+   //     if (place.getUsersMails() != null) {
+   //         holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
+   //     } else {
+          //  holder.workmatesWillGo.setText(position);
+    //    }
 
 
-       holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
-               intent.putExtra(PlaceDetailsActivity.keyForDetails, place);
-               view.getContext().startActivity(intent);
-           }
-       });
+
+
+            holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
+                    intent.putExtra(PlaceDetailsActivity.keyForDetails, place.getPlaceId());
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+            Log.d(TAG, "onBindViewHolder: " + position);
+
 
     }
+
 
     @Override
     public int getItemCount() {

@@ -6,34 +6,33 @@ import android.os.Parcelable;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 
 public class AppUser implements Parcelable {
 
-    public String ID, Fname, Lname, email, photo, placeID, UserUID;
+    public String ID, Fname, Lname, email, photo, placeID;
 
 
     public AppUser() {
 
     }
 
-    public AppUser(String ID, String fname, String lname, String email, String photo, String placeID, String userUID) {
+    public AppUser(String ID, String fname, String lname, String email, String photo, String placeID) {
         this.ID = ID;
-        Fname = fname;
-        Lname = lname;
+        this.Fname = fname;
+        this.Lname = lname;
         this.email = email;
         this.photo = photo;
         this.placeID = placeID;
-        UserUID = userUID;
     }
 
-    protected AppUser(Parcel in) {
+    public AppUser(Parcel in) {
         ID = in.readString();
         Fname = in.readString();
         Lname = in.readString();
         email = in.readString();
         photo = in.readString();
         placeID = in.readString();
-        UserUID = in.readString();
     }
 
     @Override
@@ -44,7 +43,6 @@ public class AppUser implements Parcelable {
         dest.writeString(email);
         dest.writeString(photo);
         dest.writeString(placeID);
-        dest.writeString(UserUID);
     }
 
     @Override
@@ -63,4 +61,18 @@ public class AppUser implements Parcelable {
             return new AppUser[size];
         }
     };
+
+public static HashMap<String, Object> toMap(AppUser appUser){
+    HashMap<String, Object> result = new HashMap<>();
+    result.put("ID", appUser.ID);
+    result.put("Fname", appUser.Fname);
+    result.put("Lname", appUser.Lname);
+    result.put("email", appUser.email);
+    result.put("photo", appUser.photo);
+    result.put("placeID", appUser.placeID);
+    return result;
+
+}
+
+
 }

@@ -27,6 +27,7 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
@@ -44,15 +45,22 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     public static final String keyForDetails = "thisPlace";
     private static final String TAG = "PlaceDetailsActivity";
+
     PlaceG4Lunch place;
+
+    String placeID;
 
     ImageView placeDetailImage, callResto, LikeResto, webSiteResto;
     RecyclerView placeDetailsRCV;
     FloatingActionButton goToThePlace;
-    DatabaseReference DBRef;
     TextView DetailsPlaceName;
+
     List<AppUser> workmatesWillGo;
 
+    DatabaseReference RootDBRef;
+    String userMail = G4LunchMain.appUserToUse.email;
+
+    boolean isImGoing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +68,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.place_details_activity);
         initViews();
 
-        place = getIntent().getParcelableExtra(keyForDetails);
+        placeID = getIntent().getStringExtra(keyForDetails);
+
+        place = GetPlacesTheRightWay.finalPlacesResult.get(getThePlace(placeID));
+
 
         placeDetailImage.setImageBitmap(place.getPhoto());
         DetailsPlaceName.setText(place.getPlaceName());
@@ -70,9 +81,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         placeDetailsRCV.setLayoutManager(new LinearLayoutManager(PlaceDetailsActivity.this));
         placeDetailsRCV.addItemDecoration(new DividerItemDecoration(PlaceDetailsActivity.this, DividerItemDecoration.VERTICAL));
 
-        DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
+        RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
 
         getDataFromRTDB();
+
+        isImGoing = isImGoing();
+
+        if (isImGoing){
+            goToThePlace.setImageResource(R.drawable.going_here);
+        }
+        else {
+            goToThePlace.setImageResource(R.drawable.not_going);
+        }
 
         callResto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,51 +115,36 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(PlaceDetailsActivity.this, "this hobo place even don't have web site!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaceDetailsActivity.this, "this hobo's place even don't have web site!!!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
         goToThePlace.setOnClickListener(new View.OnClickListener() {
-            PlaceG4Lunch placeG4L;
-            int thisOne = 666;
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            String userMail = user.getEmail();
             List<AppUser> workmates = new ArrayList<>();
             boolean ImGoing;
             AppUser curentUser;
 
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < workmatesWillGo.size(); i++) {
-                    if (workmatesWillGo.get(i).email.equals(userMail)){
-                        curentUser = workmatesWillGo.get(i);
-                        curentUser.placeID = place.getPlaceId();
+             if (isImGoing){
+                 goToThePlace.setImageResource(R.drawable.not_going);
 
-DBRef.child()
-                        DBRef.removeValue(new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-
-                            }
-                        });
-
-
-                    }
-                }
-
-
-                for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
-
-                    if (place.getPlaceId().equals(GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId())) {
-                        thisOne = i;
-                        break;
-                    }
-                }
-
-                GetPlacesTheRightWay.finalPlacesResult.get(thisOne).setSomeBodyGoing(true);
-                Log.d(TAG, "onClick: " + thisOne + " " + place.getPlaceId());
+                 curentUser = G4LunchMain.appUserToUse;
+                 curentUser.placeID = "not going here";
+                 RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
+                         G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+            isImGoing = false;
+             }
+             else {
+                 goToThePlace.setImageResource(R.drawable.going_here);
+                 curentUser = G4LunchMain.appUserToUse;
+                 curentUser.placeID = place.getPlaceId();
+                 RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
+                         G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+             isImGoing = true;
+             }
 
             }
         });
@@ -183,7 +188,7 @@ DBRef.child()
 
             }
         };
-        DBRef.addValueEventListener(valueEventListener);
+        RootDBRef.addValueEventListener(valueEventListener);
 
     }
 
@@ -218,6 +223,41 @@ DBRef.child()
         goToThePlace = findViewById(R.id.goToThePlace);
         DetailsPlaceName = findViewById(R.id.DetailsPlaceName);
     }
+
+    private int getThePlace(String id) {
+        int result = 0;
+
+        for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
+
+            if (id.equals(GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId())) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private boolean isImGoing(){
+        boolean result = false;
+
+        for (int i = 0; i < workmatesWillGo.size(); i++) {
+            if (workmatesWillGo.get(i).email.equals(userMail)) {
+
+                result = true;
+                break;
+            }
+        }
+
+        return  result;
+    }
+
+
+
+
+
+
+
+
 
 
 }
