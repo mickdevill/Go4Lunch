@@ -49,8 +49,61 @@ public class deadCode {
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //    if (theLike.get("user").equals(G4LunchMain.appUserToUse.email.substring(0,
+    //            G4LunchMain.appUserToUse.email.indexOf("@")))) {
+
+    //        oneLike.put("user", null);
+    //        oneLike.put("place", null);
+
+    //        likes.child(G4LunchMain.appUserToUse.email.substring(0,
+    //                G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(oneLike);
+    //        LikeResto.setImageResource(R.drawable.not_liked);
+
+    //        Log.d(TAG, "onSUCKses: " + "ono rabotaet");
+    //    } else {
+    //        oneLike.put("user", G4LunchMain.appUserToUse.email.substring(0,
+    //                G4LunchMain.appUserToUse.email.indexOf("@")));
+    //        oneLike.put("place", placeID);
+
+    //        likes.child(G4LunchMain.appUserToUse.email.substring(0,
+    //                G4LunchMain.appUserToUse.email.indexOf("@"))).setValue(oneLike);
+
+    //        LikeResto.setImageResource(R.drawable.liked);
+
+    //        Log.d(TAG, "onFailure: " + "ono rabotaet");
+
+    //    }
+
+    //         likes.child(G4LunchMain.appUserToUse.email.substring(0,
+    //                 G4LunchMain.appUserToUse.email.indexOf("@"))).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+    //             @Override
+    //             public void onSuccess(DataSnapshot dataSnapshot) {
+
+    //                 likes.child(G4LunchMain.appUserToUse.email.substring(0,
+    //                         G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(oneLike);
+    //                 LikeResto.setImageResource(R.drawable.not_liked);
+
+    //                 Log.d(TAG, "onSUCKses: " + "ono rabotaet");
 
 
+    //             }
+    //         }).addOnFailureListener(new OnFailureListener() {
+    //             @Override
+    //             public void onFailure(@NonNull Exception e) {
+
+    //                 oneLike.put("user", G4LunchMain.appUserToUse.email.substring(0,
+    //                         G4LunchMain.appUserToUse.email.indexOf("@")));
+    //                 oneLike.put("place", placeID);
+
+    //                 likes.child(G4LunchMain.appUserToUse.email.substring(0,
+    //                         G4LunchMain.appUserToUse.email.indexOf("@"))).setValue(oneLike);
+
+    //                 LikeResto.setImageResource(R.drawable.liked);
+
+    //                 Log.d(TAG, "onFailure: " + "ono rabotaet");
+
+    //             }
+    //         });
 //public class GetPlaces {
 //
 //

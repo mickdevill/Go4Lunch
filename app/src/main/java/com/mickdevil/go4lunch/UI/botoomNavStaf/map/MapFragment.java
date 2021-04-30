@@ -171,8 +171,12 @@ public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
     for (int i = 0; i < places.size(); i++) {
         placeG4Lunch = places.get(i);
         latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
+
         TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
-        Log.d(TAG, "PutMarckersOnMap: the markers work");
+
+
+
+
     }
 
 }

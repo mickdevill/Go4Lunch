@@ -384,18 +384,6 @@ fierBaseDBRef.child(appUser.email.substring(0, appUser.email.indexOf("@"))).setV
 
     }
 
-    public static void getTheFuckOutOfHere(int fromWhereChumba) {
-        switch (fromWhereChumba) {
-            case 0:
-                firebaseAuth.signOut();
-                break;
-
-            case 1:
-                LoginManager.getInstance().logOut();
-                break;
-
-        }
-    }
 
     @Override
     protected void onResume() {

@@ -252,9 +252,8 @@ public class G4LunchMain extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(G4LunchMain.this, "plese click the buton that look llike geolocation to get places, or this thing will not work", Toast.LENGTH_LONG).show();
+                    Toast.makeText(G4LunchMain.this, "please click the button that look like geolocation to get places, or this thing will not work", Toast.LENGTH_LONG).show();
                 }
-
 
                 return false;
             }

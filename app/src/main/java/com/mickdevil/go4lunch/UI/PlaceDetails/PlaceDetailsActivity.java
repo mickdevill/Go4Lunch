@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,23 +50,32 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     public static final String keyForDetails = "thisPlace";
     private static final String TAG = "PlaceDetailsActivity";
 
-    PlaceG4Lunch place;
 
-    String placeID;
-
+    //view elements//////////////////////////////////////////////////////////////////
     ImageView placeDetailImage, callResto, LikeResto, webSiteResto;
     RecyclerView placeDetailsRCV;
     FloatingActionButton goToThePlace;
     TextView DetailsPlaceName;
-
     List<AppUser> workmatesWillGo;
+//-------------------------------------------------------------------------------
 
-    DatabaseReference RootDBRef;
+    //class logic & work vars////////////////////////////////////////////////////
+    String placeID;
     String userMail = G4LunchMain.appUserToUse.email;
+    boolean isImGoing;
 
-    boolean isImGoing = false;
+    PlaceG4Lunch place;
+//-----------------------------------------------------------------------------
+
+    //fierbase/////////////////////////////////////////////////////////////////
+    DatabaseReference RootDBRef;
+    DatabaseReference likes;
+    public static final String LIKES = "Likes";
+
+    //----------------------------------------------------------------------------
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.place_details_activity);
@@ -82,17 +95,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         placeDetailsRCV.addItemDecoration(new DividerItemDecoration(PlaceDetailsActivity.this, DividerItemDecoration.VERTICAL));
 
         RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
+        likes = FirebaseDatabase.getInstance().getReference(LIKES);
 
         getDataFromRTDB();
 
-        isImGoing = isImGoing();
-
-        if (isImGoing){
+        if (isImGoing) {
             goToThePlace.setImageResource(R.drawable.going_here);
-        }
-        else {
+        } else {
             goToThePlace.setImageResource(R.drawable.not_going);
         }
+
+        setDrawebleToLikeBTN();
+        isImGoing = isImGoing();
 
         callResto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,23 +142,88 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-             if (isImGoing){
-                 goToThePlace.setImageResource(R.drawable.not_going);
+                if (isImGoing) {
+                    goToThePlace.setImageResource(R.drawable.not_going);
 
-                 curentUser = G4LunchMain.appUserToUse;
-                 curentUser.placeID = "not going here";
-                 RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
-                         G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
-            isImGoing = false;
-             }
-             else {
-                 goToThePlace.setImageResource(R.drawable.going_here);
-                 curentUser = G4LunchMain.appUserToUse;
-                 curentUser.placeID = place.getPlaceId();
-                 RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
-                         G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
-             isImGoing = true;
-             }
+                    curentUser = G4LunchMain.appUserToUse;
+                    curentUser.placeID = "not going here";
+                    RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
+                            G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+                    isImGoing = false;
+                } else {
+                    goToThePlace.setImageResource(R.drawable.going_here);
+                    curentUser = G4LunchMain.appUserToUse;
+                    curentUser.placeID = place.getPlaceId();
+                    RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
+                            G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+                    isImGoing = true;
+                }
+
+            }
+        });
+
+        //  G4LunchMain.appUserToUse.email.substring(0,
+        //                                G4LunchMain.appUserToUse.email.indexOf("@"))
+
+        LikeResto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HashMap<String, Object> oneLike = new HashMap<>();
+                List<HashMap<String, Object>> allLikes = new ArrayList<>();
+
+                ValueEventListener valueEventListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            HashMap<String, Object> theLike = ds.getValue(HashMap.class);
+
+                            allLikes.add(theLike);
+
+                        }
+                        boolean switchAction = true;
+
+                        for (int i = 0; i < allLikes.size(); i++) {
+                            HashMap<String, Object> theLike = allLikes.get(i);
+
+                            if (theLike.get("user") == G4LunchMain.appUserToUse.email.substring(0,
+                                    G4LunchMain.appUserToUse.email.indexOf("@"))) {
+
+                                oneLike.put("user", null);
+                                oneLike.put("place", null);
+
+                                likes.child(G4LunchMain.appUserToUse.email.substring(0,
+                                        G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(oneLike);
+                                LikeResto.setImageResource(R.drawable.not_liked);
+
+                                Log.d(TAG, "onSUCKses: " + "ono rabotaet");
+                                switchAction = false;
+
+                                break;
+                            }
+                        }
+
+                        if (switchAction){
+                            oneLike.put("user", G4LunchMain.appUserToUse.email.substring(0,
+                                    G4LunchMain.appUserToUse.email.indexOf("@")));
+                            oneLike.put("place", placeID);
+
+                            likes.child(G4LunchMain.appUserToUse.email.substring(0,
+                                    G4LunchMain.appUserToUse.email.indexOf("@"))).setValue(oneLike);
+
+                            LikeResto.setImageResource(R.drawable.liked);
+
+                            Log.d(TAG, "onFailure: " + "ono rabotaet");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                };
+                likes.addValueEventListener(valueEventListener);
+
 
             }
         });
@@ -237,7 +316,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         return result;
     }
 
-    private boolean isImGoing(){
+    private boolean isImGoing() {
         boolean result = false;
 
         for (int i = 0; i < workmatesWillGo.size(); i++) {
@@ -248,16 +327,29 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }
         }
 
-        return  result;
+        return result;
     }
 
+    private void setDrawebleToLikeBTN() {
+
+        likes.child(G4LunchMain.appUserToUse.email.substring(0,
+                G4LunchMain.appUserToUse.email.indexOf("@"))).child("place").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+
+                LikeResto.setImageResource(R.drawable.liked);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                LikeResto.setImageResource(R.drawable.not_liked);
 
 
-
-
-
-
-
+            }
+        });
+    }
 
 
 }
