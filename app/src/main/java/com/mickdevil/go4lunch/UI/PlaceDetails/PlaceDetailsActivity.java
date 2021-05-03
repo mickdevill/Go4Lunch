@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity.firebaseAuth;
 
@@ -49,7 +50,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     public static final String keyForDetails = "thisPlace";
     private static final String TAG = "PlaceDetailsActivity";
-
+    private String curendUserUidOnRTDB;
 
     //view elements//////////////////////////////////////////////////////////////////
     ImageView placeDetailImage, callResto, LikeResto, webSiteResto;
@@ -96,7 +97,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
         likes = FirebaseDatabase.getInstance().getReference(LIKES);
-
+        if (!G4LunchMain.appUserToUse.email.isEmpty()) {
+            curendUserUidOnRTDB = G4LunchMain.appUserToUse.email.substring(0,
+                    G4LunchMain.appUserToUse.email.indexOf("@"));
+        }
         getDataFromRTDB();
 
         if (isImGoing) {
@@ -107,6 +111,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         setDrawebleToLikeBTN();
         isImGoing = isImGoing();
+
 
         callResto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,83 +152,61 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
                     curentUser = G4LunchMain.appUserToUse;
                     curentUser.placeID = "not going here";
-                    RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
-                            G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+                    RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
                     isImGoing = false;
                 } else {
                     goToThePlace.setImageResource(R.drawable.going_here);
                     curentUser = G4LunchMain.appUserToUse;
                     curentUser.placeID = place.getPlaceId();
-                    RootDBRef.child(G4LunchMain.appUserToUse.email.substring(0,
-                            G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(AppUser.toMap(curentUser));
+                    RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
                     isImGoing = true;
                 }
 
             }
         });
 
-        //  G4LunchMain.appUserToUse.email.substring(0,
-        //                                G4LunchMain.appUserToUse.email.indexOf("@"))
-
         LikeResto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                HashMap<String, Object> oneLike = new HashMap<>();
-                List<HashMap<String, Object>> allLikes = new ArrayList<>();
+            public void onClick(View v) {
 
-                ValueEventListener valueEventListener = new ValueEventListener() {
+                likes.child(curendUserUidOnRTDB).child("places").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            HashMap<String, Object> theLike = ds.getValue(HashMap.class);
+                    public void onSuccess(DataSnapshot dataSnapshot) {
+                        List<String> likedPlaces = (List<String>) dataSnapshot.getValue();
 
-                            allLikes.add(theLike);
-
-                        }
                         boolean switchAction = true;
 
-                        for (int i = 0; i < allLikes.size(); i++) {
-                            HashMap<String, Object> theLike = allLikes.get(i);
-
-                            if (theLike.get("user") == G4LunchMain.appUserToUse.email.substring(0,
-                                    G4LunchMain.appUserToUse.email.indexOf("@"))) {
-
-                                oneLike.put("user", null);
-                                oneLike.put("place", null);
-
-                                likes.child(G4LunchMain.appUserToUse.email.substring(0,
-                                        G4LunchMain.appUserToUse.email.indexOf("@"))).updateChildren(oneLike);
+                        try {
+                            if (likedPlaces.contains(placeID)) {
+                                likedPlaces.remove(placeID);
+                                HashMap<String, Object> readyToGo = new HashMap<>();
+                                readyToGo.put("places", likedPlaces);
+                                likes.child(curendUserUidOnRTDB).updateChildren(readyToGo);
                                 LikeResto.setImageResource(R.drawable.not_liked);
-
-                                Log.d(TAG, "onSUCKses: " + "ono rabotaet");
                                 switchAction = false;
-
-                                break;
                             }
-                        }
 
-                        if (switchAction){
-                            oneLike.put("user", G4LunchMain.appUserToUse.email.substring(0,
-                                    G4LunchMain.appUserToUse.email.indexOf("@")));
-                            oneLike.put("place", placeID);
+                            if (switchAction) {
+                                likedPlaces.add(placeID);
+                                HashMap<String, Object> readyToGo = new HashMap<>();
+                                readyToGo.put("places", likedPlaces);
+                                likes.child(curendUserUidOnRTDB).updateChildren(readyToGo);
+                                LikeResto.setImageResource(R.drawable.liked);
+                            }
 
-                            likes.child(G4LunchMain.appUserToUse.email.substring(0,
-                                    G4LunchMain.appUserToUse.email.indexOf("@"))).setValue(oneLike);
 
+                        } catch (NullPointerException np) {
+                            np.printStackTrace();
+
+                            List<String> places = new ArrayList<>();
+                            places.add(placeID);
+                            likes.child(curendUserUidOnRTDB).child("places").setValue(places);
                             LikeResto.setImageResource(R.drawable.liked);
 
-                            Log.d(TAG, "onFailure: " + "ono rabotaet");
                         }
 
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                };
-                likes.addValueEventListener(valueEventListener);
-
+                });
 
             }
         });
@@ -332,23 +315,30 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     private void setDrawebleToLikeBTN() {
 
-        likes.child(G4LunchMain.appUserToUse.email.substring(0,
-                G4LunchMain.appUserToUse.email.indexOf("@"))).child("place").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+
+        likes.child(curendUserUidOnRTDB).child("places").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
+                List<String> likedPlaces = (List<String>) dataSnapshot.getValue();
 
-                LikeResto.setImageResource(R.drawable.liked);
+                try {
+                    if (likedPlaces.contains(placeID)) {
+                        LikeResto.setImageResource(R.drawable.liked);
+                    }
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                    if (!likedPlaces.contains(placeID)) {
+                        LikeResto.setImageResource(R.drawable.not_liked);
+                    }
 
-                LikeResto.setImageResource(R.drawable.not_liked);
-
+                } catch (NullPointerException npxa) {
+                    npxa.printStackTrace();
+                    LikeResto.setImageResource(R.drawable.not_liked);
+                }
 
             }
         });
+
+
     }
 
 

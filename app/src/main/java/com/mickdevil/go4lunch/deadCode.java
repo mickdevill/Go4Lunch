@@ -49,6 +49,54 @@ public class deadCode {
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+   //       ValueEventListener valueEventListener = new ValueEventListener() {
+    //           @Override
+    //           public void onDataChange(@NonNull DataSnapshot snapshot) {
+    //               for (DataSnapshot ds : snapshot.getChildren()) {
+    //                   Like theLike = ds.getValue(Like.class);
+
+    //                   allLikes.add(theLike);
+
+    //               }
+    //               boolean switchAction = true;
+
+    //               for (int i = 0; i < allLikes.size(); i++) {
+    //                   Like theLike = allLikes.get(i);
+
+    //                   if (theLike.place.equals(placeID) && theLike.user.equals(curendUserUidOnRTDB)) {
+    //                       theLike.place = "not like it";
+
+
+    //                       likes.child(curendUserUidOnRTDB).updateChildren(Like.toMap(theLike));
+    //                       LikeResto.setImageResource(R.drawable.not_liked);
+
+    //                       Log.d(TAG, "onSUCKses: " + "ono rabotaet");
+    //                       switchAction = false;
+
+    //                       break;
+    //                   }
+    //               }
+
+    //               if (switchAction) {
+    //                  Like theLike = new Like(curendUserUidOnRTDB, placeID);
+
+    //                   likes.child(curendUserUidOnRTDB).setValue(theLike);
+
+    //                   LikeResto.setImageResource(R.drawable.liked);
+
+    //                   Log.d(TAG, "onFailure: " + "ono rabotaet");
+    //               }
+
+    //           }
+
+    //           @Override
+    //           public void onCancelled(@NonNull DatabaseError error) {
+
+    //           }
+    //       };
+    //       likes.addValueEventListener(valueEventListener);
     //    if (theLike.get("user").equals(G4LunchMain.appUserToUse.email.substring(0,
     //            G4LunchMain.appUserToUse.email.indexOf("@")))) {
 
@@ -1108,7 +1156,7 @@ public class deadCode {
                                                                                                      /////////////////
 /////////////////                             ///////////                                ///////////////////////vvvvvv
     //////////////////////          ///////////////////////////////            /////////     /////////vvvvvvvvvv
-    /////////////////////////////////////// THE GRAVE GRAVE WARM  ////////////////////    o   ///////
+    /////////////////////////////////////// THE GREAT GRAVE WARM  ////////////////////    o   ///////
     /////////////////////////////////////////////////////////////////////////////////////   /////////
                ///////////////////////////////           /////////////////////1//////////////////////^^^^^^^^^^
                         ///////////                                /////////              //////////////////////^^^^
