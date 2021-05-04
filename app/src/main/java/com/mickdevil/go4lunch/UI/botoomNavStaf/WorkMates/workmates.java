@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.Chat.GroopChatActivity;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 
 import java.util.ArrayList;
@@ -42,6 +45,10 @@ public class workmates extends Fragment {
         getDataFromRTDB();
 
         return root;
+
+
+
+
     }
 
     private void getDataFromRTDB() {

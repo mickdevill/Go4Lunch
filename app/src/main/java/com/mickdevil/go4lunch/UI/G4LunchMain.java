@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,9 +43,15 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
+import com.mickdevil.go4lunch.UI.Chat.GroopChatActivity;
+import com.mickdevil.go4lunch.UI.Chat.VPagerAdapter;
+import com.mickdevil.go4lunch.UI.Chat.VerticalPager;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListView;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,6 +63,8 @@ public class G4LunchMain extends AppCompatActivity {
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private com.google.android.material.appbar.AppBarLayout AppBarLayout;
+    private VerticalPager verticalPager;
+    private VPagerAdapter pagerAdapter;
     //-----------------------------------------------------------------------------------------
 
     DatabaseReference databaseReference;
@@ -113,7 +122,6 @@ public class G4LunchMain extends AppCompatActivity {
         }
 
 
-
         Log.d(TAG, "onCreate: is runing");
         //the things of navigation
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +154,17 @@ public class G4LunchMain extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(botomNavigation, navController);
+
+        ////CUSTO: VIEW PAGER? THE VERTICAL ONE!!! CUSTO: VIEW PAGER? THE VERTICAL ONE!!! CUSTO: VIEW PAGER? THE VERTICAL ONE!!!
+        verticalPager = findViewById(R.id.theChatPager);
+        List<Fragment> fragVertNavForChat = new ArrayList<>();
+        fragVertNavForChat.add(new workmates());
+        fragVertNavForChat.add(new workmates());
+
+        pagerAdapter = new VPagerAdapter(getSupportFragmentManager(), fragVertNavForChat);
+        verticalPager.setAdapter(pagerAdapter);
+        //------------------------------------------------------------------------------------
+
 
         //set user info in side nav header and initing this views
 
@@ -218,7 +237,7 @@ public class G4LunchMain extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (GetPlacesTheRightWay.finalPlacesResult.size() != 0) {
 
-                     databaseReference.child(appUserToUse.email.substring(0,
+                    databaseReference.child(appUserToUse.email.substring(0,
                             appUserToUse.email.indexOf("@"))).child("placeID").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                         @Override
                         public void onSuccess(DataSnapshot dataSnapshot) {
@@ -248,7 +267,6 @@ public class G4LunchMain extends AppCompatActivity {
 
                         }
                     });
-
 
 
                 } else {

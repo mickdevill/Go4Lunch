@@ -83,14 +83,6 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         getLikes(holder, position);
 
 
-
-        //     if (place.getUsersMails() != null) {
-        //         holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
-        //     } else {
-        //  holder.workmatesWillGo.setText(position);
-        //    }
-
-
         holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
