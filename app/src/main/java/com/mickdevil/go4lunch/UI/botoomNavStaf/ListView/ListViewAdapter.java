@@ -12,10 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Double.valueOf;
@@ -26,8 +35,10 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     public ListViewAdapter(List<PlaceG4Lunch> places) {
         this.places = places;
-
     }
+
+    DatabaseReference likes = FirebaseDatabase.getInstance().getReference(PlaceDetailsActivity.LIKES);
+
 
     @NonNull
     @Override
@@ -35,6 +46,8 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.places_list_holder, parent, false);
         return new Holder(view);
+
+
     }
 
     @Override
@@ -67,37 +80,27 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
             holder.restoOpenColse.setText(R.string.isClose);
         }
 
-        if (place.getRating() > 1.6 && place.getRating() < 3.2) {
-            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-        }
-        if (place.getRating() > 3.2 && place.getRating() < 4) {
-            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-            holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-        }
-        if (place.getRating() > 4) {
-            holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-            holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-            holder.rateStar3.setImageResource(R.drawable.star_rate_24);
-        }
-   //     if (place.getUsersMails() != null) {
-   //         holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
-   //     } else {
-          //  holder.workmatesWillGo.setText(position);
-    //    }
+        getLikes(holder, position);
 
 
 
+        //     if (place.getUsersMails() != null) {
+        //         holder.workmatesWillGo.setText(valueOf(place.getUsersMails().size()).toString());
+        //     } else {
+        //  holder.workmatesWillGo.setText(position);
+        //    }
 
-            holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
-                    intent.putExtra(PlaceDetailsActivity.keyForDetails, place.getPlaceId());
-                    view.getContext().startActivity(intent);
-                }
-            });
 
-            Log.d(TAG, "onBindViewHolder: " + position);
+        holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
+                intent.putExtra(PlaceDetailsActivity.keyForDetails, place.getPlaceId());
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        Log.d(TAG, "onBindViewHolder: " + position);
 
 
     }
@@ -112,7 +115,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
         TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo;
         ImageView restImg, rateStar1, rateStar2, rateStar3;
-RelativeLayout placesListViewHolder;
+        RelativeLayout placesListViewHolder;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -130,22 +133,64 @@ RelativeLayout placesListViewHolder;
             rateStar3 = itemView.findViewById(R.id.rateStar3);
 
 
-
         }
     }
 
-private String cutTheAdress(String vicinity){
+    private String cutTheAdress(String vicinity) {
         String result;
         result = vicinity.substring(0, vicinity.indexOf(","));
         return result;
     }
 
-    private String cutTheDistence(String distence){
+    private String cutTheDistence(String distence) {
         String result;
         result = distence.substring(0, distence.indexOf(".")) + "m";
         return result;
 
-}
+    }
+
+    private void getLikes(Holder holder, int position) {
+
+        likes.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                List<String> likedPlaces;
+                int likesOnPlace = 0;
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    likedPlaces = (List<String>) ds.child("places").getValue();
+
+                    for (int i = 0; i < likedPlaces.size(); i++) {
+
+                        if (places.get(position).getPlaceId().equals(likedPlaces.get(i))) {
+                            likesOnPlace ++;
+                        }
+                    }
+
+                    if (likesOnPlace == 1) {
+                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                    }
+
+                    if (likesOnPlace == 2) {
+                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                        holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                    }
+                    if (likesOnPlace == 3 || likesOnPlace > 3) {
+                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                        holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                        holder.rateStar3.setImageResource(R.drawable.star_rate_24);
+                    }
+
+                    Log.d(TAG, "liks on Place" + likesOnPlace);
+
+
+                }
+            }
+
+
+        });
+
+    }
 
 
 }

@@ -201,7 +201,7 @@ public class GetPlacesTheRightWay {
         Bitmap photo = null;
         boolean isSomeBodyGoing = false;
         double distenceToUser;
-        double rating;
+        double rating = 0;
         String photoReff;
 
         JSONObject moreInfo;
@@ -234,8 +234,6 @@ public class GetPlacesTheRightWay {
                 longitude = thatPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
 
                 opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
-
-                rating = thatPlace.getDouble("rating");
 
                 //   photosArray = thatPlace.getJSONArray("photos");
                 photosArray = thatPlace.getJSONArray("photos");
@@ -282,7 +280,7 @@ public class GetPlacesTheRightWay {
 
 
 
-                if (placeName != null && placeId != null && vicinity != null && photoReff != null) {
+                if (placeName != null && placeId != null && vicinity != null) {
 
                     placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
                             false, new ArrayList<>(), distenceToUser, photoReff, rating, weekDaysOpen, webSite, phoneNumber);
