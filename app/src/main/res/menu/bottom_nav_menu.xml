@@ -12,7 +12,7 @@
         android:title="@string/list_view" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/workmates"
         android:icon="@drawable/ic_worckmates"
         android:title="@string/worckmates" />
 

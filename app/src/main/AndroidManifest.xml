@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Go4lunch"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UI.Chat.GroopChatActivity"></activity>
+        <activity android:name=".UI.Chat.GroopChatFragment" />
         <activity android:name=".UI.PlaceDetails.PlaceDetailsActivity" />
         <activity android:name=".UI.SignIn.MainSigninActivity">
             <intent-filter>

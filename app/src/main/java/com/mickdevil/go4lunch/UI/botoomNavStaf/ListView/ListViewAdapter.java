@@ -16,15 +16,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Double.valueOf;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.botoomNavStaf.WorkMates.workmates"
+    tools:context=".UI.botoomNavStaf.WorkMates.Workmates"
     android:layout_marginBottom="50dp"
     >
 
@@ -12,5 +12,7 @@
         android:id="@+id/workmatesRcv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+
 
 </RelativeLayout>

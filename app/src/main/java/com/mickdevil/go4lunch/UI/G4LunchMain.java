@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -43,13 +44,12 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.GetPlacesTheRightWay;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.TreadManager.HavyTasksThread;
-import com.mickdevil.go4lunch.UI.Chat.GroopChatActivity;
+import com.mickdevil.go4lunch.UI.Chat.GroopChatFragment;
 import com.mickdevil.go4lunch.UI.Chat.VPagerAdapter;
 import com.mickdevil.go4lunch.UI.Chat.VerticalPager;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListView;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.Workmates;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +63,8 @@ public class G4LunchMain extends AppCompatActivity {
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private com.google.android.material.appbar.AppBarLayout AppBarLayout;
+
+
     private VerticalPager verticalPager;
     private VPagerAdapter pagerAdapter;
     //-----------------------------------------------------------------------------------------
@@ -113,8 +115,7 @@ public class G4LunchMain extends AppCompatActivity {
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-//work With my SUPER thread!!!!!!!!!!
+        //work With my SUPER thread!!!!!!!!!!
         havyTasksThread = new HavyTasksThread("havy task thread", G4LunchMain.this, G4LunchMain.this);
 
         if (!havyTasksThread.isAlive()) {
@@ -148,22 +149,50 @@ public class G4LunchMain extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.maps, R.id.mapListV, R.id.navigation_notifications)
+                R.id.maps, R.id.mapListV, R.id.workmates)
                 .build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavController navController = Navigation.findNavController(G4LunchMain.this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(G4LunchMain.this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(botomNavigation, navController);
-
-        ////CUSTO: VIEW PAGER? THE VERTICAL ONE!!! CUSTO: VIEW PAGER? THE VERTICAL ONE!!! CUSTO: VIEW PAGER? THE VERTICAL ONE!!!
         verticalPager = findViewById(R.id.theChatPager);
-        List<Fragment> fragVertNavForChat = new ArrayList<>();
-        fragVertNavForChat.add(new workmates());
-        fragVertNavForChat.add(new workmates());
+        botomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        pagerAdapter = new VPagerAdapter(getSupportFragmentManager(), fragVertNavForChat);
-        verticalPager.setAdapter(pagerAdapter);
-        //------------------------------------------------------------------------------------
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.maps) {
+
+                    NavigationUI.onNavDestinationSelected(item, navController);
+
+                    verticalPager.setVisibility(View.INVISIBLE);
+
+                }
+                if (id == R.id.mapListV) {
+                    verticalPager.setVisibility(View.INVISIBLE);
+
+                    NavigationUI.onNavDestinationSelected(item, navController);
+
+                }
+                if (id == R.id.workmates) {
+
+                    verticalPager.setVisibility(View.VISIBLE);
+
+                    List<Fragment> fragVertNavForChat = new ArrayList<>();
+                    fragVertNavForChat.add(new Workmates());
+                    fragVertNavForChat.add(new GroopChatFragment());
+
+                    pagerAdapter = new VPagerAdapter(getSupportFragmentManager(), fragVertNavForChat);
+
+                    verticalPager.setAdapter(pagerAdapter);
+
+                    NavigationUI.onNavDestinationSelected(item, navController);
+                }
+
+                return false;
+            }
+        });
 
 
         //set user info in side nav header and initing this views
@@ -198,6 +227,7 @@ public class G4LunchMain extends AppCompatActivity {
 
     }
 
+
     //init the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -206,6 +236,51 @@ public class G4LunchMain extends AppCompatActivity {
 
 
         return true;
+    }
+
+
+    //this on activity result is used for alot of things. and the only working is autocmplete with places api
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUESTAUTOCOMPLITION && resultCode == RESULT_OK) {
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            //write the logic here
+        } else if (requestCode == 666) {
+            Toast.makeText(G4LunchMain.this, "it fucking worck with activity result", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    public static void handleMSG(int taskCode) {
+        Message msg = Message.obtain();
+        msg.what = taskCode;
+        havyTasksThread.getHuendler().sendMessage(msg);
+    }
+
+
+    public static void start(Activity activity, Intent intent) {
+        activity.startActivity(intent);
+    }
+
+
+    public static FusedLocationProviderClient getLocationProviderClient() {
+        return locationProviderClient;
+    }
+
+    public static PlacesClient getClient() {
+        return client;
+    }
+
+
+    public static String getApikey() {
+        return apikey;
+    }
+
+    public HavyTasksThread getHavyTasksThread() {
+        return havyTasksThread;
     }
 
 
@@ -300,50 +375,6 @@ public class G4LunchMain extends AppCompatActivity {
 
 //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!!  ////////
 //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! ////////
-
-    //this on activity result is used for alot of things. and the only working is autocmplete with places api
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUESTAUTOCOMPLITION && resultCode == RESULT_OK) {
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            //write the logic here
-        } else if (requestCode == 666) {
-            Toast.makeText(G4LunchMain.this, "it fucking worck with activity result", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-
-    public static void handleMSG(int taskCode) {
-        Message msg = Message.obtain();
-        msg.what = taskCode;
-        havyTasksThread.getHuendler().sendMessage(msg);
-    }
-
-
-    public static void start(Activity activity, Intent intent) {
-        activity.startActivity(intent);
-    }
-
-
-    public static FusedLocationProviderClient getLocationProviderClient() {
-        return locationProviderClient;
-    }
-
-    public static PlacesClient getClient() {
-        return client;
-    }
-
-
-    public static String getApikey() {
-        return apikey;
-    }
-
-    public HavyTasksThread getHavyTasksThread() {
-        return havyTasksThread;
-    }
 
 
 }

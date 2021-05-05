@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.mickdevil.go4lunch.R;
 
-public class GroopChatActivity extends Fragment {
+public class GroopChatFragment extends Fragment {
 
     @Nullable
     @Override

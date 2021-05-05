@@ -1,9 +1,13 @@
 package com.mickdevil.go4lunch.UI.Chat;
 
 import androidx.annotation.NonNull;
+import androidx.customview.widget.Openable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.navigation.ui.AppBarConfiguration;
+
+import com.mickdevil.go4lunch.R;
 
 import java.util.List;
 
@@ -20,6 +24,7 @@ public class VPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+
         return fragments.get(position);
     }
 
@@ -27,4 +32,10 @@ public class VPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return fragments.size();
     }
+
+
+
+
+
+
 }

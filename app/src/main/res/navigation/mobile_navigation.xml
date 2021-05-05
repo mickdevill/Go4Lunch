@@ -18,9 +18,9 @@
         tools:layout="@layout/fragment_list_view" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.workmates"
+        android:id="@+id/workmates"
+        android:name="com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.Workmates"
         android:label="@string/worckmates"
-        tools:layout="@layout/workmates" />
+        tools:layout="@layout/activity_pager" />
 
 </navigation>
