@@ -54,6 +54,7 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -202,6 +203,8 @@ public class MainSigninActivity extends AppCompatActivity {
                             appUser = new AppUser(fierBaseDBRef.getKey(), firebaseUser.getDisplayName(), null, firebaseUser.getEmail(), firebaseUser.getPhotoUrl().toString(), null
                                     );
 
+
+
                             Log.d(TAG, "user FB photo " + firebaseUser.getPhotoUrl().toString());
 
                             chekIfUserExistAndPush(appUser);
@@ -257,6 +260,7 @@ public class MainSigninActivity extends AppCompatActivity {
                             appUser = new AppUser(fierBaseDBRef.getKey(), account.getDisplayName(),
                                     account.getFamilyName(), account.getEmail(), account.getPhotoUrl().toString(), null);
                             Log.d(TAG, "onComplete: " + appUser);
+
 
                             chekIfUserExistAndPush(appUser);
 

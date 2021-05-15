@@ -63,6 +63,10 @@ dependencies {
 //google services
    implementation platform('com.google.firebase:firebase-bom:26.3.0')//somme fierbase stuа
 
+//Room for local DB
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+
 
 
     implementation 'com.google.firebase:firebase-auth:20.0.4'//authentification thingss
@@ -79,7 +83,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
-
+    implementation 'org.jsoup:jsoup:1.11.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
 

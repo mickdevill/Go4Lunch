@@ -29,9 +29,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -74,11 +78,14 @@ public class G4LunchMain extends AppCompatActivity {
 
     //api stuff
     /////////////////////////////////////////////////////////////////////////////////////////
-    private static FusedLocationProviderClient locationProviderClient;
-    private static PlacesClient client;
+    public static FusedLocationProviderClient locationProviderClient;
+    public static PlacesClient client;
+
+
 
     List<Place.Field> fieldList;
-    private static final String apikey = "AIzaSyBZ1yf43MqKZwPmDvEkUx5CBufQpf01yDI";
+    public static final String apikey = "AIzaSyA9oVDd4uvKKC1rA7zJtnQDeNZ6IA8UYyg";
+   // private static final String apikey = "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
 
     //-----------------------------------------------------------------------------------------
     private static HavyTasksThread havyTasksThread;
@@ -112,6 +119,8 @@ public class G4LunchMain extends AppCompatActivity {
         Places.initialize(G4LunchMain.this, apikey);
 
         client = Places.createClient(G4LunchMain.this);
+
+
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -375,6 +384,13 @@ public class G4LunchMain extends AppCompatActivity {
 
 //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!!  ////////
 //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! //WORKING WITH MENUS END!!! ////////
+
+
+
+
+
+
+
 
 
 }

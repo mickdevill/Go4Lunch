@@ -15,12 +15,36 @@
         android:src="@drawable/background_login_scren" />
 
     <EditText
+        android:id="@+id/editMSG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="76dp"
         android:hint="@string/text_mesege"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="20sp"
+       android:layout_marginEnd="50dp"
+        android:layout_marginStart="25dp"
+        />
+
+    <ImageView
+        android:id="@+id/sendMSG"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="76dp"
+      android:layout_alignParentEnd="true"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ChatRCV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/editMSG"
+        android:layout_marginBottom="15dp"
+        />
 
 
 </RelativeLayout>

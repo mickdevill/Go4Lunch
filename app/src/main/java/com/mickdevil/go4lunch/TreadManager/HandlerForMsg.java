@@ -28,7 +28,7 @@ public class HandlerForMsg extends Handler {
 
             case 1:
                 GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay(MapFragment.locationForPlaces);
-                getPlacesTheRightWay.getPlaces();
+                getPlacesTheRightWay.getPlacesWithGoogle("5000");
                 break;
 
             case 2:

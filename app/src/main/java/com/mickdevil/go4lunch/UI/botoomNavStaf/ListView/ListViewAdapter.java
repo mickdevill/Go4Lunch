@@ -51,12 +51,15 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         holder.restoName.setText(place.getPlaceName());
 
         holder.restoDistance.setText(cutTheDistence(valueOf(place.getDistenceToUser()).toString()));
-
-        if (place.getVicinity().contains(",")) {
-            holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
-        } else {
-            holder.restoAddress.setText(place.getVicinity());
-        }
+                     if (place.getForomGoogleOrAlternative() == "GOOGLE") {
+                         if (place.getVicinity().contains(",")) {
+                             holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
+                         } else {
+                             holder.restoAddress.setText(place.getVicinity());
+                         }
+                     }
+                      else {
+                          holder.restoAddress.setText(place.getVicinity()); }
 
         if (place.getPhoto() != null) {
             holder.restImg.setImageBitmap(place.getPhoto());

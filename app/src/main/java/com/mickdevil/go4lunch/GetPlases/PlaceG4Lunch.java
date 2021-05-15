@@ -25,9 +25,11 @@ public class PlaceG4Lunch implements Parcelable {
     private List<String> weekdaysOpen;
     private String webSite;
     private String phoneNumber;
+    private String foromGoogleOrAlternative;
 
-    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId, boolean opened, Bitmap photo, boolean isSomeBodyGoing,
-                        List<String> usersMails, double distenceToUser, String photoReff, double rating, List<String> weekdaysOpen, String webSite, String phoneNumber) {
+    public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId,
+                        boolean opened, Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser,
+                        String photoReff, double rating, List<String> weekdaysOpen, String webSite, String phoneNumber, String foromGoogleOrAlternative) {
         this.placeName = placeName;
         this.vicinity = vicinity;
         this.latitude = latitude;
@@ -43,6 +45,7 @@ public class PlaceG4Lunch implements Parcelable {
         this.weekdaysOpen = weekdaysOpen;
         this.webSite = webSite;
         this.phoneNumber = phoneNumber;
+        this.foromGoogleOrAlternative = foromGoogleOrAlternative;
     }
 
     protected PlaceG4Lunch(Parcel in) {
@@ -61,6 +64,7 @@ public class PlaceG4Lunch implements Parcelable {
         weekdaysOpen = in.createStringArrayList();
         webSite = in.readString();
         phoneNumber = in.readString();
+        foromGoogleOrAlternative = in.readString();
     }
 
     @Override
@@ -80,6 +84,7 @@ public class PlaceG4Lunch implements Parcelable {
         dest.writeStringList(weekdaysOpen);
         dest.writeString(webSite);
         dest.writeString(phoneNumber);
+        dest.writeString(foromGoogleOrAlternative);
     }
 
     @Override
@@ -217,5 +222,13 @@ public class PlaceG4Lunch implements Parcelable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getForomGoogleOrAlternative() {
+        return foromGoogleOrAlternative;
+    }
+
+    public void setForomGoogleOrAlternative(String foromGoogleOrAlternative) {
+        this.foromGoogleOrAlternative = foromGoogleOrAlternative;
     }
 }
