@@ -29,13 +29,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -84,8 +80,8 @@ public class G4LunchMain extends AppCompatActivity {
 
 
     List<Place.Field> fieldList;
-    public static final String apikey = "AIzaSyA9oVDd4uvKKC1rA7zJtnQDeNZ6IA8UYyg";
-   // private static final String apikey = "AIzaSyBjMRxsLtqdVWkeNxfNKA58SebE7c1XVnk";
+    public static final String apikey = "AIzaSyBh3y62azhrTpBrA34dThuIHYAN8PxLDuA";
+
 
     //-----------------------------------------------------------------------------------------
     private static HavyTasksThread havyTasksThread;
@@ -206,7 +202,7 @@ public class G4LunchMain extends AppCompatActivity {
 
         //set user info in side nav header and initing this views
 
-        databaseReference = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
+        databaseReference = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
 
         header = sideNavView.getHeaderView(0);
 

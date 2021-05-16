@@ -8,6 +8,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.HashMap;
+
+import static java.lang.Integer.valueOf;
+
 @Entity(tableName = "meseges")
 public class Mesege implements Parcelable {
 
@@ -46,7 +50,7 @@ public class Mesege implements Parcelable {
     public int year;
 
     // public String userName, userPhoto, msgText, toWho;
-   // public int day, moth, year;
+    // public int day, moth, year;
 
 
     public Mesege() {
@@ -156,4 +160,58 @@ public class Mesege implements Parcelable {
     public void setYear(int year) {
         this.year = year;
     }
+
+//TODO need to remove that
+
+ //  public HashMap<String, Object> toMap(Mesege mesege) {
+
+ //      HashMap<String, Object> result = new HashMap<>();
+ //      result.put("userName", mesege.userName);
+ //      result.put("userPhoto", mesege.userPhoto);
+ //      result.put("msgText", mesege.msgText);
+ //      result.put("toWho", mesege.toWho);
+ //      result.put("day", mesege.day);
+ //      result.put("moth", mesege.moth);
+ //      result.put("year", mesege.year);
+
+ //      return result;
+
+ //  }
+
+    public static Mesege fromMap(HashMap<String, Object> map) {
+
+        Mesege mesege;
+
+        String userName = (String) map.get("userName");
+        String userPhoto = (String) map.get("userPhoto");
+        String msgText = (String) map.get("msgText");
+        String toWho = (String) map.get("toWho");
+
+        Long dayL = (long) map.get("day");
+        Long mothL = (long) map.get("moth");
+        Long yearL = (long) map.get("year");
+
+        String dayS = Long.toString(dayL);
+        String mothS = Long.toString(mothL);
+        String yearS = Long.toString(yearL);
+
+        int day = valueOf(dayS);
+        int moth = valueOf(mothS);
+        int year = valueOf(yearS);
+
+        mesege = new Mesege(userName, userPhoto,
+                msgText, toWho, day, moth, year);
+
+
+        return mesege;
+
+    }
+
+public void zsefg(){
+
 }
+
+
+}
+
+

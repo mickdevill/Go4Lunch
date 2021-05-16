@@ -4,11 +4,7 @@ package com.mickdevil.go4lunch.UI.SignIn;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -35,7 +31,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,9 +49,6 @@ import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 
-import java.lang.reflect.Field;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +63,7 @@ public class MainSigninActivity extends AppCompatActivity {
     //my fierBase database
     public FirebaseDatabase database;
     public static DatabaseReference fierBaseDBRef;
-    public static final String USER_KEY = "App users";
+    public static final String USER_PATH = "App users";
 
     private GoogleSignInClient googleSignInClient;
 
@@ -138,7 +130,7 @@ public class MainSigninActivity extends AppCompatActivity {
 
         //init fierBase DB
         database = FirebaseDatabase.getInstance();
-        fierBaseDBRef = database.getReference(USER_KEY);
+        fierBaseDBRef = database.getReference(USER_PATH);
 
         //finde views by ID
         faceBookSignIN = findViewById(R.id.faceBookSignIN);

@@ -39,7 +39,7 @@ public class Workmates extends Fragment {
             workmatesRCV.setLayoutManager(new LinearLayoutManager(getContext()));
             workmatesRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-            DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
+            DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
             getDataFromRTDB();
 
 

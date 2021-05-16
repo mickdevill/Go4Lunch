@@ -83,8 +83,8 @@ public class GetPlacesTheRightWay {
 
 
             String myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.getLatitude() + "," +
-                    location.getLongitude() + "&radius=" + radious + "&type=restaurant&keyword=YOUR KEY WORD&key=" +
-                    "YOUR API KEY HERE(you must restrict for web, or it will nor work)";
+                    location.getLongitude() + "&radius=" + radious + "&type=restaurant&keyword=kebab&key=" +
+                    "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw";
 
             List<JSONObject> theFullResult = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class GetPlacesTheRightWay {
                 if (johny != null) {
                     theFullResult.add(johny);
                 }
-                //  Log.d(TAG, "johny is " + theFullResult.size());
+                  Log.d(TAG, "johny is " + theFullResult.size());
 
             }
 
@@ -144,7 +144,7 @@ public class GetPlacesTheRightWay {
 
             Johny = new JSONObject(data);
 
-            //  Log.d(TAG, "getPlaces: " + data);
+             Log.d(TAG, "getPlaces: " + data);
 
 
         } catch (MalformedURLException e) {
@@ -169,10 +169,10 @@ public class GetPlacesTheRightWay {
 
             nextPage = johny.getString("next_page_token");
 
-            //  Log.d(TAG, "doItAgain: " + nextPage);
+             Log.d(TAG, "doItAgain: " + nextPage);
 
             myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + nextPage + "&key=" +
-                    "YOUR API KEY HERE(you must restrict for web, or it will nor work)";
+                    "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw";
 
 
         } catch (JSONException e) {
@@ -282,7 +282,7 @@ public class GetPlacesTheRightWay {
 
 
                 url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                        photoReff + "&key=" + "YOUR API KEY HERE(you must restrict for web, or it will nor work)");
+                        photoReff + "&key=" + "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw");
 
                 urlConnection = (HttpsURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -353,7 +353,7 @@ public class GetPlacesTheRightWay {
 
 
         String myUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
-                "&fields=" + "formatted_phone_number,opening_hours,website" + "&key=YOUR API KEY HERE(you must restrict for web, or it will nor work)";
+                "&fields=" + "formatted_phone_number,opening_hours,website" + "&key=AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw";
 
 
         try {

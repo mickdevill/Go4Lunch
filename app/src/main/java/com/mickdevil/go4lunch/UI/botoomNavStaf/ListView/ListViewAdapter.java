@@ -157,24 +157,27 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
                         }
                     }
 
-                    if (likesOnPlace == 1) {
-                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-                    }
-
-                    if (likesOnPlace == 2) {
-                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-                        holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-                    }
-                    if (likesOnPlace == 3 || likesOnPlace > 3) {
-                        holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-                        holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-                        holder.rateStar3.setImageResource(R.drawable.star_rate_24);
-                    }
-
-                    Log.d(TAG, "liks on Place" + likesOnPlace);
-
 
                 }
+
+
+                if (likesOnPlace == 1) {
+                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                }
+
+                if (likesOnPlace == 2) {
+                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                    holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                }
+                if (likesOnPlace == 3 || likesOnPlace > 3) {
+                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                    holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                    holder.rateStar3.setImageResource(R.drawable.star_rate_24);
+                }
+
+                Log.d(TAG, "liks on Place" + likesOnPlace);
+
+
             }
 
 

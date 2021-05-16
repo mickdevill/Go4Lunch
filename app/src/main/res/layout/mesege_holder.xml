@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:textSize="16sp"
         android:text="vladimir putin iz kremliya" />
 
     <ImageView
@@ -28,6 +29,8 @@
         android:layout_toEndOf="@+id/profileImage"
         android:layout_marginStart="7dp"
       android:layout_marginTop="5dp"
+        android:textSize="18sp"
+
         />
 
 

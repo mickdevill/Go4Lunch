@@ -1,7 +1,6 @@
 package com.mickdevil.go4lunch.UI.PlaceDetails;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,17 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,19 +27,11 @@ import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
-import com.mickdevil.go4lunch.GetPlases.CustomPlace;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import static com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity.firebaseAuth;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
@@ -95,7 +82,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         placeDetailsRCV.setLayoutManager(new LinearLayoutManager(PlaceDetailsActivity.this));
         placeDetailsRCV.addItemDecoration(new DividerItemDecoration(PlaceDetailsActivity.this, DividerItemDecoration.VERTICAL));
 
-        RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_KEY);
+        RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
         likes = FirebaseDatabase.getInstance().getReference(LIKES);
         if (!G4LunchMain.appUserToUse.email.isEmpty()) {
             curendUserUidOnRTDB = G4LunchMain.appUserToUse.email.substring(0,
@@ -179,18 +166,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                         try {
                             if (likedPlaces.contains(placeID)) {
                                 likedPlaces.remove(placeID);
-                                HashMap<String, Object> readyToGo = new HashMap<>();
-                                readyToGo.put("places", likedPlaces);
-                                likes.child(curendUserUidOnRTDB).updateChildren(readyToGo);
+                                HashMap<String, Object> likedPlacesUpdated = new HashMap<>();
+                                likedPlacesUpdated.put("places", likedPlaces);
+                                likes.child(curendUserUidOnRTDB).updateChildren(likedPlacesUpdated);
                                 LikeResto.setImageResource(R.drawable.not_liked);
                                 switchAction = false;
                             }
 
                             if (switchAction) {
                                 likedPlaces.add(placeID);
-                                HashMap<String, Object> readyToGo = new HashMap<>();
-                                readyToGo.put("places", likedPlaces);
-                                likes.child(curendUserUidOnRTDB).updateChildren(readyToGo);
+                                HashMap<String, Object> likedPlacesUpdated = new HashMap<>();
+                                likedPlacesUpdated.put("places", likedPlaces);
+                                likes.child(curendUserUidOnRTDB).updateChildren(likedPlacesUpdated);
                                 LikeResto.setImageResource(R.drawable.liked);
                             }
 
