@@ -13,7 +13,12 @@ import java.util.HashMap;
 import static java.lang.Integer.valueOf;
 
 @Entity(tableName = "meseges")
-public class Mesege implements Parcelable {
+public class Mesege {
+
+    //for msg status
+    public static final String MSG_STATUS_OK = "OK";
+    public static final String MSG_STATUS_NON_READ_BY_EVREE_ONE = "NOT_OK";
+
 
     @PrimaryKey(autoGenerate = true)
     public long id;
@@ -49,15 +54,27 @@ public class Mesege implements Parcelable {
     @ColumnInfo(name = "year")
     public int year;
 
+    public int hour;
+
+    public int min;
+
+    public int sec;
+
+    @ColumnInfo(name = "milis")
+    public int milis;
     // public String userName, userPhoto, msgText, toWho;
     // public int day, moth, year;
+
+    //this string is used to remove the messeges, for extra high optimization
+    @ColumnInfo(name = "msgStatus")
+    public String msgStatus;
 
 
     public Mesege() {
 
     }
 
-    public Mesege(String userName, String userPhoto, String msgText, String toWho, int day, int moth, int year) {
+    public Mesege(String userName, String userPhoto, String msgText, String toWho, int day, int moth, int year, String msgStatus, int milis, int hour, int sec, int min) {
         this.userName = userName;
         this.userPhoto = userPhoto;
         this.msgText = msgText;
@@ -65,45 +82,55 @@ public class Mesege implements Parcelable {
         this.day = day;
         this.moth = moth;
         this.year = year;
+        this.msgStatus = msgStatus;
+        this.milis = milis;
+        this.hour = hour;
+        this.sec = sec;
+        this.min = min;
     }
 
-    protected Mesege(Parcel in) {
-        userName = in.readString();
-        userPhoto = in.readString();
-        msgText = in.readString();
-        toWho = in.readString();
-        day = in.readInt();
-        moth = in.readInt();
-        year = in.readInt();
+    public int getMin() {
+        return min;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userName);
-        dest.writeString(userPhoto);
-        dest.writeString(msgText);
-        dest.writeString(toWho);
-        dest.writeInt(day);
-        dest.writeInt(moth);
-        dest.writeInt(year);
+    public void setMin(int min) {
+        this.min = min;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public int getHour() {
+        return hour;
     }
 
-    public static final Creator<Mesege> CREATOR = new Creator<Mesege>() {
-        @Override
-        public Mesege createFromParcel(Parcel in) {
-            return new Mesege(in);
-        }
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
 
-        @Override
-        public Mesege[] newArray(int size) {
-            return new Mesege[size];
-        }
-    };
+    public int getSec() {
+        return sec;
+    }
+
+    public void setSec(int sec) {
+        this.sec = sec;
+    }
+
+    public String getMsgStatus() {
+        return msgStatus;
+    }
+
+    public void setMsgStatus(String msgStatus) {
+        this.msgStatus = msgStatus;
+    }
+
+
+    public int getMilis() {
+        return milis;
+    }
+
+    public void setMilis(int milis) {
+        this.milis = milis;
+    }
+
 
     public String getUserName() {
         return userName;
@@ -163,53 +190,52 @@ public class Mesege implements Parcelable {
 
 //TODO need to remove that
 
- //  public HashMap<String, Object> toMap(Mesege mesege) {
+    //  public HashMap<String, Object> toMap(Mesege mesege) {
 
- //      HashMap<String, Object> result = new HashMap<>();
- //      result.put("userName", mesege.userName);
- //      result.put("userPhoto", mesege.userPhoto);
- //      result.put("msgText", mesege.msgText);
- //      result.put("toWho", mesege.toWho);
- //      result.put("day", mesege.day);
- //      result.put("moth", mesege.moth);
- //      result.put("year", mesege.year);
+    //      HashMap<String, Object> result = new HashMap<>();
+    //      result.put("userName", mesege.userName);
+    //      result.put("userPhoto", mesege.userPhoto);
+    //      result.put("msgText", mesege.msgText);
+    //      result.put("toWho", mesege.toWho);
+    //      result.put("day", mesege.day);
+    //      result.put("moth", mesege.moth);
+    //      result.put("year", mesege.year);
 
- //      return result;
+    //      return result;
 
- //  }
+    //  }
+//TODO remove this one, i dont use RDB for msg and don't get msg with hash map
 
-    public static Mesege fromMap(HashMap<String, Object> map) {
+//  public static Mesege fromMap(HashMap<String, Object> map) {
+//      Mesege mesege;
 
-        Mesege mesege;
+//      String userName = (String) map.get("userName");
+//      String userPhoto = (String) map.get("userPhoto");
+//      String msgText = (String) map.get("msgText");
+//      String toWho = (String) map.get("toWho");
+//      String msgStatus = (String) map.get("msgStatus");
 
-        String userName = (String) map.get("userName");
-        String userPhoto = (String) map.get("userPhoto");
-        String msgText = (String) map.get("msgText");
-        String toWho = (String) map.get("toWho");
+//      Long dayL = (long) map.get("day");
+//      Long mothL = (long) map.get("moth");
+//      Long yearL = (long) map.get("year");
+//      Long milisL = (long) map.get("milis");
 
-        Long dayL = (long) map.get("day");
-        Long mothL = (long) map.get("moth");
-        Long yearL = (long) map.get("year");
-
-        String dayS = Long.toString(dayL);
-        String mothS = Long.toString(mothL);
-        String yearS = Long.toString(yearL);
-
-        int day = valueOf(dayS);
-        int moth = valueOf(mothS);
-        int year = valueOf(yearS);
-
-        mesege = new Mesege(userName, userPhoto,
-                msgText, toWho, day, moth, year);
+//      String dayS = Long.toString(dayL);
+//      String mothS = Long.toString(mothL);
+//      String yearS = Long.toString(yearL);
+//      String milisS = Long.toString(yearL);
 
 
-        return mesege;
+//      int milis = valueOf(milisS);
+//      int day = valueOf(dayS);
+//      int moth = valueOf(mothS);
+//      int year = valueOf(yearS);
 
-    }
 
-public void zsefg(){
-
-}
+//      mesege = new Mesege(userName, userPhoto,
+//              msgText, toWho, day, moth, year, msgStatus, milis);
+//      return mesege;
+//  }
 
 
 }

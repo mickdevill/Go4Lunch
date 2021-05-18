@@ -27,7 +27,7 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class deadCode {
-
+//да упокоятся ваши грешные души...
 
 
                                                           /////////////////////////
@@ -48,6 +48,111 @@ public class deadCode {
                                                   //                                  //                          //////
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    //   private void sortMsg(List<Mesege> meseges) {
+//       List<Mesege> sortedeMeseges = new ArrayList<>();
+//       List<Integer> indexesOfMeseges = new ArrayList<>();
+//       try {
+// if (meseges.size() > 2 || meseges.size() == 2 ) {
+//   Mesege mesege;
+//   for (int i = 0; i < meseges.size(); i++) {
+//       mesege = meseges.get(i);
+//       int msgIndexI = 0;
+//       int msgIndexIPlusOne = 0;
+
+//       //YEARS
+//       if (mesege.year > meseges.get(i + 1).year) {
+//           msgIndexI++;
+//       }
+
+//       if (mesege.year < meseges.get(i + 1).year) {
+//           msgIndexIPlusOne++;
+//       }
+
+//       //MOTH
+//       if (mesege.moth > meseges.get(i + 1).moth) {
+//           msgIndexI++;
+//       }
+//       if (mesege.moth < meseges.get(i + 1).moth) {
+//           msgIndexIPlusOne++;
+//       }
+//       //DAY
+//       if (mesege.day > meseges.get(i + 1).day) {
+//           msgIndexI++;
+//       }
+//       if (mesege.day < meseges.get(i + 1).day) {
+//           msgIndexIPlusOne++;
+//       }
+//       //HOUR
+//       if (mesege.hour > meseges.get(i + 1).hour) {
+//           msgIndexI++;
+//       }
+//       if (mesege.hour < meseges.get(i + 1).hour) {
+//           msgIndexIPlusOne++;
+//       }
+//       //MIN
+//       if (mesege.min > meseges.get(i + 1).min) {
+//           msgIndexI++;
+//       }
+//       if (mesege.min < meseges.get(i + 1).min) {
+//           msgIndexIPlusOne++;
+//       }
+//       //SEC
+//       if (mesege.sec > meseges.get(i + 1).sec) {
+//           msgIndexI++;
+//       }
+//       if (mesege.sec < meseges.get(i + 1).sec) {
+//           msgIndexIPlusOne++;
+//       }
+//       //MILISEC
+//       if (mesege.milis > meseges.get(i + 1).milis) {
+//           msgIndexI++;
+//       }
+//       if (mesege.milis < meseges.get(i + 1).milis) {
+//           msgIndexIPlusOne++;
+//       }
+
+//       if (msgIndexI > msgIndexIPlusOne) {
+//           indexesOfMeseges.add(i + 1);
+//           indexesOfMeseges.add(i);
+//       } else {
+//           indexesOfMeseges.add(i);
+//           indexesOfMeseges.add(i + 1);
+//       }
+
+//   }
+
+//
+
+//       } catch (ArrayIndexOutOfBoundsException e) {
+
+//       }
+
+//       for (int i = 0; i < indexesOfMeseges.size(); i++){
+//           sortedeMeseges.add(meseges.get(i));
+//       }
+
+
+//       ChatRCV.setAdapter(new ChatRCVAdapter(sortedeMeseges));
+
+//       ChatRCV.smoothScrollToPosition(sortedeMeseges.size());
+
+//   }
+
+
+    //  public void observeLVD() {
+    //      mvm = ViewModelProviders.of(this).get(MainViewModel.class);
+    //      mvm.getLVD().observe(getActivity(), new Observer<List<Mesege>>() {
+    //          @Override
+    //          public void onChanged(List<Mesege> meseges) {
+    //              mesegesList = meseges;
+    //              ChatRCV.setAdapter(new ChatRCVAdapter(mesegesList));
+
+    //          }
+    //      });
+    //  }
 
 
 
@@ -1164,10 +1269,6 @@ public class deadCode {
 
 
 
-
-    //hey dude, the one who reed it, try to get high when you code next time, it will make you feel better XD
-
-                                                                                                                                                                                                         ////////////////////
     //some gansta let it there.......                                                                                                                 ///////////                                 /////////////////////////////////
           // ▄︻芫━━ ▄︻芫━━ ▄︻芫━━ ▄︻芫━━           //////////////              ///////           ////////                       ////         //////////////////////                          ///////////      /////////////////
                                                      //      //////             //    //           //   /////                    ////      /////////////////////////////////                   ////          //////////      ////////

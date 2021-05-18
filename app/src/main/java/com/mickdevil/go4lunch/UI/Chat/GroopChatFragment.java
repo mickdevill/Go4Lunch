@@ -30,8 +30,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.Chat.localDB.AppST;
 import com.mickdevil.go4lunch.UI.Chat.localDB.MainViewModel;
@@ -39,6 +42,7 @@ import com.mickdevil.go4lunch.UI.Chat.localDB.Mesege;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 import com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListViewAdapter;
+import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -63,14 +67,11 @@ public class GroopChatFragment extends Fragment {
     String curetUser = G4LunchMain.appUserToUse.email.substring(0,
             G4LunchMain.appUserToUse.email.indexOf("@"));
 
-    MainViewModel mvm;
+    // MainViewModel mvm;
 
-
-    List<Mesege> mesegesList;
 
     public static final String MESEGES = "MESEGES";
 
-    Calendar calendar;
 
     @Nullable
     @Override
@@ -85,7 +86,7 @@ public class GroopChatFragment extends Fragment {
 
         ChatRCV.setLayoutManager(linearManager);
         ChatRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        mesegesList = new ArrayList<>();
+
 
         mesegesReff = FirebaseDatabase.getInstance().getReference(MESEGES);
         updateMeseges();
@@ -95,8 +96,7 @@ public class GroopChatFragment extends Fragment {
 
         watcher(editMSG, sendMSG);
 
-        observeLVD();
-        calendar = Calendar.getInstance();
+        // observeLVD();
 
 
         sendMSG.setOnClickListener(new View.OnClickListener() {
@@ -105,21 +105,26 @@ public class GroopChatFragment extends Fragment {
                 String theContent = editMSG.getText().toString();
 
                 if (theContent.length() != 0) {
-
+                    Calendar calendar = Calendar.getInstance();
 
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     int mouth = calendar.get(Calendar.MONTH);
                     int year = calendar.get(Calendar.YEAR);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    int min = calendar.get(Calendar.MINUTE);
+                    int sec = calendar.get(Calendar.SECOND);
+                    int milis = calendar.get(Calendar.MILLISECOND);
 
                     Mesege mesege = new Mesege(curetUser, G4LunchMain.appUserToUse.photo,
-                            editMSG.getText().toString(), "all", day, mouth, year);
+                            editMSG.getText().toString(), "all", day, mouth, year,
+                            Mesege.MSG_STATUS_NON_READ_BY_EVREE_ONE, milis, hour, sec, min);
 
-                    sendFierBaseMSG(mesege);
+                    String childName = Integer.toString(mesege.day) + Integer.toString(mesege.moth) + Integer.toString(mesege.year) + Integer.toString(mesege.milis);
+
+                    sendFierBaseMSG(mesege, childName);
 
                     editMSG.getText().clear();
 
-                    ChatRCV.setAdapter(new ChatRCVAdapter(mesegesList));
-                    ChatRCV.smoothScrollToPosition(mesegesList.size());
                 }
 
 
@@ -131,60 +136,85 @@ public class GroopChatFragment extends Fragment {
     }
 
 
-    private void sendFierBaseMSG(Mesege mesege) {
-
-        mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-            @Override
-            public void onSuccess(DataSnapshot dataSnapshot) {
-                List<Mesege> messeges = (List<Mesege>) dataSnapshot.getValue();
-
-                if (messeges != null) {
-                    messeges.add(mesege);
-                    mesegesReff.setValue(messeges);
-                } else {
-                    List<Mesege> nunNullMeseges = new ArrayList<>();
-                    nunNullMeseges.add(mesege);
-                    mesegesReff.setValue(nunNullMeseges);
-                }
-            }
-        });
-
+    private void sendFierBaseMSG(Mesege mesege, String childName) {
+        mesegesReff.child(childName).setValue(mesege);
         updateMeseges();
     }
 
 
+    // private void updateMeseges() {
+    //     mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+    //         @Override
+    //         public void onSuccess(DataSnapshot dataSnapshot) {
+
+    //             for (DataSnapshot ds : dataSnapshot.getChildren()) {
+    //                 HashMap<String, Object> mesege = (HashMap<String, Object>) ds.getValue();
+
+    //                 if (!mesegesList.contains(mesege)) {
+    //                     mvm.insert(Mesege.fromMap(mesege));
+
+    //                 }
+    //                 Log.d(TAG, "onSuccess: IT WORK " + Mesege.fromMap(mesege).getMsgText());
+    //             }
+    //         }
+    //     });
+
+
+    // }
+
+
     private void updateMeseges() {
-        mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
-            public void onSuccess(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    HashMap<String, Object> mesege = (HashMap<String, Object>) ds.getValue();
+                List<Mesege> UpdatedmesegesList = new ArrayList<>();
 
-                    if (!mesegesList.contains(mesege)) {
-                        mvm.insert(Mesege.fromMap(mesege));
+                Mesege mesege;
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    mesege = ds.getValue(Mesege.class);
 
-                    }
-                    Log.d(TAG, "onSuccess: IT WORK " + Mesege.fromMap(mesege).getMsgText());
+                    UpdatedmesegesList.add(mesege);
+
                 }
+
+
+
             }
-        });
 
-
-    }
-
-
-    public void observeLVD() {
-        mvm = ViewModelProviders.of(this).get(MainViewModel.class);
-        mvm.getLVD().observe(getActivity(), new Observer<List<Mesege>>() {
             @Override
-            public void onChanged(List<Mesege> meseges) {
-                mesegesList = meseges;
-                ChatRCV.setAdapter(new ChatRCVAdapter(mesegesList));
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+
+        mesegesReff.addValueEventListener(valueEventListener);
+
     }
+
+
+    private void sortMSGes(List<Mesege> unsortedMeseges){
+        List<Mesege> sortedMeseges = new ArrayList<>();
+
+
+
+
+
+
+
+
+
+
+        ChatRCV.setAdapter(new ChatRCVAdapter( sortedMeseges));
+
+        ChatRCV.smoothScrollToPosition( sortedMeseges.size());
+
+
+
+    }
+
+
 
 
     public void watcher(EditText editMSG, ImageView imageView) {
