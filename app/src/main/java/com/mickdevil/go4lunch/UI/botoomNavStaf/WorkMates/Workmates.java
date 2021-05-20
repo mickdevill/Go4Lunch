@@ -29,45 +29,53 @@ public class Workmates extends Fragment {
     private RecyclerView workmatesRCV;
     private DatabaseReference DBRef;
     private static final String TAG = "Workmates";
-    private int iflationTaskCode;
+    public boolean makeVisibleOrNot = true;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.workmates, container, false);
 
-            workmatesRCV = root.findViewById(R.id.workmatesRcv);
-            workmatesRCV.setLayoutManager(new LinearLayoutManager(getContext()));
-            workmatesRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        workmatesRCV = root.findViewById(R.id.workmatesRcv);
+        workmatesRCV.setLayoutManager(new LinearLayoutManager(getContext()));
+        workmatesRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-            DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
-            getDataFromRTDB();
-
+        DBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
+        switchMainAction(makeVisibleOrNot);
 
         return root;
 
     }
 
 
-    private void getDataFromRTDB() {
-        List<AppUser> workmates = new ArrayList<>();
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    AppUser appUser = ds.getValue(AppUser.class);
+    private void switchMainAction(boolean makeVisibleOrNot) {
 
-                    workmates.add(appUser);
+        if (makeVisibleOrNot) {
+            workmatesRCV.setVisibility(View.INVISIBLE);
 
-                    workmatesRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+
+        } else {
+            List<AppUser> workmates = new ArrayList<>();
+            ValueEventListener valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        AppUser appUser = ds.getValue(AppUser.class);
+
+                        workmates.add(appUser);
+
+                        workmatesRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        };
-        DBRef.addValueEventListener(valueEventListener);
+                }
+            };
+            DBRef.addValueEventListener(valueEventListener);
+
+        }
+
 
     }
 

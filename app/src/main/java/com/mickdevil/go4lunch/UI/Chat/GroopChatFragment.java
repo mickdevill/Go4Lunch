@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,10 +40,10 @@ public class GroopChatFragment extends Fragment {
 
     EditText editMSG;
     ImageView sendMSG;
-    RecyclerView ChatRCV;
-
+    static RecyclerView ChatRCV;
+    static List<Mesege> theStaticMeseges;
     public static LinearLayoutManager linearManager;
-
+    static FloatingActionButton scrolToTheEnd;
     DatabaseReference mesegesReff;
 
 
@@ -63,13 +64,12 @@ public class GroopChatFragment extends Fragment {
         editMSG = v.findViewById(R.id.editMSG);
         sendMSG = v.findViewById(R.id.sendMSG);
         ChatRCV = v.findViewById(R.id.ChatRCV);
+        scrolToTheEnd = v.findViewById(R.id.scrolToTheEnd);
         linearManager = new LinearLayoutManager(getContext());
-
-        //linearManager.setStackFromEnd(false);
-
 
         ChatRCV.setLayoutManager(linearManager);
         ChatRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        scrolChatOnTheBotom(0);
 
 
         mesegesReff = FirebaseDatabase.getInstance().getReference(MESEGES);
@@ -80,6 +80,15 @@ public class GroopChatFragment extends Fragment {
 
         watcher(editMSG, sendMSG);
 
+
+        scrolToTheEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrolChatOnTheBotom(1);
+            }
+        });
+
+
         sendMSG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,16 +96,12 @@ public class GroopChatFragment extends Fragment {
 
                 if (theContent.length() != 0) {
                     Calendar calendar = Calendar.getInstance();
-
                     Date date = new Date();
-
-                    TimeZone tz = TimeZone.getTimeZone("Europe/Paris");
 
                     int year = calendar.get(Calendar.YEAR);
                     int month = calendar.get(Calendar.MONTH);
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     long creationTime = date.getTime();
-                    //tz.getOffset(date.getTime());
 
                     Log.d(TAG, "TIME FROM TIME ZONE " + creationTime);
 
@@ -175,6 +180,8 @@ public class GroopChatFragment extends Fragment {
             }
         }
 
+        theStaticMeseges = mesegeList;
+
         ChatRCV.swapAdapter(new ChatRCVAdapter(mesegeList), false);
     }
 
@@ -217,16 +224,33 @@ public class GroopChatFragment extends Fragment {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
     }
 
-    public static void ScrolChatOnTheBotom(boolean setStackFromEnd) {
+    public static void scrolChatOnTheBotom(int switchAction) {
+        switch (switchAction) {
 
-        if (setStackFromEnd) {
-            linearManager.setStackFromEnd(true);
-        } else {
+            case 0:
+                linearManager.setStackFromEnd(true);
+                break;
 
-            linearManager.setStackFromEnd(false);
+            case 1:
+                ChatRCV.smoothScrollToPosition(theStaticMeseges.size());
+                break;
+
+            case 2:
+
+                scrolToTheEnd.setVisibility(View.VISIBLE);
+
+                break;
+
+            case 3:
+
+                scrolToTheEnd.setVisibility(View.INVISIBLE);
+
+                break;
         }
+
 
     }
 

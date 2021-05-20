@@ -8,6 +8,7 @@
     android:layout_marginBottom="50dp"
     >
 
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workmatesRcv"
         android:layout_width="match_parent"
@@ -46,5 +47,6 @@
         />
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
+
 
 </RelativeLayout>

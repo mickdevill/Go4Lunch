@@ -19,41 +19,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="76dp"
         android:hint="@string/text_mesege"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textSize="20sp"
-       android:layout_marginEnd="50dp"
-        android:layout_marginStart="25dp"
-        />
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/sendMSG"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="centerCrop"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="76dp"
-      android:layout_alignParentEnd="true"
-        />
+        android:scaleType="centerCrop" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ChatRCV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/editMSG"
-        android:layout_marginBottom="15dp"
-       android:layout_below="@+id/cardViewForViewPageNavigationWORKMATES"
-        />
+        android:layout_below="@+id/cardViewForViewPageNavigationWORKMATES"
+        android:layout_marginBottom="15dp" />
 
 
     <com.google.android.material.card.MaterialCardView
-     android:id="@+id/cardViewForViewPageNavigationWORKMATES"
+        android:id="@+id/cardViewForViewPageNavigationWORKMATES"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_alignParentTop="true"
-        >
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,32 +58,33 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:text="@string/worckmates"
-                android:textSize="25sp"
+                android:layout_alignParentBottom="true"
                 android:gravity="center"
-                android:textStyle="bold"
+                android:text="@string/worckmates"
                 android:textColor="@color/mainAppColor"
-             android:layout_alignParentBottom="true"
-                />
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <ImageView
-                android:layout_alignParentTop="true"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/workmates_above"
                 android:layout_centerHorizontal="true"
-                />
+                android:src="@drawable/workmates_above" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
 
-
-
-
-
-
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scrolToTheEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sendMSG"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/scrol_chat_down"
+        app:rippleColor="@color/black" />
 
 
 </RelativeLayout>

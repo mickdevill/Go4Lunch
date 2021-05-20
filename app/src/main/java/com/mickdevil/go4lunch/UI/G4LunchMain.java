@@ -184,8 +184,13 @@ public class G4LunchMain extends AppCompatActivity {
 
                     verticalPager.setVisibility(View.VISIBLE);
 
+                    Workmates workmates = new Workmates();
+                    workmates.makeVisibleOrNot = false;
+
                     List<Fragment> fragVertNavForChat = new ArrayList<>();
-                    fragVertNavForChat.add(new Workmates());
+
+                   fragVertNavForChat.add(workmates);
+
                     fragVertNavForChat.add(new GroopChatFragment());
 
                     pagerAdapter = new VPagerAdapter(getSupportFragmentManager(), fragVertNavForChat);

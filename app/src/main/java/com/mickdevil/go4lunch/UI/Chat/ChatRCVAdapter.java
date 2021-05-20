@@ -16,13 +16,14 @@ import com.mickdevil.go4lunch.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder>{
+public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder> {
 
     public List<Mesege> meseges = new ArrayList<>();
 
 
     public ChatRCVAdapter(List<Mesege> meseges) {
         this.meseges = meseges;
+
     }
 
 
@@ -31,7 +32,6 @@ public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder>{
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mesege_holder, parent, false);
         Holder holder = new Holder(view);
-
 
         return holder;
     }
@@ -46,15 +46,27 @@ public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder>{
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.profileImage);
 
+        if (holder.getLayoutPosition() > meseges.size() - 5) {
+            GroopChatFragment.scrolChatOnTheBotom(1);
+        }
+
+        if (holder.getLayoutPosition() < meseges.size() - 15) {
+
+            GroopChatFragment.scrolChatOnTheBotom(2);
+        } else {
+
+            GroopChatFragment.scrolChatOnTheBotom(3);
+
+        }
+
 
     }
+
 
     @Override
     public int getItemCount() {
         return meseges.size();
     }
-
-
 
 
     public class Holder extends RecyclerView.ViewHolder {
