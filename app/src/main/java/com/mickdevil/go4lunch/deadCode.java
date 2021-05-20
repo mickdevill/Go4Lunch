@@ -48,7 +48,20 @@ public class deadCode {
                                                   //                                  //                          //////
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //        if (isImGoing) {
 
+    //            goToThePlace.setImageResource(R.drawable.not_going);
+    //            curentUser = G4LunchMain.appUserToUse;
+    //            curentUser.placeID = "not going here";
+    //            RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+    //            isImGoing = false;
+    //        } else {
+    //            goToThePlace.setImageResource(R.drawable.going_here);
+    //            curentUser = G4LunchMain.appUserToUse;
+    //            curentUser.placeID = place.getPlaceId();
+    //            RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+    //            isImGoing = true;
+    //        }
     // private void updateMeseges() {
     //     mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
     //         @Override

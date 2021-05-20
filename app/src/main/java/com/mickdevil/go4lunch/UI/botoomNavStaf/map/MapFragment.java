@@ -173,11 +173,10 @@ public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
         latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
 
         TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
-
-
-
-
     }
+
+  //  G4LunchMain.handleMSG(0);
+
 
 }
 

@@ -10,22 +10,25 @@ import java.util.List;
 
 public class PlaceG4Lunch implements Parcelable {
 
-    private String placeName;
-    private String vicinity;
-    private double latitude;
-    private double longitude;
-    private String placeId;
-    private boolean opened;
-    private Bitmap photo;
-    private boolean isSomeBodyGoing;
-    private List<String> usersMails;
-    private double distenceToUser;
-    private String photoReff;
-    private double rating;
-    private List<String> weekdaysOpen;
-    private String webSite;
-    private String phoneNumber;
-    private String foromGoogleOrAlternative;
+    public String placeName;
+    public String vicinity;
+    public double latitude;
+    public double longitude;
+    public String placeId;
+    public boolean opened;
+    public Bitmap photo;
+    public boolean isSomeBodyGoing;
+    public List<String> usersMails;
+    public double distenceToUser;
+    public String photoReff;
+    public double rating;
+    public List<String> weekdaysOpen;
+    public String webSite;
+    public String phoneNumber;
+    public String foromGoogleOrAlternative;
+
+    public PlaceG4Lunch() {
+    }
 
     public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId,
                         boolean opened, Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser,

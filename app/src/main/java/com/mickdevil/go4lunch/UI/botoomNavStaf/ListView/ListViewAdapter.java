@@ -19,7 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
+import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static java.lang.Double.valueOf;
@@ -30,10 +32,15 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     public ListViewAdapter(List<PlaceG4Lunch> places) {
         this.places = places;
+
     }
 
-    DatabaseReference likes = FirebaseDatabase.getInstance().getReference(PlaceDetailsActivity.LIKES);
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
+    DatabaseReference likes = firebaseDatabase.getReference(PlaceDetailsActivity.LIKES);
+    DatabaseReference wormatesDbReff = firebaseDatabase.getReference(MainSigninActivity.USER_PATH);
+
+    long totalWorkMates;
 
     @NonNull
     @Override
@@ -51,15 +58,15 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         holder.restoName.setText(place.getPlaceName());
 
         holder.restoDistance.setText(cutTheDistence(valueOf(place.getDistenceToUser()).toString()));
-                     if (place.getForomGoogleOrAlternative() == "GOOGLE") {
-                         if (place.getVicinity().contains(",")) {
-                             holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
-                         } else {
-                             holder.restoAddress.setText(place.getVicinity());
-                         }
-                     }
-                      else {
-                          holder.restoAddress.setText(place.getVicinity()); }
+        if (place.getForomGoogleOrAlternative() == "GOOGLE") {
+            if (place.getVicinity().contains(",")) {
+                holder.restoAddress.setText(cutTheAdress(place.getVicinity()));
+            } else {
+                holder.restoAddress.setText(place.getVicinity());
+            }
+        } else {
+            holder.restoAddress.setText(place.getVicinity());
+        }
 
         if (place.getPhoto() != null) {
             holder.restImg.setImageBitmap(place.getPhoto());
@@ -79,7 +86,7 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         }
 
         getLikes(holder, position);
-
+        setRestoOpentClose(holder, position);
 
         holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +110,9 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     public class Holder extends RecyclerView.ViewHolder {
 
-        TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo;
-        ImageView restImg, rateStar1, rateStar2, rateStar3;
+        TextView restoName, restoAddress, restoOpenColse, restoDistance, workmatesWillGo, likeTxt;
+        ImageView restImg, likeLogo;
+        //rateStar1, rateStar2, rateStar3;
         RelativeLayout placesListViewHolder;
 
         public Holder(@NonNull View itemView) {
@@ -116,11 +124,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
             restoDistance = itemView.findViewById(R.id.restoDistance);
             workmatesWillGo = itemView.findViewById(R.id.workmatesWillGo);
             placesListViewHolder = itemView.findViewById(R.id.placesListViewHolder);
+            likeLogo = itemView.findViewById(R.id.likeLogo);
+            likeTxt = itemView.findViewById(R.id.likesTxt);
 
             //the stars to set resto rate
-            rateStar1 = itemView.findViewById(R.id.rateStar1);
-            rateStar2 = itemView.findViewById(R.id.rateStar2);
-            rateStar3 = itemView.findViewById(R.id.rateStar3);
+            //  rateStar1 = itemView.findViewById(R.id.rateStar1);
+            //  rateStar2 = itemView.findViewById(R.id.rateStar2);
+            //  rateStar3 = itemView.findViewById(R.id.rateStar3);
 
 
         }
@@ -139,7 +149,63 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
 
     }
 
+
+    public void setRestoOpentClose(Holder holder, int position) {
+        PlaceG4Lunch place = places.get(position);
+
+        //in my parser I add 2 empty string on 0 and 1, it simplify the interact with calendar
+
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day == 1) {
+            day = 8;
+        }
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+
+        String dayOfPlayce = place.getWeekdaysOpen().get(day).substring(place.getWeekdaysOpen().get(day).indexOf(" " + 1), place.getWeekdaysOpen().get(day).length());
+
+
+        holder.restoOpenColse.setText(dayOfPlayce);
+
+     //  String morning = "closed";
+     //  String evening = "closed";
+
+     //  if (dayOfPlayce.contains(",")) {
+     //      morning = dayOfPlayce.substring(0, dayOfPlayce.indexOf(","));
+     //      evening = dayOfPlayce.substring(dayOfPlayce.indexOf(","), dayOfPlayce.length());
+     //  } else {
+     //      morning = dayOfPlayce;
+     //  }
+
+     //  int endOfTimes = morning.indexOf(" ") + 3;
+
+     //  if ( morning.substring(morning.indexOf(" ") + 1, endOfTimes).contains(":")){
+
+
+     //  }
+        // try {
+      //     int placeHour = Integer.valueOf(morning.substring(morning.indexOf(" ") + 1, endOfTimes));
+      //     int placeMin = Integer.valueOf(morning.substring(endOfTimes + 1, endOfTimes + 3));
+      // }catch (NumberFormatException numberFormatException){
+
+
+      // }
+
+      // String openAt;
+
+
+      // if (morning != "closed") {
+
+      // }
+      // Log.d(TAG, "setRestoOpentClose: " + "morning " + morning + "evening " + evening + "place hour " + placeHour + " place Min " + placeMin);
+
+        // Log.d(TAG, "setRestoOpentClose: " + morning);
+    }
+
+
     private void getLikes(Holder holder, int position) {
+
 
         likes.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
@@ -153,27 +219,34 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
                     for (int i = 0; i < likedPlaces.size(); i++) {
 
                         if (places.get(position).getPlaceId().equals(likedPlaces.get(i))) {
-                            likesOnPlace ++;
+                            likesOnPlace++;
                         }
                     }
 
 
                 }
 
-
-                if (likesOnPlace == 1) {
-                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                if (likesOnPlace != 0) {
+                    holder.likeLogo.setImageResource(R.drawable.like_logo_black);
                 }
 
-                if (likesOnPlace == 2) {
-                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-                    holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-                }
-                if (likesOnPlace == 3 || likesOnPlace > 3) {
-                    holder.rateStar1.setImageResource(R.drawable.star_rate_24);
-                    holder.rateStar2.setImageResource(R.drawable.star_rate_24);
-                    holder.rateStar3.setImageResource(R.drawable.star_rate_24);
-                }
+                holder.likeTxt.setText("(" + Integer.toString(likesOnPlace) + ")");
+
+                //  Log.d(TAG, "RESULT RESUL RESULT RESULT " + a );
+
+                //  if (likesOnPlace == 1) {
+                //      holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                //  }
+
+                //  if (likesOnPlace == 2) {
+                //      holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                //      holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                //  }
+                //  if (likesOnPlace == 3 || likesOnPlace > 3) {
+                //      holder.rateStar1.setImageResource(R.drawable.star_rate_24);
+                //      holder.rateStar2.setImageResource(R.drawable.star_rate_24);
+                //      holder.rateStar3.setImageResource(R.drawable.star_rate_24);
+                //  }
 
                 Log.d(TAG, "liks on Place" + likesOnPlace);
 
@@ -184,6 +257,16 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         });
 
     }
+    // public void getTotalWorkmates() {
+    //     wormatesDbReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+    //         @Override
+    //         public void onSuccess(DataSnapshot dataSnapshot) {
 
+    //             totalWorkMates = dataSnapshot.getChildrenCount();
+
+    //         }
+    //     });
+
+    // }
 
 }

@@ -86,6 +86,30 @@ android:layout_below="@+id/restoName"
         android:src="@drawable/workmate_will_go"
         />
 
+    <TextView
+        android:id="@+id/likesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_toStartOf="@+id/restImg"
+        android:layout_below="@+id/workmatesWillGo"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="7dp"
+        />
+
+    <ImageView
+        android:id="@+id/likeLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/likesTxt"
+        android:layout_below="@+id/workmatesWillGo"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="7dp"
+      android:src="@drawable/likes_logo"
+
+        />
+
+    <!--
     <ImageView
         android:id="@+id/rateStar1"
         android:layout_width="20dp"
@@ -113,5 +137,5 @@ android:layout_below="@+id/restoName"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="7dp"
         />
-
+-->
 </RelativeLayout>

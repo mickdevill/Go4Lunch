@@ -71,7 +71,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/workmates_above" />
+                android:src="@drawable/chat_below" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 

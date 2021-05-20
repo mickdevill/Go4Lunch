@@ -37,6 +37,9 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.data.Point;
@@ -65,6 +68,11 @@ public class GetPlacesTheRightWay {
 
     public static List<PlaceG4Lunch> finalPlacesResult = new ArrayList<>();
 
+    public static final String ALL_GETED_PACES_EVER = "ALL_GETED_PACES_EVER";
+
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference placesReff = firebaseDatabase.getReference(ALL_GETED_PACES_EVER);
+
 
     private static final String TAG = "GetPlacesTheRightWay";
 
@@ -72,7 +80,6 @@ public class GetPlacesTheRightWay {
 
     public GetPlacesTheRightWay(Location location) {
         this.location = location;
-
     }
 
 
@@ -103,7 +110,7 @@ public class GetPlacesTheRightWay {
                 if (johny != null) {
                     theFullResult.add(johny);
                 }
-                  Log.d(TAG, "johny is " + theFullResult.size());
+                //      Log.d(TAG, "johny is " + theFullResult.size());
 
             }
 
@@ -144,7 +151,7 @@ public class GetPlacesTheRightWay {
 
             Johny = new JSONObject(data);
 
-             Log.d(TAG, "getPlaces: " + data);
+            //   Log.d(TAG, "getPlaces: " + data);
 
 
         } catch (MalformedURLException e) {
@@ -169,7 +176,7 @@ public class GetPlacesTheRightWay {
 
             nextPage = johny.getString("next_page_token");
 
-             Log.d(TAG, "doItAgain: " + nextPage);
+            Log.d(TAG, "doItAgain: " + nextPage);
 
             myURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + nextPage + "&key=" +
                     "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw";
@@ -213,7 +220,7 @@ public class GetPlacesTheRightWay {
             }
         }
 
-        Log.d(TAG, "decriptThatShit:  " + allMyPlaces.size());
+        // Log.d(TAG, "decriptThatShit:  " + allMyPlaces.size());
 
 
         return allMyPlaces;
@@ -308,6 +315,7 @@ public class GetPlacesTheRightWay {
 
                 weekDaysOpen = new ArrayList<>();
                 weekDaysOpen.add("");
+                weekDaysOpen.add("");
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
@@ -316,6 +324,8 @@ public class GetPlacesTheRightWay {
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
                 weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
 
+                Log.d(TAG, "createTheFinalListWithGoglePlacesApi: " + weekDaysOpen.get(0) + "\n" + weekDaysOpen.get(1) + "\n" + weekDaysOpen.get(2) + "\n" +
+                        weekDaysOpen.get(3) + "\n" + weekDaysOpen.get(4) + "\n" + weekDaysOpen.get(5) + "\n" + weekDaysOpen.get(6) + "\n" + weekDaysOpen.get(7) + "\n" + weekDaysOpen.size());
 
                 if (placeName != null && placeId != null && vicinity != null) {
 
@@ -387,6 +397,52 @@ public class GetPlacesTheRightWay {
         return resultOBJ;
 
     }
+    public void addMyPlaycesToFierBase(List<PlaceG4Lunch> thePlacesFromApi) {
+        placesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            PlaceG4Lunch place;
+            List<PlaceG4Lunch> places = new ArrayList<>();
+
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() < 1) {
+
+                    for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
+                        place = iterator.next();
+                        placesReff.child(place.getPlaceId()).setValue(place);
+                    }
+                }
+                if (dataSnapshot.getChildrenCount() > 1) {
+
+                    placesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                        @Override
+                        public void onSuccess(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()){
+                                places.add(ds.getValue(PlaceG4Lunch.class));
+                            }
+
+                            for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
+                                place = iterator.next();
+                                boolean allredyIn = false;
+
+                                for (int i = 0; i < places.size();i ++ ){
+
+                                    if (place.getPlaceId().equals(places.get(i).getPlaceId())){
+                                        allredyIn = true;
+                                    }
+                                }
+                                if (!allredyIn){
+                                    placesReff.child(place.getPlaceId()).setValue(place);
+                                }
+
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,15 +451,15 @@ public class GetPlacesTheRightWay {
 
     //THIS IS USED ONLY FOR THE ALTERNATIVE WAY
     private void getPlacesAlternative(String radious) {
-//here I use the URL that I find on https://www.freemaptools.com/find-places-within-radius.htm by inspecting the page, that way
-//I get all places for free in Json format, it's so essy i even don't need to do web scraping with Jsoup, besids, IT'S FREE TO USE!!!! I AM A GENIUS!!!!
+        //here I use the URL that I find on https://www.freemaptools.com/find-places-within-radius.htm by inspecting the page, that way
+        //I get all places for free in Json format, it's so essy i even don't need to do web scraping with Jsoup, besids, IT'S FREE TO USE!!!! I AM A GENIUS!!!!
 
         String alternativeWayURL = "https://api.foursquare.com/v2/venues/search?ll=" + valueOf(location.getLatitude()) + "%2C" + valueOf(location.getLongitude())
                 + "&radius=" + radious + "&categoryId=" +
                 "4d4b7105d754a06374d81259" + "&client_id=MDW1CQIF4AUNLX2VXX2FJ1CA4CZIWQ3ACUQTCK0JNQ2MXVRO&client_secret=YI1SJ" +
                 "4Q4CKJZV3NK0YPGCCLIYZTRLCNTW3MDBHPBRJXMUUCL&v=20200101";
 
-     finalPlacesResult =  createTheFinalListWithAlternativeWay(cutBigObjectsToPlaceUnitsForTheAlternativeWay(parseJohny(alternativeWayURL)));
+        finalPlacesResult = createTheFinalListWithAlternativeWay(cutBigObjectsToPlaceUnitsForTheAlternativeWay(parseJohny(alternativeWayURL)));
 
     }
 
@@ -480,23 +536,21 @@ public class GetPlacesTheRightWay {
                 longitude = locationObject.getDouble("lng");
 
 
-
-
                 //  opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
 
                 LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
                 LatLng placeLatLng = new LatLng(latitude, longitude);
                 distenceToUser = SphericalUtil.computeDistanceBetween(user, placeLatLng);
 
-                test(placeLatLng,user, placeName );
+                test(placeLatLng, user, placeName);
 
-               weekDaysOpen = new ArrayList<>();
+                weekDaysOpen = new ArrayList<>();
 
                 if (placeName != null && placeId != null && vicinity != null) {
 
-                  placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-                          false, new ArrayList<>(), distenceToUser, null, rating,
-                          weekDaysOpen, webSite, phoneNumber, "ALTERNATIVE");
+                    placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
+                            false, new ArrayList<>(), distenceToUser, null, rating,
+                            weekDaysOpen, webSite, phoneNumber, "ALTERNATIVE");
 
 
                     theFinalList.add(placeG4Lunch);
@@ -521,16 +575,16 @@ public class GetPlacesTheRightWay {
 
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
         // and once again when the user makes a selection (for example when calling fetchPlace()).
-         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
 
         // Create a RectangularBounds object.
-      // RectangularBounds bounds = RectangularBounds.newInstance(
-      //         latLngP,
-      //         latLngU);
+        // RectangularBounds bounds = RectangularBounds.newInstance(
+        //         latLngP,
+        //         latLngU);
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 // Call either setLocationBias() OR setLocationRestriction().
-               // .setLocationBias(bounds)
+                // .setLocationBias(bounds)
                 //.setLocationRestriction(bounds)
                 .setOrigin(latLngP)
                 .setCountries("FR")
@@ -552,7 +606,6 @@ public class GetPlacesTheRightWay {
 
             }
         });
-
 
 
     }

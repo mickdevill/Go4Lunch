@@ -24,7 +24,9 @@ public class HandlerForMsg extends Handler {
     public void handleMessage(@NonNull Message TaskCode) {
         switch (TaskCode.what) {
             case 0:
-
+GetPlacesTheRightWay getPlacesTheRightWayToAddPlacesInFierBase = new GetPlacesTheRightWay(MapFragment.locationForPlaces);
+getPlacesTheRightWayToAddPlacesInFierBase.addMyPlaycesToFierBase(GetPlacesTheRightWay.finalPlacesResult);
+                break;
 
             case 1:
                 GetPlacesTheRightWay getPlacesTheRightWay = new GetPlacesTheRightWay(MapFragment.locationForPlaces);

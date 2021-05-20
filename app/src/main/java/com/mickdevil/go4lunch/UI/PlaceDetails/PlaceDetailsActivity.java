@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     //class logic & work vars////////////////////////////////////////////////////
     String placeID;
     String userMail = G4LunchMain.appUserToUse.email;
-    boolean isImGoing;
+
 
     PlaceG4Lunch place;
 //-----------------------------------------------------------------------------
@@ -90,15 +91,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         }
         getDataFromRTDB();
 
-        if (isImGoing) {
-            goToThePlace.setImageResource(R.drawable.going_here);
-        } else {
-            goToThePlace.setImageResource(R.drawable.not_going);
-        }
 
         setDrawebleToLikeBTN();
-        isImGoing = isImGoing();
-
+        setDrawebleToGoInThePlaceBTN();
 
         callResto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,27 +122,54 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
         goToThePlace.setOnClickListener(new View.OnClickListener() {
-            List<AppUser> workmates = new ArrayList<>();
-            boolean ImGoing;
             AppUser curentUser;
 
             @Override
             public void onClick(View view) {
-                if (isImGoing) {
-                    goToThePlace.setImageResource(R.drawable.not_going);
 
-                    curentUser = G4LunchMain.appUserToUse;
-                    curentUser.placeID = "not going here";
-                    RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
-                    isImGoing = false;
-                } else {
-                    goToThePlace.setImageResource(R.drawable.going_here);
-                    curentUser = G4LunchMain.appUserToUse;
-                    curentUser.placeID = place.getPlaceId();
-                    RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
-                    isImGoing = true;
-                }
+                 RootDBRef.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                    @Override
+                    public void onSuccess(DataSnapshot dataSnapshot) {
+                        AppUser appUser = dataSnapshot.getValue(AppUser.class);
+                        if (appUser.placeID != null){
+
+                            if (appUser.placeID.equals(placeID)){
+                                goToThePlace.setImageResource(R.drawable.not_going);
+                                curentUser = G4LunchMain.appUserToUse;
+                                curentUser.placeID = "not going here";
+                                RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                                Log.d(TAG, "remouve place id");
+                            }
+                            else {
+                                goToThePlace.setImageResource(R.drawable.going_here);
+                                curentUser = G4LunchMain.appUserToUse;
+                                curentUser.placeID = place.getPlaceId();
+                                RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                                Log.d(TAG, "add place id becose it's not selected");
+                            }
+                        }
+                        else {
+                            goToThePlace.setImageResource(R.drawable.going_here);
+                            curentUser = G4LunchMain.appUserToUse;
+                            curentUser.placeID = place.getPlaceId();
+                            RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                            Log.d(TAG, "add place id becose it's not NULL");
+                        }
+
+
+
+                    }
+                });
+
+
+
+
+
+
+
 
             }
         });
@@ -202,11 +224,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     }
 
     private void getDataFromRTDB() {
-
         ValueEventListener valueEventListener = new ValueEventListener() {
             AppUser theDude;
             List<AppUser> workmates = new ArrayList<>();
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
@@ -215,8 +235,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     workmatesWillGo.add(appUser);
 
                 }
-
-
                 for (int i = 0; i < workmates.size(); i++) {
                     theDude = workmates.get(i);
 
@@ -286,22 +304,31 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         return result;
     }
 
-    private boolean isImGoing() {
-        boolean result = false;
+    private void setDrawebleToGoInThePlaceBTN() {
+        RootDBRef.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                AppUser appUser = dataSnapshot.getValue(AppUser.class);
 
-        for (int i = 0; i < workmatesWillGo.size(); i++) {
-            if (workmatesWillGo.get(i).email.equals(userMail)) {
+                Log.d(TAG, "compare ID'is " + appUser.placeID + " " + placeID );
 
-                result = true;
-                break;
+                if (appUser.placeID.equals(placeID)) {
+                    goToThePlace.setImageResource(R.drawable.going_here);
+                    Log.d(TAG, "set positive IMG");
+                    }
+                if (!appUser.placeID.equals(placeID))  {
+                    goToThePlace.setImageResource(R.drawable.not_going);
+                    Log.d(TAG, "set negative IMG");
+                }
+
+
             }
-        }
+        });
 
-        return result;
     }
 
-    private void setDrawebleToLikeBTN() {
 
+    private void setDrawebleToLikeBTN() {
 
         likes.child(curendUserUidOnRTDB).child("places").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
@@ -321,7 +348,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     npxa.printStackTrace();
                     LikeResto.setImageResource(R.drawable.not_liked);
                 }
-
             }
         });
 

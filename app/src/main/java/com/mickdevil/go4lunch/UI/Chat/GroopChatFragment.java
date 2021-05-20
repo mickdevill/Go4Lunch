@@ -144,15 +144,12 @@ public class GroopChatFragment extends Fragment {
                     mesege = ds.getValue(Mesege.class);
 
                     msgItemCount = snapshot.getChildrenCount() + 1;
-                    Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   =====  " + msgItemCount);
+
                     updatedmesegesList.add(mesege);
 
                 }
-
                 sortMSGes(updatedmesegesList);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

@@ -8,7 +8,7 @@
     android:layout_marginBottom="50dp"
     >
 
-    
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workmatesRcv"
         android:layout_width="match_parent"
@@ -37,14 +37,16 @@
         android:textStyle="bold"
         android:textColor="@color/mainAppColor"
         />
-        workmates_above
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/chat_below"
-        android:layout_centerHorizontal="true"
-        />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/workmates_above"
+            android:layout_centerHorizontal="true"
+            />
+
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
 
