@@ -11,8 +11,40 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workmatesRcv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cardViewForViewPageNavigationCHAT"
+        />
 
+<com.google.android.material.card.MaterialCardView
+ android:id="@+id/cardViewForViewPageNavigationCHAT"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:layout_alignParentBottom="true"
+    >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="@string/chat"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/mainAppColor"
+        />
+        workmates_above
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/chat_below"
+        android:layout_centerHorizontal="true"
+        />
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

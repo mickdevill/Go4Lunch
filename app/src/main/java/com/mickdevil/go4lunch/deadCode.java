@@ -49,6 +49,74 @@ public class deadCode {
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // private void updateMeseges() {
+    //     mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+    //         @Override
+    //         public void onSuccess(DataSnapshot dataSnapshot) {
+
+    //             for (DataSnapshot ds : dataSnapshot.getChildren()) {
+    //                 HashMap<String, Object> mesege = (HashMap<String, Object>) ds.getValue();
+
+    //                 if (!mesegesList.contains(mesege)) {
+    //                     mvm.insert(Mesege.fromMap(mesege));
+
+    //                 }
+    //                 Log.d(TAG, "onSuccess: IT WORK " + Mesege.fromMap(mesege).getMsgText());
+    //             }
+    //         }
+    //     });
+
+
+    // }
+
+
+
+    //  public HashMap<String, Object> toMap(Mesege mesege) {
+
+    //      HashMap<String, Object> result = new HashMap<>();
+    //      result.put("userName", mesege.userName);
+    //      result.put("userPhoto", mesege.userPhoto);
+    //      result.put("msgText", mesege.msgText);
+    //      result.put("toWho", mesege.toWho);
+    //      result.put("day", mesege.day);
+    //      result.put("moth", mesege.moth);
+    //      result.put("year", mesege.year);
+
+    //      return result;
+
+    //  }
+
+//  public static Mesege fromMap(HashMap<String, Object> map) {
+//      Mesege mesege;
+
+//      String userName = (String) map.get("userName");
+//      String userPhoto = (String) map.get("userPhoto");
+//      String msgText = (String) map.get("msgText");
+//      String toWho = (String) map.get("toWho");
+//      String msgStatus = (String) map.get("msgStatus");
+
+//      Long dayL = (long) map.get("day");
+//      Long mothL = (long) map.get("moth");
+//      Long yearL = (long) map.get("year");
+//      Long milisL = (long) map.get("milis");
+
+//      String dayS = Long.toString(dayL);
+//      String mothS = Long.toString(mothL);
+//      String yearS = Long.toString(yearL);
+//      String milisS = Long.toString(yearL);
+
+
+//      int milis = valueOf(milisS);
+//      int day = valueOf(dayS);
+//      int moth = valueOf(mothS);
+//      int year = valueOf(yearS);
+
+
+//      mesege = new Mesege(userName, userPhoto,
+//              msgText, toWho, day, moth, year, msgStatus, milis);
+//      return mesege;
+//  }
+
 
 
     //   private void sortMsg(List<Mesege> meseges) {

@@ -44,7 +44,50 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/editMSG"
         android:layout_marginBottom="15dp"
+       android:layout_below="@+id/cardViewForViewPageNavigationWORKMATES"
         />
+
+
+    <com.google.android.material.card.MaterialCardView
+     android:id="@+id/cardViewForViewPageNavigationWORKMATES"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/worckmates"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/mainAppColor"
+             android:layout_alignParentBottom="true"
+                />
+
+            <ImageView
+                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/workmates_above"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+
+
+
 
 
 </RelativeLayout>

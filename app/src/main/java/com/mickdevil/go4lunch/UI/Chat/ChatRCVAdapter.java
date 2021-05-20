@@ -12,17 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.mickdevil.go4lunch.R;
-import com.mickdevil.go4lunch.UI.Chat.localDB.Mesege;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder> {
+public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder>{
 
-    List<Mesege> meseges;
+    public List<Mesege> meseges = new ArrayList<>();
+
 
     public ChatRCVAdapter(List<Mesege> meseges) {
         this.meseges = meseges;
     }
+
 
     @NonNull
     @Override
@@ -37,12 +39,13 @@ public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder> 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Mesege mesage = meseges.get(position);
-        holder.MsgInfo.setText(mesage.userName + " " + mesage.day + "." + mesage.moth + "." + mesage.year);
+        holder.MsgInfo.setText(mesage.userName + " " + mesage.day + "." + mesage.month + "." + mesage.year);
         holder.MsgContent.setText(mesage.msgText);
         Glide.with(holder.profileImage)
                 .load(mesage.userPhoto)
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.profileImage);
+
 
     }
 
@@ -50,6 +53,9 @@ public class ChatRCVAdapter extends RecyclerView.Adapter<ChatRCVAdapter.Holder> 
     public int getItemCount() {
         return meseges.size();
     }
+
+
+
 
     public class Holder extends RecyclerView.ViewHolder {
 

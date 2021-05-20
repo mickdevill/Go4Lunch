@@ -1,57 +1,37 @@
 package com.mickdevil.go4lunch.UI.Chat;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.textclassifier.ConversationActions;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.R;
-import com.mickdevil.go4lunch.UI.Chat.localDB.AppST;
-import com.mickdevil.go4lunch.UI.Chat.localDB.MainViewModel;
-import com.mickdevil.go4lunch.UI.Chat.localDB.Mesege;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
-import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.ListView.ListViewAdapter;
-import com.mickdevil.go4lunch.UI.botoomNavStaf.WorkMates.WorkMatesRcvAdapter;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
-
-import static java.lang.Double.valueOf;
+import java.util.TimeZone;
 
 public class GroopChatFragment extends Fragment {
 
@@ -61,16 +41,17 @@ public class GroopChatFragment extends Fragment {
     ImageView sendMSG;
     RecyclerView ChatRCV;
 
+    public static LinearLayoutManager linearManager;
+
     DatabaseReference mesegesReff;
 
 
     String curetUser = G4LunchMain.appUserToUse.email.substring(0,
             G4LunchMain.appUserToUse.email.indexOf("@"));
 
-    // MainViewModel mvm;
-
-
     public static final String MESEGES = "MESEGES";
+
+    private static long msgItemCount = 0;
 
 
     @Nullable
@@ -82,7 +63,10 @@ public class GroopChatFragment extends Fragment {
         editMSG = v.findViewById(R.id.editMSG);
         sendMSG = v.findViewById(R.id.sendMSG);
         ChatRCV = v.findViewById(R.id.ChatRCV);
-        LinearLayoutManager linearManager = new LinearLayoutManager(getContext());
+        linearManager = new LinearLayoutManager(getContext());
+
+        //linearManager.setStackFromEnd(false);
+
 
         ChatRCV.setLayoutManager(linearManager);
         ChatRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -96,9 +80,6 @@ public class GroopChatFragment extends Fragment {
 
         watcher(editMSG, sendMSG);
 
-        // observeLVD();
-
-
         sendMSG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,24 +88,29 @@ public class GroopChatFragment extends Fragment {
                 if (theContent.length() != 0) {
                     Calendar calendar = Calendar.getInstance();
 
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    int mouth = calendar.get(Calendar.MONTH);
+                    Date date = new Date();
+
+                    TimeZone tz = TimeZone.getTimeZone("Europe/Paris");
+
                     int year = calendar.get(Calendar.YEAR);
-                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    int min = calendar.get(Calendar.MINUTE);
-                    int sec = calendar.get(Calendar.SECOND);
-                    int milis = calendar.get(Calendar.MILLISECOND);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    long creationTime = date.getTime();
+                    //tz.getOffset(date.getTime());
+
+                    Log.d(TAG, "TIME FROM TIME ZONE " + creationTime);
 
                     Mesege mesege = new Mesege(curetUser, G4LunchMain.appUserToUse.photo,
-                            editMSG.getText().toString(), "all", day, mouth, year,
-                            Mesege.MSG_STATUS_NON_READ_BY_EVREE_ONE, milis, hour, sec, min);
+                            editMSG.getText().toString(), "all", creationTime, year, month, day, msgItemCount);
 
-                    String childName = Integer.toString(mesege.day) + Integer.toString(mesege.moth) + Integer.toString(mesege.year) + Integer.toString(mesege.milis);
+                    String childName = Integer.toString(mesege.day) + Integer.toString(mesege.month)
+                            + Integer.toString(mesege.year) + Long.toString(mesege.creationTime);
 
                     sendFierBaseMSG(mesege, childName);
 
                     editMSG.getText().clear();
 
+                    hideKeyboard(getActivity());
                 }
 
 
@@ -138,30 +124,7 @@ public class GroopChatFragment extends Fragment {
 
     private void sendFierBaseMSG(Mesege mesege, String childName) {
         mesegesReff.child(childName).setValue(mesege);
-        updateMeseges();
     }
-
-
-    // private void updateMeseges() {
-    //     mesegesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-    //         @Override
-    //         public void onSuccess(DataSnapshot dataSnapshot) {
-
-    //             for (DataSnapshot ds : dataSnapshot.getChildren()) {
-    //                 HashMap<String, Object> mesege = (HashMap<String, Object>) ds.getValue();
-
-    //                 if (!mesegesList.contains(mesege)) {
-    //                     mvm.insert(Mesege.fromMap(mesege));
-
-    //                 }
-    //                 Log.d(TAG, "onSuccess: IT WORK " + Mesege.fromMap(mesege).getMsgText());
-    //             }
-    //         }
-    //     });
-
-
-    // }
-
 
     private void updateMeseges() {
 
@@ -169,17 +132,19 @@ public class GroopChatFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                List<Mesege> UpdatedmesegesList = new ArrayList<>();
+                List<Mesege> updatedmesegesList = new ArrayList<>();
 
                 Mesege mesege;
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     mesege = ds.getValue(Mesege.class);
 
-                    UpdatedmesegesList.add(mesege);
+                    msgItemCount = snapshot.getChildrenCount() + 1;
+                    Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   =====  " + msgItemCount);
+                    updatedmesegesList.add(mesege);
 
                 }
 
-
+                sortMSGes(updatedmesegesList);
 
             }
 
@@ -188,33 +153,30 @@ public class GroopChatFragment extends Fragment {
 
             }
         };
-
         mesegesReff.addValueEventListener(valueEventListener);
-
     }
 
 
-    private void sortMSGes(List<Mesege> unsortedMeseges){
-        List<Mesege> sortedMeseges = new ArrayList<>();
+    private void sortMSGes(List<Mesege> mesegeList) {
 
+        if (mesegeList.size() > 1) {
+            for (int x = 0; x < mesegeList.size(); x++) {
+                for (int i = 0; i < mesegeList.size() - i; i++) {
+                    if (mesegeList.get(i).mesegeCount > mesegeList.get(i + 1).mesegeCount) {
 
+                        mesegeList.set(i, mesegeList.get(i + 1));
 
+                        mesegeList.set(i + 1, mesegeList.get(i));
 
+                    }
 
+                }
 
+            }
+        }
 
-
-
-
-        ChatRCV.setAdapter(new ChatRCVAdapter( sortedMeseges));
-
-        ChatRCV.smoothScrollToPosition( sortedMeseges.size());
-
-
-
+        ChatRCV.swapAdapter(new ChatRCVAdapter(mesegeList), false);
     }
-
-
 
 
     public void watcher(EditText editMSG, ImageView imageView) {
@@ -243,6 +205,28 @@ public class GroopChatFragment extends Fragment {
 
             }
         });
+
+    }
+
+    public void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void ScrolChatOnTheBotom(boolean setStackFromEnd) {
+
+        if (setStackFromEnd) {
+            linearManager.setStackFromEnd(true);
+        } else {
+
+            linearManager.setStackFromEnd(false);
+        }
 
     }
 
