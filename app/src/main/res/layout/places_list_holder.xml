@@ -4,138 +4,109 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/placesListViewHolder"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="90dp">
 
     <TextView
         android:id="@+id/restoName"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="the resto name"
-        android:textSize="16sp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="7dp"
-        />
+        android:maxLines="1"
+        android:text="the resto name"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
 
     <TextView
         android:id="@+id/restoAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="kreml, kracnoya ploshad"
-        android:textSize="16sp"
+        android:layout_below="@+id/restoName"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-android:layout_below="@+id/restoName"
-        />
+        android:layout_marginTop="7dp"
+        android:text="kreml, kracnoya ploshad"
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/restoOpenColse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="7h du mat mgl"
-        android:textSize="16sp"
+        android:layout_below="@+id/restoAddress"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-        android:layout_below="@+id/restoAddress"
-        />
+        android:layout_marginTop="5dp"
+        android:text="7h du mat mgl"
+        android:textSize="10sp" />
 
     <ImageView
         android:id="@+id/restImg"
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_baseline_restaurant_menu_24"
-      android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="7dp"
-        />
+        android:layout_marginBottom="7dp"
+        android:src="@drawable/ic_baseline_restaurant_menu_24" />
 
     <TextView
         android:id="@+id/restoDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=">9000"
-        android:textSize="16sp"
-        android:layout_toStartOf="@+id/restImg"
-        android:layout_marginEnd="7dp"
         android:layout_marginTop="7dp"
-        />
+        android:layout_marginEnd="7dp"
+        android:layout_toStartOf="@+id/restImg"
+        android:text=">9000"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/workmatesWillGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="(2)"
         android:layout_below="@+id/restoDistance"
-        android:layout_toStartOf="@+id/restImg"
-        android:layout_marginEnd="7dp"
         android:layout_marginTop="7dp"
-        />
+        android:layout_marginEnd="7dp"
+        android:layout_toStartOf="@+id/restImg"
+        android:text="(2)"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/workmatesWillGoImg"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_toStartOf="@+id/workmatesWillGo"
         android:layout_below="@+id/restoDistance"
         android:layout_marginEnd="7dp"
-        android:src="@drawable/workmate_will_go"
-        />
+        android:layout_toStartOf="@+id/workmatesWillGo"
+        android:src="@drawable/workmate_will_go" />
 
-    <TextView
-        android:id="@+id/likesTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_toStartOf="@+id/restImg"
-        android:layout_below="@+id/workmatesWillGo"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="7dp"
-        />
-
-    <ImageView
-        android:id="@+id/likeLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/likesTxt"
-        android:layout_below="@+id/workmatesWillGo"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="7dp"
-      android:src="@drawable/likes_logo"
-
-        />
-
-    <!--
     <ImageView
         android:id="@+id/rateStar1"
         android:layout_width="20dp"
         android:layout_height="25dp"
-        android:layout_toStartOf="@+id/restImg"
         android:layout_below="@+id/workmatesWillGo"
         android:layout_marginEnd="7dp"
         android:layout_marginBottom="7dp"
-        />
+        android:layout_toStartOf="@+id/restImg" />
+
     <ImageView
         android:id="@+id/rateStar2"
         android:layout_width="20dp"
         android:layout_height="25dp"
-        android:layout_toStartOf="@+id/rateStar1"
         android:layout_below="@+id/workmatesWillGo"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="7dp"
-        />
+        android:layout_toStartOf="@+id/rateStar1" />
+
     <ImageView
         android:id="@+id/rateStar3"
         android:layout_width="20dp"
         android:layout_height="25dp"
-        android:layout_toStartOf="@+id/rateStar2"
         android:layout_below="@+id/workmatesWillGo"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="7dp"
-        />
--->
+        android:layout_toStartOf="@+id/rateStar2" />
+
 </RelativeLayout>

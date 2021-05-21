@@ -175,9 +175,6 @@ public static void PutMarckersOnMap(List<PlaceG4Lunch> places){
         TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
     }
 
-  //  G4LunchMain.handleMSG(0);
-
-
 }
 
 

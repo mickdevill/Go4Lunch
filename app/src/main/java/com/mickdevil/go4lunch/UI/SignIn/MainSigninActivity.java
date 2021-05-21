@@ -95,38 +95,13 @@ public class MainSigninActivity extends AppCompatActivity {
         askPermisions();
         configureGoogleClient();
 
-
-        //--------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------
-   //    //THIS IS THE FUCKING BEST WAY TO GET THE HASH FOR FACEBOOK. THANK YOU  INDIAN DUDE
-
-   //  try {
-   //      PackageInfo info = getPackageManager().getPackageInfo(
-   //              getPackageName(),
-   //              PackageManager.GET_SIGNATURES);
-   //      for (Signature signature : info.signatures) {
-   //          MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-   //          messageDigest.update(signature.toByteArray());
-   //          Log.d(TAG, Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT));
-   //      }
-   //  } catch (PackageManager.NameNotFoundException e) {
-
-   //  } catch (NoSuchAlgorithmException e) {
-
-   //  }
-//--------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------
-
-
         permissions.add("email");
         permissions.add("public_profile");
-
 
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         LoginManager.getInstance().logOut();
         FirebaseAuth.getInstance().signOut();
-
 
         //init fierBase DB
         database = FirebaseDatabase.getInstance();
@@ -176,6 +151,7 @@ public class MainSigninActivity extends AppCompatActivity {
 
 
     }
+
 
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -389,7 +365,6 @@ fierBaseDBRef.child(appUser.email.substring(0, appUser.email.indexOf("@"))).setV
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseAuth.getCurrentUser().delete();
         }
-
         LoginManager.getInstance().logOut();
     }
 

@@ -37,6 +37,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -376,7 +377,11 @@ public class G4LunchMain extends AppCompatActivity {
         logOut.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                finish();
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+               if (firebaseAuth.getCurrentUser() != null) {
+                   firebaseAuth.getCurrentUser().delete();
+               }
+                   finish();
                 return false;
             }
         });

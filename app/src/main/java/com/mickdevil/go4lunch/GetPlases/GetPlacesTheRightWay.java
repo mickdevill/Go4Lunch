@@ -1,48 +1,18 @@
 package com.mickdevil.go4lunch.GetPlases;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.SystemClock;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.LocationBias;
-import com.google.android.libraries.places.api.model.LocationRestriction;
 import com.google.android.libraries.places.api.model.OpeningHours;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.JsonObject;
 import com.google.maps.android.SphericalUtil;
-import com.google.maps.android.data.Point;
 import com.mickdevil.go4lunch.UI.G4LunchMain;
 
 import org.json.JSONArray;
@@ -55,8 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,8 +41,8 @@ public class GetPlacesTheRightWay {
 
     public static final String ALL_GETED_PACES_EVER = "ALL_GETED_PACES_EVER";
 
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference placesReff = firebaseDatabase.getReference(ALL_GETED_PACES_EVER);
+    private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private static final DatabaseReference placesReff = firebaseDatabase.getReference(ALL_GETED_PACES_EVER);
 
 
     private static final String TAG = "GetPlacesTheRightWay";
@@ -100,7 +71,6 @@ public class GetPlacesTheRightWay {
             Log.d(TAG, "getPlaces: " + johny);
 
             JSONObject cheker = johny;
-            //   Log.d(TAG, "johny is " + johny);
 
             while (cheker != null) {
                 SystemClock.sleep(1500);
@@ -118,15 +88,16 @@ public class GetPlacesTheRightWay {
 
             if (finalPlacesResult.size() == 0) {
                 getPlacesAlternative("5000");
-
-
                 // this method is located just below "createTheFinalListWithGoglePlacesApi" and "getMoreInfoAboutThePlace",
 // all other methods to get get playces with out google places api are there to
             }
 
-
             G4LunchMain.handleMSG(2);
+
+            addMyPlaycesToFierBase(finalPlacesResult);
+
         }
+
 
     }
 
@@ -236,22 +207,20 @@ public class GetPlacesTheRightWay {
 
         JSONObject thatPlace;
 
-        String placeName;
-        String vicinity;
-        double latitude = 66.666666;
-        double longitude = 66.666666;
-        String placeId;
+        String placeName = " ";
+        String vicinity = " ";
+        double latitude = 00.0;
+        double longitude = 00.00;
+        String placeId = " ";
         boolean opened = false;
         Bitmap photo = null;
-        boolean isSomeBodyGoing = false;
-        double distenceToUser;
-        double rating = 0;
-        String photoReff;
+        double distenceToUser = 00.00;
+        String photoReff = " ";
 
         JSONObject moreInfo;
         String phoneNumber = "";
         String webSite = "";
-        List<String> weekDaysOpen;
+        List<String> weekDaysOpen = new ArrayList<>();
 
 
         JSONArray photosArray;
@@ -279,24 +248,17 @@ public class GetPlacesTheRightWay {
 
                 opened = thatPlace.getJSONObject("opening_hours").getBoolean("open_now");
 
-                //   photosArray = thatPlace.getJSONArray("photos");
-                photosArray = thatPlace.getJSONArray("photos");
+                if (thatPlace.getJSONArray("photos") != null) {
+                    photosArray = thatPlace.getJSONArray("photos");
 
-                JSONObject phtotoObj = (JSONObject) photosArray.getJSONObject(0);
+                    JSONObject phtotoObj = (JSONObject) photosArray.getJSONObject(0);
+                    photoReff = phtotoObj.getString("photo_reference");
+                    photo = getPlacePhoto(photoReff);
 
-
-                photoReff = phtotoObj.getString("photo_reference");
-
-
-                url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                        photoReff + "&key=" + "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw");
-
-                urlConnection = (HttpsURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                inputStream = urlConnection.getInputStream();
-                photo = BitmapFactory.decodeStream(inputStream);
-                inputStream.close();
-
+                } else {
+                    photoReff = null;
+                    photo = null;
+                }
 
                 LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
                 LatLng placeLatLng = new LatLng(latitude, longitude);
@@ -306,44 +268,43 @@ public class GetPlacesTheRightWay {
                 moreInfo = getMoreInfoAboutThePlace(placeId);
 
 
-                if (moreInfo.getString("formatted_phone_number") != null) {
                     phoneNumber = moreInfo.getString("formatted_phone_number");
-                }
-                if (moreInfo.getString("website") != null) {
-                    webSite = moreInfo.getString("website");
-                }
 
-                weekDaysOpen = new ArrayList<>();
-                weekDaysOpen.add("");
-                weekDaysOpen.add("");
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(3));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(4));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
-                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
 
-                Log.d(TAG, "createTheFinalListWithGoglePlacesApi: " + weekDaysOpen.get(0) + "\n" + weekDaysOpen.get(1) + "\n" + weekDaysOpen.get(2) + "\n" +
-                        weekDaysOpen.get(3) + "\n" + weekDaysOpen.get(4) + "\n" + weekDaysOpen.get(5) + "\n" + weekDaysOpen.get(6) + "\n" + weekDaysOpen.get(7) + "\n" + weekDaysOpen.size());
+                    if (moreInfo.getString("website") != null) {
+                        webSite = moreInfo.getString("website");
+                    } else {
+
+                        webSite = null;
+                    }
+
+                    weekDaysOpen = new ArrayList<>();
+                    weekDaysOpen.add("");
+                    weekDaysOpen.add("");
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(3));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(4));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
+                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
 
                 if (placeName != null && placeId != null && vicinity != null) {
 
                     placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-                            false, new ArrayList<>(), distenceToUser, photoReff, rating, weekDaysOpen,
+                            distenceToUser, photoReff, weekDaysOpen,
                             webSite, phoneNumber, "GOOGLE");
 
 
                     theFinalList.add(placeG4Lunch);
                 }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
 
 
         }
@@ -352,6 +313,7 @@ public class GetPlacesTheRightWay {
         return theFinalList;
 
     }
+
 
     //THIS METHOD IS USED ONLY FOR GOOGLE
     public JSONObject getMoreInfoAboutThePlace(String placeID) {
@@ -364,12 +326,10 @@ public class GetPlacesTheRightWay {
 
         String myUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
                 "&fields=" + "formatted_phone_number,opening_hours,website" + "&key=AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw";
-
-
         try {
             URL url = new URL(myUrl);
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-            //  urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("GET");
             InputStream inputStream = urlConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -397,10 +357,32 @@ public class GetPlacesTheRightWay {
         return resultOBJ;
 
     }
+
+    public static Bitmap getPlacePhoto(String photoReff) {
+        Bitmap photo = null;
+
+        try {
+            URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                    photoReff + "&key=" + "AIzaSyCvgGKZBsLoMHrd7TTl3LXRoxJv5x2apaw");
+
+            URLConnection urlConnection = null;
+
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            photo = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return photo;
+    }
+
+
     public void addMyPlaycesToFierBase(List<PlaceG4Lunch> thePlacesFromApi) {
         placesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             PlaceG4Lunch place;
-            List<PlaceG4Lunch> places = new ArrayList<>();
+            List<HashMap<String, Object>> places = new ArrayList<>();
 
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
@@ -408,47 +390,45 @@ public class GetPlacesTheRightWay {
 
                     for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
                         place = iterator.next();
-                        placesReff.child(place.getPlaceId()).setValue(place);
+                        placesReff.child(place.getPlaceId()).setValue(PlaceG4Lunch.placeG4LunchToMap(place));
                     }
                 }
                 if (dataSnapshot.getChildrenCount() > 1) {
 
-                    placesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-                        @Override
-                        public void onSuccess(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()){
-                                places.add(ds.getValue(PlaceG4Lunch.class));
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        places.add((HashMap<String, Object>) ds.getValue());
+                        G4LunchMain.handleMSG(0);
+
+                        for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
+                            place = iterator.next();
+                            boolean allredyIn = false;
+
+                            for (int i = 0; i < places.size(); i++) {
+
+                                if (place.getPlaceId().equals(places.get(i).get("placeId"))) {
+                                    allredyIn = true;
+                                }
                             }
-
-                            for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
-                                place = iterator.next();
-                                boolean allredyIn = false;
-
-                                for (int i = 0; i < places.size();i ++ ){
-
-                                    if (place.getPlaceId().equals(places.get(i).getPlaceId())){
-                                        allredyIn = true;
-                                    }
-                                }
-                                if (!allredyIn){
-                                    placesReff.child(place.getPlaceId()).setValue(place);
-                                }
-
+                            if (!allredyIn) {
+                                placesReff.child(place.getPlaceId()).setValue(PlaceG4Lunch.placeG4LunchToMap(place));
                             }
                         }
-                    });
-
+                    }
                 }
+
+
             }
         });
-
     }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////THIS IS ALTERNATIVE IMPLEMENTATION/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //THIS IS USED ONLY FOR THE ALTERNATIVE WAY
     private void getPlacesAlternative(String radious) {
         //here I use the URL that I find on https://www.freemaptools.com/find-places-within-radius.htm by inspecting the page, that way
@@ -542,14 +522,14 @@ public class GetPlacesTheRightWay {
                 LatLng placeLatLng = new LatLng(latitude, longitude);
                 distenceToUser = SphericalUtil.computeDistanceBetween(user, placeLatLng);
 
-                test(placeLatLng, user, placeName);
+                //    test(placeLatLng, user, placeName);
 
                 weekDaysOpen = new ArrayList<>();
 
                 if (placeName != null && placeId != null && vicinity != null) {
 
                     placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-                            false, new ArrayList<>(), distenceToUser, null, rating,
+                            distenceToUser, null,
                             weekDaysOpen, webSite, phoneNumber, "ALTERNATIVE");
 
 
@@ -568,47 +548,47 @@ public class GetPlacesTheRightWay {
 
     }
 
-    //this Method is used only for the alternative way
-    public static void test(LatLng latLngP, LatLng latLngU, String fullAdress) {
+// //this Method is used only for the alternative way
+// public static void test(LatLng latLngP, LatLng latLngU, String fullAdress) {
 
-        SystemClock.sleep(150);
+//     SystemClock.sleep(150);
 
-        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
-        // and once again when the user makes a selection (for example when calling fetchPlace()).
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+//     // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
+//     // and once again when the user makes a selection (for example when calling fetchPlace()).
+//     AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
 
-        // Create a RectangularBounds object.
-        // RectangularBounds bounds = RectangularBounds.newInstance(
-        //         latLngP,
-        //         latLngU);
-        // Use the builder to create a FindAutocompletePredictionsRequest.
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                // Call either setLocationBias() OR setLocationRestriction().
-                // .setLocationBias(bounds)
-                //.setLocationRestriction(bounds)
-                .setOrigin(latLngP)
-                .setCountries("FR")
-                .setTypeFilter(TypeFilter.ADDRESS)
-                .setSessionToken(token)
-                .setQuery("a")
-                .build();
+//     // Create a RectangularBounds object.
+//     // RectangularBounds bounds = RectangularBounds.newInstance(
+//     //         latLngP,
+//     //         latLngU);
+//     // Use the builder to create a FindAutocompletePredictionsRequest.
+//     FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+//             // Call either setLocationBias() OR setLocationRestriction().
+//             // .setLocationBias(bounds)
+//             //.setLocationRestriction(bounds)
+//             .setOrigin(latLngP)
+//             .setCountries("FR")
+//             .setTypeFilter(TypeFilter.ADDRESS)
+//             .setSessionToken(token)
+//             .setQuery("a")
+//             .build();
 
-        G4LunchMain.client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-            }
+//     G4LunchMain.client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+//         for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+//             Log.i(TAG, prediction.getPlaceId());
+//             Log.i(TAG, prediction.getPrimaryText(null).toString());
+//         }
 
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+//     }).addOnFailureListener((exception) -> {
+//         if (exception instanceof ApiException) {
+//             ApiException apiException = (ApiException) exception;
+//             Log.e(TAG, "Place not found: " + apiException.getStatusCode());
 
-            }
-        });
+//         }
+//     });
 
 
-    }
+// }
 
 
 }

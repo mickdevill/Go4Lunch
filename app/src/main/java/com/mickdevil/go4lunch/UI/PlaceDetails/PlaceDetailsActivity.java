@@ -45,7 +45,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     RecyclerView placeDetailsRCV;
     FloatingActionButton goToThePlace;
     TextView DetailsPlaceName;
-    List<AppUser> workmatesWillGo;
+
 //-------------------------------------------------------------------------------
 
     //class logic & work vars////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 //-----------------------------------------------------------------------------
 
     //fierbase/////////////////////////////////////////////////////////////////
-    DatabaseReference RootDBRef;
+    DatabaseReference usersDbReff;
     DatabaseReference likes;
     public static final String LIKES = "Likes";
 
@@ -74,16 +74,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         place = GetPlacesTheRightWay.finalPlacesResult.get(getThePlace(placeID));
 
-
-        placeDetailImage.setImageBitmap(place.getPhoto());
+if (place.getPhoto() != null) {
+    placeDetailImage.setImageBitmap(place.getPhoto());
+}
+else {
+    placeDetailImage.setImageResource(R.drawable.no_place_photo);
+}
         DetailsPlaceName.setText(place.getPlaceName());
-
-        workmatesWillGo = new ArrayList<>();
 
         placeDetailsRCV.setLayoutManager(new LinearLayoutManager(PlaceDetailsActivity.this));
         placeDetailsRCV.addItemDecoration(new DividerItemDecoration(PlaceDetailsActivity.this, DividerItemDecoration.VERTICAL));
 
-        RootDBRef = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
+        usersDbReff = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
         likes = FirebaseDatabase.getInstance().getReference(LIKES);
         if (!G4LunchMain.appUserToUse.email.isEmpty()) {
             curendUserUidOnRTDB = G4LunchMain.appUserToUse.email.substring(0,
@@ -123,52 +125,46 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         });
 
 
-
         goToThePlace.setOnClickListener(new View.OnClickListener() {
             AppUser curentUser;
 
             @Override
             public void onClick(View view) {
 
-                 RootDBRef.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                usersDbReff.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                     @Override
                     public void onSuccess(DataSnapshot dataSnapshot) {
                         AppUser appUser = dataSnapshot.getValue(AppUser.class);
-                        if (appUser.placeID != null){
+                        if (appUser.placeID != null) {
 
-                            if (appUser.placeID.equals(placeID)){
+                            if (appUser.placeID.equals(placeID)) {
                                 goToThePlace.setImageResource(R.drawable.not_going);
                                 curentUser = G4LunchMain.appUserToUse;
                                 curentUser.placeID = "not going here";
-                                RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                                usersDbReff.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
                                 Log.d(TAG, "remouve place id");
-                            }
-                            else {
+                                getDataFromRTDB();
+
+                            } else {
                                 goToThePlace.setImageResource(R.drawable.going_here);
                                 curentUser = G4LunchMain.appUserToUse;
                                 curentUser.placeID = place.getPlaceId();
-                                RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                                usersDbReff.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
                                 Log.d(TAG, "add place id becose it's not selected");
+                                getDataFromRTDB();
                             }
-                        }
-                        else {
+                        } else {
                             goToThePlace.setImageResource(R.drawable.going_here);
                             curentUser = G4LunchMain.appUserToUse;
                             curentUser.placeID = place.getPlaceId();
-                            RootDBRef.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
+                            usersDbReff.child(curendUserUidOnRTDB).updateChildren(AppUser.toMap(curentUser));
                             Log.d(TAG, "add place id becose it's not NULL");
+                            getDataFromRTDB();
                         }
-
 
 
                     }
                 });
-
-
-
-
-
-
 
 
             }
@@ -224,39 +220,30 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     }
 
     private void getDataFromRTDB() {
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            AppUser theDude;
-            List<AppUser> workmates = new ArrayList<>();
+
+        usersDbReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                List<AppUser> workmates = new ArrayList<>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     AppUser appUser = ds.getValue(AppUser.class);
-                    workmates.add(appUser);
-                    workmatesWillGo.add(appUser);
+                    if (appUser.placeID != null) {
 
-                }
-                for (int i = 0; i < workmates.size(); i++) {
-                    theDude = workmates.get(i);
+                        if (!appUser.placeID.equals(placeID)) {
+                            workmates.remove(appUser);
+                            placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+                        }
 
-                    if (place.getPlaceId() != theDude.placeID) {
-                        workmates.remove(i);
+                        if (appUser.placeID.equals(placeID)) {
+                            workmates.add(appUser);
+                            placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+                        }
+
                     }
-
                 }
-
-                placeDetailsRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
-
-
             }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        RootDBRef.addValueEventListener(valueEventListener);
-
+        });
     }
 
 
@@ -305,22 +292,25 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     }
 
     private void setDrawebleToGoInThePlaceBTN() {
-        RootDBRef.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+        usersDbReff.child(curendUserUidOnRTDB).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 AppUser appUser = dataSnapshot.getValue(AppUser.class);
 
-                Log.d(TAG, "compare ID'is " + appUser.placeID + " " + placeID );
-
-                if (appUser.placeID.equals(placeID)) {
-                    goToThePlace.setImageResource(R.drawable.going_here);
-                    Log.d(TAG, "set positive IMG");
+                Log.d(TAG, "compare ID'is " + appUser.placeID + " " + placeID);
+                if (appUser.placeID != null) {
+                    if (appUser.placeID.equals(placeID)) {
+                        goToThePlace.setImageResource(R.drawable.going_here);
+                        Log.d(TAG, "set positive IMG");
                     }
-                if (!appUser.placeID.equals(placeID))  {
+                    if (!appUser.placeID.equals(placeID)) {
+                        goToThePlace.setImageResource(R.drawable.not_going);
+                        Log.d(TAG, "set negative IMG");
+                    }
+                } else {
                     goToThePlace.setImageResource(R.drawable.not_going);
                     Log.d(TAG, "set negative IMG");
                 }
-
 
             }
         });

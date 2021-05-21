@@ -19,9 +19,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -48,6 +50,66 @@ public class deadCode {
                                                   //                                  //                          //////
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //private static List<HashMap<String, Object>> placesMapListFromFireBase = new ArrayList<>();
+   // private static List<PlaceG4Lunch> generatedWithFierBaseHashMapPlaces = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //  GetPlacesTheRightWay.createPlacesFromMaps();
+
+    // private static void addNewPlacesToFireBase(List<PlaceG4Lunch> thePlacesFromApi){
+
+    //     placesReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+    //         @Override
+    //         public void onSuccess(DataSnapshot dataSnapshot) {
+    //             PlaceG4Lunch place;
+    //             if (dataSnapshot.getChildrenCount() > 1) {
+
+    //                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+    //                     placesMapListFromFireBase.add((HashMap<String, Object>) ds.getValue());
+    //                     G4LunchMain.handleMSG(0);
+
+    //                     for (Iterator<PlaceG4Lunch> iterator = thePlacesFromApi.iterator(); iterator.hasNext(); ) {
+    //                         place = iterator.next();
+    //                         boolean allredyIn = false;
+
+    //                         for (int i = 0; i < generatedWithFierBaseHashMapPlaces.size(); i++) {
+
+    //                             if (place.getPlaceId().equals(generatedWithFierBaseHashMapPlaces.get(i).getPlaceId())) {
+    //                                 allredyIn = true;
+    //                             }
+    //                         }
+    //                         if (!allredyIn) {
+    //                             placesReff.child(place.getPlaceId()).setValue(place);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+
+
+    //         }
+    //     });
+    // }
+
+
+
+
+    //   public static void createPlacesFromMaps() {
+    //       for (int i = 0; i < placesMapListFromFireBase.size(); i++) {
+    //           generatedWithFierBaseHashMapPlaces.add(PlaceG4Lunch.placeG4LunchFROMMap(placesMapListFromFireBase.get(i)));
+//
+    //       }
+//
+    //       addNewPlacesToFireBase(finalPlacesResult);
+//
+    //   }
+//
+
     //        if (isImGoing) {
 
     //            goToThePlace.setImageResource(R.drawable.not_going);
@@ -1364,6 +1426,28 @@ public class deadCode {
           // ▄︻芫━━ ▄︻芫━━ ▄︻芫━━ ▄︻芫━━      ////////////      //              //////////  //            ///////////                         ////////////////////////                         ////////////////
 
 
+
+
+           ///////////                                                  //////                       //////////              //////////////////////////////////   //////////////////////////////
+    /////////////////////////                                        ////////////               ////////////////////        /////////////////////////////////     ////               ////////////
+    ////                  ////                                      ////////////               ///            ////////     ////////////////////////////////       ////                  ///////////
+    ////                   ////                                     ////////////              ///               ///////   //////                                  ////                    ///////////
+    ////                    ////                                                             ///                  /////  //////                                   ////                     ///////////
+    ////                     ////                                    ////////               ///                   ////////////                                    ////                       //////////
+    ////                      ////                                  ////////               ///                     //// /////                                     ////                         //////////
+    ////                       /////                               ////////               ///                   ////   /////                                      ////                          //////////
+    //////////////////////////////                                 ////////              ///                 ////     /////                                       ////                           //////////
+    /////////////////////////////                                 ////////              ///////////////////////      //////////////////////////////////////       ////                           //////////
+    ////                     /////                                ///////              ///                          /////////////////////////////////////         ////                            /////////
+    ////                     ///////                             ///////              ///                          /////                                          ////                            ////////
+    ////                        /////                           ////////             ///                          /////                                           ////                           ////////
+    ////                         /////                          ///////             ///                          /////                                            ////                          ////////
+    ////                          /////                        ////////            ///                          /////                                             ////                         ////////
+    ////                           //////                     ////////            ///                          /////                                              ////                        ////////
+    ////                            //////                   /////////           ///                          /////                                               ////                      /////////
+    ////                              //////                /////////           ///                          /////                                                ////                 /////////////
+    ////                               ///////             /////////           ///                          /////////////////////////////////////////////         ////             //////////////
+    ////                                  /////           /////////           ///                          ////////////////////////////////////////////           /////////////////////////////
 
 
 

@@ -1,12 +1,20 @@
 package com.mickdevil.go4lunch.GetPlases;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONObject;
+import com.mickdevil.go4lunch.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class PlaceG4Lunch implements Parcelable {
 
@@ -17,22 +25,20 @@ public class PlaceG4Lunch implements Parcelable {
     public String placeId;
     public boolean opened;
     public Bitmap photo;
-    public boolean isSomeBodyGoing;
-    public List<String> usersMails;
     public double distenceToUser;
     public String photoReff;
-    public double rating;
     public List<String> weekdaysOpen;
     public String webSite;
     public String phoneNumber;
     public String foromGoogleOrAlternative;
 
+
     public PlaceG4Lunch() {
     }
 
     public PlaceG4Lunch(String placeName, String vicinity, double latitude, double longitude, String placeId,
-                        boolean opened, Bitmap photo, boolean isSomeBodyGoing, List<String> usersMails, double distenceToUser,
-                        String photoReff, double rating, List<String> weekdaysOpen, String webSite, String phoneNumber, String foromGoogleOrAlternative) {
+                        boolean opened, Bitmap photo, double distenceToUser,
+                        String photoReff, List<String> weekdaysOpen, String webSite, String phoneNumber, String foromGoogleOrAlternative) {
         this.placeName = placeName;
         this.vicinity = vicinity;
         this.latitude = latitude;
@@ -40,11 +46,8 @@ public class PlaceG4Lunch implements Parcelable {
         this.placeId = placeId;
         this.opened = opened;
         this.photo = photo;
-        this.isSomeBodyGoing = isSomeBodyGoing;
-        this.usersMails = usersMails;
         this.distenceToUser = distenceToUser;
         this.photoReff = photoReff;
-        this.rating = rating;
         this.weekdaysOpen = weekdaysOpen;
         this.webSite = webSite;
         this.phoneNumber = phoneNumber;
@@ -59,11 +62,8 @@ public class PlaceG4Lunch implements Parcelable {
         placeId = in.readString();
         opened = in.readByte() != 0;
         photo = in.readParcelable(Bitmap.class.getClassLoader());
-        isSomeBodyGoing = in.readByte() != 0;
-        usersMails = in.createStringArrayList();
         distenceToUser = in.readDouble();
         photoReff = in.readString();
-        rating = in.readDouble();
         weekdaysOpen = in.createStringArrayList();
         webSite = in.readString();
         phoneNumber = in.readString();
@@ -79,11 +79,8 @@ public class PlaceG4Lunch implements Parcelable {
         dest.writeString(placeId);
         dest.writeByte((byte) (opened ? 1 : 0));
         dest.writeParcelable(photo, flags);
-        dest.writeByte((byte) (isSomeBodyGoing ? 1 : 0));
-        dest.writeStringList(usersMails);
         dest.writeDouble(distenceToUser);
         dest.writeString(photoReff);
-        dest.writeDouble(rating);
         dest.writeStringList(weekdaysOpen);
         dest.writeString(webSite);
         dest.writeString(phoneNumber);
@@ -163,20 +160,8 @@ public class PlaceG4Lunch implements Parcelable {
         this.photo = photo;
     }
 
-    public boolean isSomeBodyGoing() {
-        return isSomeBodyGoing;
-    }
 
     public void setSomeBodyGoing(boolean someBodyGoing) {
-        isSomeBodyGoing = someBodyGoing;
-    }
-
-    public List<String> getUsersMails() {
-        return usersMails;
-    }
-
-    public void setUsersMails(List<String> usersMails) {
-        this.usersMails = usersMails;
     }
 
     public double getDistenceToUser() {
@@ -193,14 +178,6 @@ public class PlaceG4Lunch implements Parcelable {
 
     public void setPhotoReff(String photoReff) {
         this.photoReff = photoReff;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
     }
 
     public List<String> getWeekdaysOpen() {
@@ -234,4 +211,96 @@ public class PlaceG4Lunch implements Parcelable {
     public void setForomGoogleOrAlternative(String foromGoogleOrAlternative) {
         this.foromGoogleOrAlternative = foromGoogleOrAlternative;
     }
+
+
+
+
+    //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS
+    //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS
+    //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS //PLACE HASH MAP METHODS
+
+    public static HashMap<String, Object> placeG4LunchToMap(PlaceG4Lunch place) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        String placeName = "placeName";
+        String vicinity = "vicinity";
+        String latitude = "latitude";
+        String longitude = "longitude";
+        String placeId = "placeId";
+        String opened = "opened";
+        String photo = "photo";
+        String distenceToUser = "distenceToUser";
+        String photoReff = "photoReff";
+        String weekdaysOpen = "weekdaysOpen";
+        String webSite = "webSite";
+        String phoneNumber = "phoneNumber";
+        String foromGoogleOrAlternative = "foromGoogleOrAlternative";
+
+        result.put(placeName, place.getPlaceName());
+        result.put(vicinity, place.getVicinity());
+        result.put(latitude, place.getLatitude());
+        result.put(longitude, place.getLongitude());
+        result.put(placeId, place.getPlaceId());
+        result.put(opened, place.opened);
+        result.put(photo, null);
+        result.put(distenceToUser, place.getDistenceToUser());
+        result.put(photoReff, place.photoReff);
+        result.put(weekdaysOpen, place.getWeekdaysOpen());
+        result.put(webSite, place.getWebSite());
+        result.put(phoneNumber, place.getPhoneNumber());
+        result.put(foromGoogleOrAlternative, place.getForomGoogleOrAlternative());
+
+
+        return result;
+
+    }
+
+    public static PlaceG4Lunch placeG4LunchFROMMap(HashMap<String, Object> placeMap) {
+        PlaceG4Lunch result;
+//Strings that is keys
+        String placeName2get = "placeName";
+        String vicinity2get = "vicinity";
+        String latitude2get = "latitude";
+        String longitude2get = "longitude";
+        String placeId2get = "placeId";
+        String opened2get = "opened";
+        String photo2get = "photo";
+        String distenceToUser2get = "distenceToUser";
+        String photoReff2get = "photoReff";
+        String weekdaysOpen2get = "weekdaysOpen";
+        String webSite2get = "webSite";
+        String phoneNumber2get = "phoneNumber";
+        String foromGoogleOrAlternative2get = "foromGoogleOrAlternative";
+        //vars for the future PlaceG4Lunch!!!!!!!!!!!!!!!
+        String placeName = (String) placeMap.get(placeName2get);
+        String vicinity = (String) placeMap.get(vicinity2get);
+        double latitude = (Double) placeMap.get(latitude2get);
+        double longitude = (Double) placeMap.get(longitude2get);
+        String placeId = (String) placeMap.get(placeId2get);
+        boolean opened = (Boolean) placeMap.get(opened2get);
+        double distenceToUser = (Double) placeMap.get(distenceToUser2get);
+        String photoReff = (String) placeMap.get(photoReff2get);
+        List<String> weekdaysOpen = (List<String>) placeMap.get(weekdaysOpen2get);
+        String webSite = (String) placeMap.get(webSite2get);
+        String phoneNumber = (String) placeMap.get(phoneNumber2get);
+        String foromGoogleOrAlternative = (String) placeMap.get(foromGoogleOrAlternative2get);
+
+        Bitmap photo = null;
+
+
+        result = new PlaceG4Lunch(placeName,vicinity,latitude,longitude,placeId,opened,photo,distenceToUser,
+                photoReff,weekdaysOpen,webSite,phoneNumber,foromGoogleOrAlternative2get);
+
+
+
+        return result;
+
+    }
+
+    //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END
+    //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END
+    //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END
+    //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END //PLACE HASH MAP METHODS END
+
+
 }

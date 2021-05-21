@@ -36,6 +36,7 @@
     <string name="isClose">it\'s close for now</string>
     <string name="text_mesege">text mesege</string>
     <string name="chat">CHAT</string>
+    <string name="unknow_information">unknow information</string>
 
 
 </resources>
