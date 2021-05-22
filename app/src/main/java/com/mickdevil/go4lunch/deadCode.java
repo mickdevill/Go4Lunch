@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,10 +17,15 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPhotoResponse;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,9 +57,22 @@ public class deadCode {
                                                   //                                  //                         ///////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//  public static void getOnePlace(String placeId) {
 
+//      // Define a Place ID.
+//      // Specify the fields to return.
+//      final List<Place.Field> placeFields = Arrays.asList( Place.Field.NAME, Place.Field.PHOTO_METADATAS,Place.Field.LAT_LNG,Place.Field.WEBSITE_URI,
+//              Place.Field.PHONE_NUMBER,Place.Field.);
 
+// Construct a request object, passing the place ID and fields array.
+//      final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
 
+//      G4LunchMain.client.fetchPlace(request).addOnSuccessListener((response) -> {
+//          Place place = response.getPlace();
+
+//      });
+
+//  }
 
 
     //private static List<HashMap<String, Object>> placesMapListFromFireBase = new ArrayList<>();

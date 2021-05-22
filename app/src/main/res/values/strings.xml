@@ -37,6 +37,8 @@
     <string name="text_mesege">text mesege</string>
     <string name="chat">CHAT</string>
     <string name="unknow_information">unknow information</string>
+    <string name="hasnt_decided">hasn\'t decidet yet</string>
+    <string name="is_eating">\"is eating \"</string>
 
 
 </resources>

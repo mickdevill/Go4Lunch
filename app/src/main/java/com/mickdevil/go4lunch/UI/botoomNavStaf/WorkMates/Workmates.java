@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,7 @@ public class Workmates extends Fragment {
 
     private WorkMatesRcvAdapter workMatesRcvAdapter;
     private RecyclerView workmatesRCV;
+ private MaterialCardView cardViewForViewPageNavigationCHAT;
     private DatabaseReference DBRef;
     private static final String TAG = "Workmates";
     public boolean makeVisibleOrNot = true;
@@ -36,6 +38,7 @@ public class Workmates extends Fragment {
         View root = inflater.inflate(R.layout.workmates, container, false);
 
         workmatesRCV = root.findViewById(R.id.workmatesRcv);
+        cardViewForViewPageNavigationCHAT = root.findViewById(R.id.cardViewForViewPageNavigationCHAT);
         workmatesRCV.setLayoutManager(new LinearLayoutManager(getContext()));
         workmatesRCV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
@@ -51,20 +54,22 @@ public class Workmates extends Fragment {
 
         if (makeVisibleOrNot) {
             workmatesRCV.setVisibility(View.INVISIBLE);
+            cardViewForViewPageNavigationCHAT.setVisibility(View.INVISIBLE);
 
 
         } else {
-            List<AppUser> workmates = new ArrayList<>();
             ValueEventListener valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<AppUser> workmates = new ArrayList<>();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         AppUser appUser = ds.getValue(AppUser.class);
 
                         workmates.add(appUser);
 
-                        workmatesRCV.setAdapter(new WorkMatesRcvAdapter(workmates));
+                        workmatesRCV.setAdapter(new WorkMatesRcvAdapter(workmates,1));
                     }
+
                 }
 
                 @Override

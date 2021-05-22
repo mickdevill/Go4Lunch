@@ -255,7 +255,7 @@ public class PlaceG4Lunch implements Parcelable {
 
     }
 
-    public static PlaceG4Lunch placeG4LunchFROMMap(HashMap<String, Object> placeMap) {
+    public static PlaceG4Lunch placeG4LunchFROMMap(HashMap<String, Object> placeMap, Bitmap bitmapPhoto) {
         PlaceG4Lunch result;
 //Strings that is keys
         String placeName2get = "placeName";
@@ -284,8 +284,14 @@ public class PlaceG4Lunch implements Parcelable {
         String webSite = (String) placeMap.get(webSite2get);
         String phoneNumber = (String) placeMap.get(phoneNumber2get);
         String foromGoogleOrAlternative = (String) placeMap.get(foromGoogleOrAlternative2get);
+        Bitmap photo;
+        if (bitmapPhoto != null){
+          photo = bitmapPhoto;
+        }
+        else {
+           photo = null;
+        }
 
-        Bitmap photo = null;
 
 
         result = new PlaceG4Lunch(placeName,vicinity,latitude,longitude,placeId,opened,photo,distenceToUser,

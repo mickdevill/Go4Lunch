@@ -13,11 +13,11 @@ import com.mickdevil.go4lunch.UI.botoomNavStaf.map.MapFragment;
 public class HandlerForMsg extends Handler {
 
     Context context;
-    Activity mActivity;
+    Activity activity;
 
-    public HandlerForMsg(Context context, Activity mActivity) {
+    public HandlerForMsg(Context context, Activity activity) {
         this.context = context;
-        this.mActivity = mActivity;
+        this.activity = activity;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class HandlerForMsg extends Handler {
                 break;
 
             case 2:
-                mActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        MapFragment.PutMarckersOnMap(GetPlacesTheRightWay.finalPlacesResult);
+                        MapFragment.PutMarckersOnMap(GetPlacesTheRightWay.finalPlacesResult, activity.getApplicationContext());
                     }
                 });
                 break;

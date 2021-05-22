@@ -6,9 +6,13 @@ import android.location.Location;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +42,16 @@ import static java.lang.Double.valueOf;
 
 public class GetPlacesTheRightWay {
 
+
+
     public static List<PlaceG4Lunch> finalPlacesResult = new ArrayList<>();
+
+    //this is the list of places added from fierbase with PlaceG4lunch.getFromMap method
+    public static List<PlaceG4Lunch> placesFromFierBase = new ArrayList<>();
+
+
+
+
 
     public static final String ALL_GETED_PACES_EVER = "ALL_GETED_PACES_EVER";
 
@@ -268,43 +282,41 @@ public class GetPlacesTheRightWay {
                 moreInfo = getMoreInfoAboutThePlace(placeId);
 
 
-                    phoneNumber = moreInfo.getString("formatted_phone_number");
+                phoneNumber = moreInfo.getString("formatted_phone_number");
 
 
-                    if (moreInfo.getString("website") != null) {
-                        webSite = moreInfo.getString("website");
-                    } else {
+                if (moreInfo.getString("website") != null) {
+                    webSite = moreInfo.getString("website");
+                } else {
 
-                        webSite = null;
-                    }
+                    webSite = null;
+                }
 
-                    weekDaysOpen = new ArrayList<>();
-                    weekDaysOpen.add("");
-                    weekDaysOpen.add("");
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(3));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(4));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
-                    weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
+                weekDaysOpen = new ArrayList<>();
+                weekDaysOpen.add("");
+                weekDaysOpen.add("");
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(0));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(1));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(2));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(3));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(4));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(5));
+                weekDaysOpen.add(moreInfo.getJSONObject("opening_hours").getJSONArray("weekday_text").getString(6));
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
 
-                if (placeName != null && placeId != null && vicinity != null) {
+            if (placeName != null && placeId != null && vicinity != null) {
 
-                    placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
-                            distenceToUser, photoReff, weekDaysOpen,
-                            webSite, phoneNumber, "GOOGLE");
+                placeG4Lunch = new PlaceG4Lunch(placeName, vicinity, latitude, longitude, placeId, opened, photo,
+                        distenceToUser, photoReff, weekDaysOpen,
+                        webSite, phoneNumber, "GOOGLE");
 
-
-                    theFinalList.add(placeG4Lunch);
-                }
-
-
+                Log.d(TAG, "PHOTO IN PARSER PHOTO IN PARSER PHOTO IN PARSER " + photo );
+                theFinalList.add(placeG4Lunch);
+            }
 
 
         }
@@ -420,6 +432,9 @@ public class GetPlacesTheRightWay {
             }
         });
     }
+
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

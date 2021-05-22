@@ -2,6 +2,7 @@ package com.mickdevil.go4lunch.UI.botoomNavStaf.ListView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPhotoResponse;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mickdevil.go4lunch.AppUser;
 import com.mickdevil.go4lunch.GetPlases.PlaceG4Lunch;
 import com.mickdevil.go4lunch.R;
+import com.mickdevil.go4lunch.UI.G4LunchMain;
 import com.mickdevil.go4lunch.UI.PlaceDetails.PlaceDetailsActivity;
 import com.mickdevil.go4lunch.UI.SignIn.MainSigninActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Double.valueOf;
@@ -51,15 +59,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.Holder
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.places_list_holder, parent, false);
         return new Holder(view);
-
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         PlaceG4Lunch place = places.get(position);
 
-holder.setIsRecyclable(false);
+        holder.setIsRecyclable(false);
         holder.restoName.setText(place.getPlaceName());
 
         holder.restoDistance.setText(cutTheDistence(valueOf(place.getDistenceToUser()).toString()));
@@ -80,7 +86,7 @@ holder.setIsRecyclable(false);
         if (place.getPhoto() != null) {
             holder.restImg.setImageBitmap(place.getPhoto());
         } else {
-            holder.restImg.setImageResource(R.drawable.no_place_photo);
+            getPlacePhoto(holder, position);
         }
 
         if (place.isOpened()) {
@@ -90,10 +96,10 @@ holder.setIsRecyclable(false);
             holder.restoOpenColse.setText(R.string.isClose);
         }
 
-        getLikes(holder, position);
-        setRestoOpentClose(holder, position);
-        howManyWorkmatesWillGo(holder, position);
 
+       getLikes(holder, position);
+        //setRestoOpentClose(holder, position);
+        howManyWorkmatesWillGo(holder, position);
         holder.placesListViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,8 +110,6 @@ holder.setIsRecyclable(false);
         });
 
         Log.d(TAG, "onBindViewHolder: " + position);
-
-
     }
 
 
@@ -200,8 +204,7 @@ holder.setIsRecyclable(false);
 
 
             holder.restoOpenColse.setText(dayOfPlayce);
-        }
-        else {
+        } else {
             holder.restoOpenColse.setText(R.string.unknow_information);
 
         }
@@ -243,7 +246,6 @@ holder.setIsRecyclable(false);
 
     private void getLikes(Holder holder, int position) {
 
-
         likes.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
@@ -262,6 +264,10 @@ holder.setIsRecyclable(false);
 
 
                 }
+
+                holder.rateStar1.setImageResource(R.drawable.not_liked);
+                holder.rateStar2.setImageResource(R.drawable.not_liked);
+                holder.rateStar3.setImageResource(R.drawable.not_liked);
 
                 if (likesOnPlace == 1) {
                     holder.rateStar1.setImageResource(R.drawable.star_rate_24);
@@ -286,16 +292,59 @@ holder.setIsRecyclable(false);
         });
 
     }
-    // public void getTotalWorkmates() {
-    //     wormatesDbReff.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-    //         @Override
-    //         public void onSuccess(DataSnapshot dataSnapshot) {
 
-    //             totalWorkMates = dataSnapshot.getChildrenCount();
 
-    //         }
-    //     });
+    private void getPlacePhoto(Holder holder, int position) {
 
-    // }
+        // Define a Place ID.
+        final String placeId = places.get(position).placeId;
+
+// Specify fields. Requests for photos must always have the PHOTO_METADATAS field.
+        final List<Place.Field> fields = Collections.singletonList(Place.Field.PHOTO_METADATAS);
+
+// Get a Place object (this example uses fetchPlace(), but you can also use findCurrentPlace())
+        final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
+
+        G4LunchMain.client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+            final Place place = response.getPlace();
+
+            // Get the photo metadata.
+            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if (metadata == null || metadata.isEmpty()) {
+                return;
+            }
+
+            final PhotoMetadata photoMetadata = metadata.get(0);
+
+            // Get the attribution text.
+            final String attributions = photoMetadata.getAttributions();
+
+            // Create a FetchPhotoRequest.
+            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500) // Optional.
+                    .setMaxHeight(300) // Optional.
+                    .build();
+            G4LunchMain.client.fetchPhoto(photoRequest).addOnSuccessListener(new OnSuccessListener<FetchPhotoResponse>() {
+                @Override
+                public void onSuccess(FetchPhotoResponse fetchPhotoResponse) {
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                    if (bitmap != null) {
+                        Log.d(TAG, "request photu sucses ");
+                        holder.restImg.setImageBitmap(bitmap);
+                        places.get(position).setPhoto(bitmap);
+                    } else {
+                        Log.d(TAG, "request photu fail ");
+
+                        holder.restImg.setImageResource(R.drawable.no_place_photo);
+                    }
+
+                }
+            });
+
+        });
+
+
+    }
+
 
 }
