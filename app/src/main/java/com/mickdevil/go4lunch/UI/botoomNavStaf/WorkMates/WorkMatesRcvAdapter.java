@@ -142,37 +142,36 @@ public class WorkMatesRcvAdapter extends RecyclerView.Adapter<WorkMatesRcvAdapte
     private void workmateIsEatingTheFierBaseSide(AppUser appUser, Holder holder) {
 
         placesReff.child(appUser.placeID).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-                @Override
-                public void onSuccess(DataSnapshot dataSnapshot) {
-                    HashMap<String, Object> placeFromFire = (HashMap<String, Object>) dataSnapshot.getValue();
-                    PlaceG4Lunch placeG4Lunch = PlaceG4Lunch.placeG4LunchFROMMap(placeFromFire, null);
-                    holder.nameAndPlaceHeWillGo.setText(appUser.Fname + " " + "is eating " + placeG4Lunch.getPlaceName());
-                    Log.d(TAG, "from fier base " + placeG4Lunch.getPlaceName());
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                HashMap<String, Object> placeFromFire = (HashMap<String, Object>) dataSnapshot.getValue();
+                PlaceG4Lunch placeG4Lunch = PlaceG4Lunch.placeG4LunchFROMMap(placeFromFire, null);
+                holder.nameAndPlaceHeWillGo.setText(appUser.Fname + " " + "is eating " + placeG4Lunch.getPlaceName());
+                Log.d(TAG, "from fier base " + placeG4Lunch.getPlaceName());
 
-                    if (GetPlacesTheRightWay.finalPlacesResult.size() > 1) {
+                if (GetPlacesTheRightWay.finalPlacesResult.size() > 1) {
 
-                        boolean allredyIn = true;
+                    boolean allredyIn = true;
 
-                        for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
+                    for (int i = 0; i < GetPlacesTheRightWay.finalPlacesResult.size(); i++) {
 
-                            if (GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId().equals(placeG4Lunch.getPlaceId())) {
-                                allredyIn = false;
-                            }
+                        if (GetPlacesTheRightWay.finalPlacesResult.get(i).getPlaceId().equals(placeG4Lunch.getPlaceId())) {
+                            allredyIn = false;
                         }
-
-                        if (allredyIn) {
-                            GetPlacesTheRightWay.finalPlacesResult.add(placeG4Lunch);
-                        }
-
-                    } else {
-                        Log.d(TAG, "is my bit map null? " + placeG4Lunch.getPhoto());
-                        GetPlacesTheRightWay.placesFromFierBase.add(placeG4Lunch);
-
                     }
 
-                }
-            });
+                    if (allredyIn) {
+                        GetPlacesTheRightWay.finalPlacesResult.add(placeG4Lunch);
+                    }
 
+                } else {
+                    Log.d(TAG, "is my bit map null? " + placeG4Lunch.getPhoto());
+                    GetPlacesTheRightWay.placesFromFierBase.add(placeG4Lunch);
+
+                }
+
+            }
+        });
 
     }
 

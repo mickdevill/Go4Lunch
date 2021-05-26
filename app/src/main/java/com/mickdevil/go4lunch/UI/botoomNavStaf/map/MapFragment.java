@@ -183,68 +183,60 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     public static void PutMarckersOnMap(List<PlaceG4Lunch> places, Context context) {
 
 
-PlaceG4Lunch placeG4Lunch;
-for (int i = 0; i < places.size(); i++){
-    placeG4Lunch = places.get(i);
-    LatLng latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
-    TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()));
+        DatabaseReference users = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
 
-}
+        users.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                List<AppUser> appUsers = new ArrayList<>();
+                AppUser appUser;
 
-    //  DatabaseReference users = FirebaseDatabase.getInstance().getReference(MainSigninActivity.USER_PATH);
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    appUser = ds.getValue(AppUser.class);
+                    appUsers.add(appUser);
 
-    //  users.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-    //      @Override
-    //      public void onSuccess(DataSnapshot dataSnapshot) {
-    //          List<AppUser> appUsers = new ArrayList<>();
-    //          AppUser appUser;
-
-    //          for (DataSnapshot ds : dataSnapshot.getChildren()) {
-    //              appUser = ds.getValue(AppUser.class);
-    //              appUsers.add(appUser);
-
-    //          }
+                }
 
 
-    //          LatLng latLng;
-    //          for (int i = 0; i < places.size(); i++) {
-    //              PlaceG4Lunch placeG4Lunch = places.get(i);
-    //              latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
-    //              boolean bool = true;
+                LatLng latLng;
+                for (int i = 0; i < places.size(); i++) {
+                    PlaceG4Lunch placeG4Lunch = places.get(i);
+                    latLng = new LatLng(placeG4Lunch.getLatitude(), placeG4Lunch.getLongitude());
+                    boolean bool = true;
 
 
-    //              for (Iterator<AppUser> iterator = appUsers.iterator(); iterator.hasNext(); ) {
-    //                  appUser = iterator.next();
+                    for (Iterator<AppUser> iterator = appUsers.iterator(); iterator.hasNext(); ) {
+                        appUser = iterator.next();
 
-    //                  if (placeG4Lunch.getPlaceId().equals(appUser.placeID)) {
-    //                      TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()))
-    //                              .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-    //                      bool = false;
-    //                      break;
-    //                  }
+                        if (placeG4Lunch.getPlaceId().equals(appUser.placeID)) {
+                            TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()))
+                                    .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            bool = false;
+                            break;
+                        }
 
-    //              }
+                    }
 
-    //              if (bool) {
-    //                  TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()))
-    //                          .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-    //              }
+                    if (bool) {
+                        TheStaticMap.addMarker(new MarkerOptions().position(latLng).title(placeG4Lunch.getPlaceName()))
+                                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    }
 
-    //              TheStaticMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-    //                  @Override
-    //                  public boolean onMarkerClick(Marker marker) {
-    //                      Intent intent = new Intent(context, PlaceDetailsActivity.class);
-    //                      intent.putExtra(PlaceDetailsActivity.keyForDetails, placeG4Lunch.getPlaceId());
-    //                      context.startActivity(intent);
-    //                      return false;
-    //                  }
-    //              });
+                    TheStaticMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent intent = new Intent(context, PlaceDetailsActivity.class);
+                            intent.putExtra(PlaceDetailsActivity.keyForDetails, placeG4Lunch.getPlaceId());
+                            context.startActivity(intent);
+                            return false;
+                        }
+                    });
 
-    //          }
+                }
 
 
-    //      }
-    //  });
+            }
+        });
 
 
     }
